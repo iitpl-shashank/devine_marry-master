@@ -154,7 +154,7 @@ class RouteHelper {
   /// Pages ==================>
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => const SplashScreen()),
-    GetPage(name: login, page: () => LoginScreen()),
+    GetPage(name: login, page: () => LoginScreen()),  
     GetPage(name: register, page: () => RegisterScreen(),),
     GetPage( name: otpVerification,
         page: () => OtpVerificationScreen()),
