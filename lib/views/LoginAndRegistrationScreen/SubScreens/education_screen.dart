@@ -1,5 +1,6 @@
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/models/component_models/user_atributes.dart';
+import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/widgets/custom_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class EducationScreen extends StatelessWidget {
                       StringTexts.educationAndProfession,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF86413F),
+                        color: AppColors.darkTheme,
                         fontSize: 28,
                         fontWeight: FontWeight.w800,
                         height: 1.40,

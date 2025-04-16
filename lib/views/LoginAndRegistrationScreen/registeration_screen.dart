@@ -1,16 +1,12 @@
-import 'dart:developer';
-
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
+import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/create_screen.dart';
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/personality_screen.dart';
-import 'package:devine_marry/widgets/custom_snack_bar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../widgets/common_button.dart';
-import 'SubScreens/create_screen.dart';
 import 'SubScreens/education_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -52,9 +48,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               physics: NeverScrollableScrollPhysics(),
               controller: authController.pageController,
               children: [
+                // PreferencesScreen(),
                 CreateScreen(),
                 EducationScreen(),
                 PersonalityScreen(),
+                
               ],
             );
           },

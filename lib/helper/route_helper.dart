@@ -45,7 +45,7 @@ class RouteHelper {
   static const String otpVerification = '/otp-verification';
   static const String letsBegin = '/lets-begin';
   static const String dashboard = '/dashboard';
-  static const String   successFullRegisterationScreen = '/successfull-registeration-screen';
+  static const String successFullRegisterationScreen = '/successfull-registeration-screen';
   static const String selectSlot = '/select-slot';
   static const String patientDetails = '/patient-details';
   static const String paymentMethod = '/payment-method';

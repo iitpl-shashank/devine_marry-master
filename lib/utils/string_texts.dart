@@ -40,6 +40,6 @@ static const String PROFESSION_DETAIL = 'PROFESSION DETAIL';
   static const String Personality_Details = 'Personality Details';
   static const String Personality_Attributes = 'Personality Attributes';
   static const String YouCanUpdateTheData = 'You can update the data from profile settings in app';
-  static const String Preferrences = 'Preferrences';
+  static const String Preferences = 'Preferences';
 
 }
