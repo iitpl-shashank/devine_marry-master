@@ -1,0 +1,2 @@
+/Users/iitpl/Documents/Flutter/projects/devine_marry/android/app/.cxx/RelWithDebInfo/2l1q1wf8/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/iitpl/Documents/Flutter/projects/devine_marry/android/app/.cxx/RelWithDebInfo/2l1q1wf8/armeabi-v7a/CMakeFiles/rebuild_cache.dir
