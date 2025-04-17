@@ -3,10 +3,8 @@ import 'package:devine_marry/widgets/custom_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../utils/string_texts.dart';
 import '../../../utils/styles.dart';
-import '../../../widgets/common_button.dart';
 import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/image_picker_widget.dart';

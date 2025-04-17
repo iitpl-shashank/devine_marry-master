@@ -1,12 +1,9 @@
 import 'dart:developer';
-
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/personality_screen.dart';
-import 'package:devine_marry/widgets/custom_snack_bar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../widgets/common_button.dart';
@@ -55,6 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CreateScreen(),
                 EducationScreen(),
                 PersonalityScreen(),
+                PreferencesScreen(),
               ],
             );
           },
@@ -89,11 +87,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () {
                       if(controller.currentPage == 0){
                         controller.checkCreateAccountScreen();
+                        log("Screen 0");
                       } else if(controller.currentPage == 1){
                         controller.checkEducationScreen();
+                         log("Screen 1");
                       } else if(controller.currentPage == 2){
                         controller.checkPersonalityScreen();
+                         log("Screen 2");
                       }
+                      controller.nextPage();
                     },
                     isLightColor: false,
                     text: controller.isLoginLoading

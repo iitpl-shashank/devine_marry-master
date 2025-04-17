@@ -8,6 +8,7 @@ void showHeightPickerDialog({
   required int maxHeight,
   required Function(int) onHeightSelected,
   int initialHeight = 170,
+  String? title,
 }) {
   int tempHeight = initialHeight;
 
@@ -15,7 +16,7 @@ void showHeightPickerDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text("Select Height (in cm)"),
+        title: Text(title ?? "Select Height (in cm)"),
         content: StatefulBuilder(
           builder: (context, setState) {
             return Column(

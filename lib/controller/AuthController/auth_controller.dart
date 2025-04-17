@@ -16,7 +16,6 @@ import '../../models/user/user.dart';
 import '../../utils/app_constants.dart';
 import '../../widgets/common_loading.dart';
 import '../../widgets/custom_snack_bar.dart';
-import 'package:path/path.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
@@ -61,7 +60,6 @@ class AuthController extends GetxController implements GetxService {
   String? gender;
   String? profilePhoto = "";
 
-
   void updateLookingFor(String value) {
     lookingFor = value;
     update();
@@ -92,11 +90,15 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  void updatePrefState(List<String> value) {
+    prefState = value;
+    update();
+  }
+
   void updateDob(String value) {
     dob = value;
     value = DateConverter.formatDate(DateTime.parse(value));
-    dobController.text =
-        value;
+    dobController.text = value;
     update();
   }
 
@@ -109,12 +111,6 @@ class AuthController extends GetxController implements GetxService {
     profilePhoto = value;
     update();
   }
-
-
-
-
-
-
 
   //EducationDetails
 
@@ -141,39 +137,65 @@ class AuthController extends GetxController implements GetxService {
   TextEditingController weightController = TextEditingController();
   TextEditingController interestController = TextEditingController();
 
-
   String? smokingHabit;
   String? drinkingHabit;
   String? bloodGroup;
   String? complexion;
   String? disability;
+
+  //PreferencesDetails
+
+  TextEditingController prefAgeController = TextEditingController();
+  TextEditingController prefHeightController = TextEditingController();
   List<String>? prefReligion;
+  List<String>? prefCaste;
   List<String>? prefHighestQualification;
   List<String>? prefCountry;
+  List<String>? prefState;
+  List<String>? prefComplexion;
+  String? prefSmokingHabit;
+  String? prefDrinkingHabit;
 
   CountryResponse countryResponse = CountryResponse(countries: []);
   ReligionResponse religionResponse = ReligionResponse(religions: []);
-  DataModel dataModel = DataModel(maritalStatuses: [], genders: [], qualifications: [], smoking: [], drinking: [], bloodGroups: [], complexion: [], disabilities: []);
+  DataModel dataModel = DataModel(
+      maritalStatuses: [],
+      genders: [],
+      qualifications: [],
+      smoking: [],
+      drinking: [],
+      bloodGroups: [],
+      complexion: [],
+      disabilities: []);
   CasteResponse casteResponse = CasteResponse(castes: []);
-  DegreeResponse degreeResponse = DegreeResponse( Degrees: []);
+  DegreeResponse degreeResponse = DegreeResponse(Degrees: []);
   StateResponse stateResponse = StateResponse(states: []);
-
-
 
   void updateBloodGroup(String value) {
     bloodGroup = value;
     update();
-
   }
+
   void updateComplexion(String value) {
     complexion = value;
     update();
-
   }
+
   void updateSmokingHabit(String value) {
     smokingHabit = value;
     update();
   }
+
+  void updatePrefSmokingHabit(String value) {
+    prefSmokingHabit = value;
+    update();
+  }
+
+  void updatePrefDrinkingHabit(String value) {
+    prefDrinkingHabit = value;
+    update();
+  }
+
   void updateDrinkingHabit(String value) {
     drinkingHabit = value;
     update();
@@ -183,12 +205,19 @@ class AuthController extends GetxController implements GetxService {
     disability = values;
     update();
   }
+
   void updatePrefReligion(List<String> value) {
     prefReligion = value;
     update();
   }
+
   void updatePrefQualification(List<String> value) {
     prefHighestQualification = value;
+    update();
+  }
+
+  void updatePrefComplexion(List<String> value) {
+    prefComplexion = value;
     update();
   }
 
@@ -197,17 +226,15 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-
-
   void updateHighestQualification(String value) {
     highestQualification = value;
     update();
   }
+
   void updateDegree(String? value) {
     degree = value;
     update();
   }
-
 
   List<LookingFor> lookingForList = [
     LookingFor(id: 1, title: 'Bridegroom'),
@@ -215,17 +242,16 @@ class AuthController extends GetxController implements GetxService {
   ];
 
   void nextPage() {
-    pageController.nextPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeIn);
-    update();
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+    log("Page number : ${pageController.page}");
+    if (currentPage < 4) {
+      pageController.nextPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       update();
-    });
-
+      currentPage = pageController.page!.toInt() + 1;
+      log("Next Page number : ${currentPage.toString()}");
+    }
   }
 
   void updatePage(int index) {
@@ -235,16 +261,14 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void previousPage() {
-    pageController.previousPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeOut);
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+    if (currentPage > 0) {
+      pageController.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       update();
-    });
-    update();
+      currentPage = pageController.page!.toInt() - 1;
+    }
   }
 
   void changePhoneNumber(String value) {
@@ -386,7 +410,7 @@ class AuthController extends GetxController implements GetxService {
     try {
       Response response =
           await authRepo.sendOtpRepo(phoneController.text.trim());
-        debugPrint("Response: ${response.body}");
+      debugPrint("Response: ${response.body}");
       // var responseData = response.body;
       if (response.body['status']) {
         var responseData = response.body;
@@ -585,7 +609,6 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
-
   Future<void> getDegrees() async {
     showLoading();
     updateDegree(null);
@@ -621,9 +644,6 @@ class AuthController extends GetxController implements GetxService {
       update();
     }
   }
-
-
-
 
   //
   // Future<void> saveSubscriptionStatus(bool isActive) async {
@@ -696,7 +716,8 @@ class AuthController extends GetxController implements GetxService {
 
   Future<bool> registerUser(String updateType) async {
     showLoading();
-    final String url = AppConstants.baseUrl+AppConstants.register; // Replace with your API URL
+    final String url = AppConstants.baseUrl +
+        AppConstants.register; // Replace with your API URL
 
     // Image file (Replace with actual file picker logic)
     File imageFile = File(profilePhoto ?? ""); // Replace with actual image path
@@ -713,7 +734,7 @@ class AuthController extends GetxController implements GetxService {
 
     Map<dynamic, dynamic> finalMap = {};
 
-    if(updateType == "register"){
+    if (updateType == "register") {
       finalMap = {
         "step": "register",
         "looking_for": lookingForList
@@ -753,20 +774,20 @@ class AuthController extends GetxController implements GetxService {
         "mother_profession": motherProfessionController.text,
         "number_of_siblings": (numberOfSiblings ?? "").toString(),
       };
-    } else if(updateType == "basicInfo"){
-      bool isHighSchoolOrIntermediate =
-          highestQualification != "High School" && highestQualification != "Intermediate";
+    } else if (updateType == "basicInfo") {
+      bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
+          highestQualification != "Intermediate";
       finalMap = {
         "step": "basicInfo",
         "highest_qualification": (dataModel.qualifications
-            .firstWhere((element) => (element.name ?? "") == highestQualification)
-            .id)
-            .toString() ,
-        "institute": schoolUniversityController.text,
-        if(isHighSchoolOrIntermediate)"degree": degreeResponse.Degrees
-            .firstWhere((element) => (element.name ?? "") == degree)
-            .id
+                .firstWhere(
+                    (element) => (element.name ?? "") == highestQualification)
+                .id)
             .toString(),
+        "institute": schoolUniversityController.text,
+        if (isHighSchoolOrIntermediate)
+          "degree": degreeResponse.Degrees.firstWhere(
+              (element) => (element.name ?? "") == degree).id.toString(),
         "starting_year": startDateController.text,
         "ending_year": endDayController.text,
         "company": companyOrganisationController.text,
@@ -774,28 +795,25 @@ class AuthController extends GetxController implements GetxService {
         "monthly_income": monthlyIncomeController.text,
         "experience": noOfYears,
       };
-    }
-    else {
-
+    } else {
       List<String> Religion = [];
       List<String> HighestQualification = [];
       List<String> Country = [];
 
-
       religionResponse.religions.forEach((religion) {
-        if(prefReligion!.contains(religion.name)){
+        if (prefReligion!.contains(religion.name)) {
           Religion.add(religion.id.toString());
         }
       });
 
       dataModel.qualifications.forEach((qualification) {
-        if(prefHighestQualification!.contains(qualification.name)){
+        if (prefHighestQualification!.contains(qualification.name)) {
           HighestQualification.add(qualification.id.toString());
         }
       });
 
       countryResponse.countries.forEach((country) {
-        if(prefCountry!.contains(country.name)){
+        if (prefCountry!.contains(country.name)) {
           Country.add(country.id.toString());
         }
       });
@@ -824,22 +842,22 @@ class AuthController extends GetxController implements GetxService {
             .firstWhere((element) => (element.name ?? "") == complexion)
             .id
             .toString(),
-        "disabilities": dataModel.disabilities.firstWhere((dis)=>dis.name == disability).id,
+        "disabilities": dataModel.disabilities
+            .firstWhere((dis) => dis.name == disability)
+            .id,
         "religions": Religion,
         "Qualification": HighestQualification,
         "country": Country,
       };
     }
 
-
     log("Final Map: $finalMap\n===>");
     // Add fields
-    request.fields.addAll(
-        finalMap.map((key, value) => MapEntry(key.toString(), value?.toString() ?? ""))
-    );
+    request.fields.addAll(finalMap.map(
+        (key, value) => MapEntry(key.toString(), value?.toString() ?? "")));
 
     // Add image file
-        if(imageFile.path.isNotEmpty && updateType == "register"){
+    if (imageFile.path.isNotEmpty && updateType == "register") {
       request.files.add(
         await http.MultipartFile.fromPath("image", imageFile.path),
       );
@@ -852,9 +870,7 @@ class AuthController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         hideLoading();
         print("Success: $responseData");
-        if(currentPage != 2) {
-          nextPage();
-        } else {
+        if (currentPage == 4) {
           Get.toNamed(RouteHelper.successFullRegisterationScreen);
         }
         return true;
@@ -981,8 +997,8 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void checkEducationScreen() {
-    bool isHighSchoolOrIntermediate =
-        highestQualification != "High School" && highestQualification == "Intermediate";
+    bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
+        highestQualification == "Intermediate";
 
     if ((highestQualification ?? "").isNotEmpty &&
         (!isHighSchoolOrIntermediate || (degree ?? "").isNotEmpty) &&
@@ -997,13 +1013,15 @@ class AuthController extends GetxController implements GetxService {
     } else {
       if ((highestQualification ?? "").isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select highest qualification", isError: true);
+        showCustomSnackBar("Please select highest qualification",
+            isError: true);
       } else if (isHighSchoolOrIntermediate && (degree ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select degree", isError: true);
       } else if (schoolUniversityController.text.isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please enter your school/university name", isError: true);
+        showCustomSnackBar("Please enter your school/university name",
+            isError: true);
       } else if (startDateController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select start date", isError: true);
@@ -1012,7 +1030,8 @@ class AuthController extends GetxController implements GetxService {
         showCustomSnackBar("Please select end date", isError: true);
       } else if (companyOrganisationController.text.isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please enter your company/organisation name", isError: true);
+        showCustomSnackBar("Please enter your company/organisation name",
+            isError: true);
       } else if (designationController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your designation", isError: true);
@@ -1049,7 +1068,7 @@ class AuthController extends GetxController implements GetxService {
       } else if ((eyeColorController.text ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your eye color", isError: true);
-  } else if ((bioController.text ?? "").isEmpty) {
+      } else if ((bioController.text ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your bio", isError: true);
       } else if ((heightController.text ?? "").isEmpty) {
@@ -1078,7 +1097,8 @@ class AuthController extends GetxController implements GetxService {
         showCustomSnackBar("Please select preferred country", isError: true);
       } else if ((prefHighestQualification ?? []).isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select preferred highest qualification", isError: true);
+        showCustomSnackBar("Please select preferred highest qualification",
+            isError: true);
       } else if ((prefReligion ?? []).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select preferred religion", isError: true);
@@ -1088,5 +1108,4 @@ class AuthController extends GetxController implements GetxService {
       }
     }
   }
-
 }

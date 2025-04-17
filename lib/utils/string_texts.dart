@@ -34,12 +34,20 @@ static const String Family_Details = 'Family Details';
 static const String educationAndProfession = 'Education & Profession';
 static const String youCanUpdateTheDataFromProfileScreen = 'You can update the data from profile settings in app';
 static const String EDUCATION_DETAILS = 'EDUCATION DETAILS';
-static const String PROFESSION_DETAIL = 'PROFESSION_DETAIL';
+static const String PROFESSION_DETAIL = 'PROFESSION DETAIL';
 
 //Personality Details
   static const String Personality_Details = 'Personality Details';
   static const String Personality_Attributes = 'Personality Attributes';
   static const String YouCanUpdateTheData = 'You can update the data from profile settings in app';
-  static const String Preferrences = 'Preferrences';
+  static const String Preferences = 'Preferences';
+
+//Preferences
+   static const String set_preferences = 'Set Preferences';
+
+//Connect Screen
+  static const String connects = 'Connects';
+  static const String tempDescription = 'Lorem Ipsum is simply dummy text of the printin...';
+
 
 }
