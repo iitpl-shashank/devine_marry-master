@@ -1,3 +1,4 @@
+import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -159,7 +160,9 @@ class RouteHelper {
     GetPage( name: otpVerification,
         page: () => OtpVerificationScreen()),
     GetPage( name: dashboard,
-        page: () => DashBoardScreen()),
+    //UPDATED for preference screen
+        // page: () => DashBoardScreen()),
+        page: () => PreferencesScreen()),
     GetPage( name: successFullRegisterationScreen,
         page: () => ProfileCompleteScreen()),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),

@@ -16,7 +16,6 @@ import '../../models/user/user.dart';
 import '../../utils/app_constants.dart';
 import '../../widgets/common_loading.dart';
 import '../../widgets/custom_snack_bar.dart';
-import 'package:path/path.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
@@ -141,15 +140,27 @@ class AuthController extends GetxController implements GetxService {
   TextEditingController weightController = TextEditingController();
   TextEditingController interestController = TextEditingController();
 
-
   String? smokingHabit;
   String? drinkingHabit;
   String? bloodGroup;
   String? complexion;
   String? disability;
+
+  //PreferencesDetails
+
+  TextEditingController prefAgeController = TextEditingController();
+  TextEditingController prefStateController = TextEditingController();
+  TextEditingController prefHeightController = TextEditingController();
   List<String>? prefReligion;
+  List<String>? prefCaste;
   List<String>? prefHighestQualification;
   List<String>? prefCountry;
+  List<String>? prefState;
+  List<String>? prefComplexion;
+  String? prefSmokingHabit;
+  String? prefDrinkingHabit;
+
+
 
   CountryResponse countryResponse = CountryResponse(countries: []);
   ReligionResponse religionResponse = ReligionResponse(religions: []);
@@ -215,17 +226,17 @@ class AuthController extends GetxController implements GetxService {
   ];
 
   void nextPage() {
-    pageController.nextPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeIn);
-    update();
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+    log("Page number : ${pageController.page}");
+    if (currentPage < 4) { 
+      pageController.nextPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       update();
-    });
-
+       currentPage = pageController.page!.toInt() + 1;
+    log("Next Page number : ${currentPage.toString()}");
+    }
+   
   }
 
   void updatePage(int index) {
@@ -235,16 +246,16 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void previousPage() {
-    pageController.previousPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeOut);
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+   if (currentPage > 0) {
+      pageController.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       update();
-    });
-    update();
+          currentPage = pageController.page!.toInt() - 1;
+    }
+    
+
   }
 
   void changePhoneNumber(String value) {
@@ -852,9 +863,7 @@ class AuthController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         hideLoading();
         print("Success: $responseData");
-        if(currentPage != 2) {
-          nextPage();
-        } else {
+        if(currentPage == 4) {
           Get.toNamed(RouteHelper.successFullRegisterationScreen);
         }
         return true;

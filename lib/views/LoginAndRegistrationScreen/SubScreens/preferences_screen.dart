@@ -1,20 +1,21 @@
-import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../controller/AuthController/auth_controller.dart';
 import '../../../utils/string_texts.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/themes/app_colors.dart';
 import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/number_picker_custom.dart';
 
-class PersonalityScreen extends StatelessWidget {
-  const PersonalityScreen({super.key});
+class PreferencesScreen extends StatelessWidget {
+  const PreferencesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (controller) {
       return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -25,10 +26,10 @@ class PersonalityScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      StringTexts.Personality_Attributes,
+                      StringTexts.Preferences,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF86413F),
+                        color: AppColors.darkTheme,
                         fontSize: 30,
                         fontWeight: FontWeight.w800,
                         height: 1.40,
@@ -37,7 +38,7 @@ class PersonalityScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 8,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Row(
@@ -48,7 +49,7 @@ class PersonalityScreen extends StatelessWidget {
                         StringTexts.YouCanUpdateTheData,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color(0xFF212121),
+                          color: AppColors.textBlack,
                           fontSize:
                               DmSansRegular.copyWith(fontSize: 12).fontSize,
                           // fontFamily: 'DM Sans',
@@ -79,9 +80,9 @@ class PersonalityScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              StringTexts.Personality_Details,
+                              StringTexts.set_preferences.toUpperCase(),
                               style: TextStyle(
-                                color: Color(0xFF86413F),
+                                color: AppColors.darkTheme,
                                 fontSize: DmSansRegular.copyWith(fontSize: 14)
                                     .fontSize,
                                 // fontFamily: 'DM Sans',
@@ -94,35 +95,82 @@ class PersonalityScreen extends StatelessWidget {
                         Row(
                           children: [
                             Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Complexion',
-                                options: controller.dataModel.complexion
-                                    .map((complexion) => complexion.name)
-                                    .toList(),
-                                selectedValue: controller.complexion,
-                                onChanged: (value) {
-                                  controller.updateComplexion(value ?? "");
+                              child: CustomTextField(
+                                hintText: 'Age',
+                                readOnly: true,
+                                suffixText: "Yrs",
+                                inputType: TextInputType.number,
+                                isAmount: true,
+                                controller: controller.prefAgeController,
+                                onChanged: (value) {},
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Age (in Yrs)",
+                                    context: context,
+                                    maxHeight: 254,
+                                    initialHeight: 25,
+                                    onHeightSelected: (value) {
+                                      controller.prefAgeController.text =
+                                          value.toString();
+                                    },
+                                  );
                                 },
-                                validator: (value) {
+                                validation: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
+                                    return 'This field is required';
                                   }
                                   return null;
                                 },
                               ),
                             ),
                             SizedBox(
-                              width: 13,
+                              width: 5,
                             ),
                             Flexible(
+                              child: CustomTextField(
+                                readOnly: true,
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Height (in cm)",
+                                    context: context,
+                                    maxHeight: 200,
+                                    onHeightSelected: (value) {
+                                      controller.prefHeightController.text =
+                                          value.toString();
+                                    },
+                                    initialHeight: 25,
+                                  );
+                                },
+                                hintText: 'Height',
+                                inputType: TextInputType.number,
+                                suffixText: "cm",
+                                isAmount: true,
+                                controller: controller.prefHeightController,
+                                onChanged: (value) {},
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                       
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
                               child: CustomDropdownField(
-                                hintText: 'Blood Group',
-                                options: controller.dataModel.bloodGroups
+                                hintText: 'Religion',
+                                options: controller.religionResponse.religions
                                     .map((religions) => religions.name)
                                     .toList(),
-                                selectedValue: controller.bloodGroup,
+                                isMultiple: true,
+                                selectedValues: controller.prefReligion,
                                 onChanged: (value) {
-                                  controller.updateBloodGroup(value ?? "");
+                                  controller.updatePrefReligion(value ?? "");
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -134,7 +182,30 @@ class PersonalityScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 25),
+                            SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                hintText: 'Caste',
+                                options: controller.religionResponse.religions
+                                    .map((religions) => religions.name)
+                                    .toList(),
+                                isMultiple: true,
+                                selectedValues: controller.prefReligion,
+                                onChanged: (value) {
+                                  controller.updatePrefReligion(value ?? "");
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                         Row(
                           children: [
                             Flexible(
