@@ -49,11 +49,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               physics: NeverScrollableScrollPhysics(),
               controller: authController.pageController,
               children: [
-                PreferencesScreen(),
                 CreateScreen(),
                 EducationScreen(),
                 PersonalityScreen(),
-                // PreferencesScreen(),
+                PreferencesScreen(),
               ],
             );
           },

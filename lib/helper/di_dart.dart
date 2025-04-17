@@ -1,8 +1,8 @@
 
+import 'package:devine_marry/controller/DashboardController/dashboard_controller.dart';
 import 'package:devine_marry/controller/SplashScreenController/splash_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../controller/AuthController/auth_controller.dart';
 import '../data/api/api.dart';
 import '../data/repo/auth_repo.dart';
@@ -30,6 +30,7 @@ Future<void>   init() async {
   /// Controller
   Get.lazyPut(() => AuthController(authRepo: Get.find(), sharedPreferences: Get.find()));
   Get.lazyPut(() => SplashController(authRepo: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(() => DashboardController());
   // Get.lazyPut(() => AppointmentController(appointmentRepo:  Get.find(), apiClient: Get.find()));
   // Get.lazyPut(() => ClinicController(clinicRepo:  Get.find(), apiClient: Get.find()));
   // Get.lazyPut(() => ProfileController(profileRepo: Get.find(), apiClient: Get.find()));

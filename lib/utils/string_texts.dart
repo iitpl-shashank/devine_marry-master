@@ -45,5 +45,9 @@ static const String PROFESSION_DETAIL = 'PROFESSION DETAIL';
 //Preferences
    static const String set_preferences = 'Set Preferences';
 
+//Connect Screen
+  static const String connects = 'Connects';
+  static const String tempDescription = 'Lorem Ipsum is simply dummy text of the printin...';
+
 
 }

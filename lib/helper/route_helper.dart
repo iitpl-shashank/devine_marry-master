@@ -46,7 +46,8 @@ class RouteHelper {
   static const String otpVerification = '/otp-verification';
   static const String letsBegin = '/lets-begin';
   static const String dashboard = '/dashboard';
-  static const String   successFullRegisterationScreen = '/successfull-registeration-screen';
+  static const String successFullRegisterationScreen =
+      '/successfull-registeration-screen';
   static const String selectSlot = '/select-slot';
   static const String patientDetails = '/patient-details';
   static const String paymentMethod = '/payment-method';
@@ -124,7 +125,8 @@ class RouteHelper {
 
   static String getServiceDetailRoute(
     String? id,
-    String? title, String? videoUrl,
+    String? title,
+    String? videoUrl,
   ) =>
       '$serviceDetail?id=$id&title=$title&videoUrl=$videoUrl';
 
@@ -154,16 +156,21 @@ class RouteHelper {
 
   /// Pages ==================>
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => const SplashScreen()),
-    GetPage(name: login, page: () => LoginScreen()),  
-    GetPage(name: register, page: () => RegisterScreen(),),
-    GetPage( name: otpVerification,
-        page: () => OtpVerificationScreen()),
-    GetPage( name: dashboard,
-    //UPDATED for preference screen
-        // page: () => DashBoardScreen()),
-        page: () => PreferencesScreen()),
-    GetPage( name: successFullRegisterationScreen,
+    GetPage(name: initial, page: () => DashBoardScreen()),
+    // GetPage(name: initial, page: () => const SplashScreen()),
+    GetPage(name: login, page: () => LoginScreen()),
+    GetPage(
+      name: register,
+      page: () => RegisterScreen(),
+    ),
+    GetPage(name: otpVerification, page: () => OtpVerificationScreen()),
+    GetPage(
+        name: dashboard,
+        //UPDATED for preference screen
+        page: () => DashBoardScreen()),
+    // page: () => PreferencesScreen()),
+    GetPage(
+        name: successFullRegisterationScreen,
         page: () => ProfileCompleteScreen()),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(
