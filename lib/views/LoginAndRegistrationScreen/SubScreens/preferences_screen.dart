@@ -171,7 +171,20 @@ class PreferencesScreen extends StatelessWidget {
                                 isMultiple: true,
                                 selectedValues: controller.prefReligion,
                                 onChanged: (value) {
-                                  controller.updatePrefReligion(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    controller.updatePrefReligion(value);
+                                    controller.getCasteList(
+                                      controller.religionResponse.religions
+                                          .where((element) =>
+                                              value.contains(element.name))
+                                          .map((element) =>
+                                              element.id.toString())
+                                          .toList(),
+                                    );
+                                  } else {
+                                    controller.updatePrefReligion([]);
+                                    controller.getCasteList([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -189,13 +202,17 @@ class PreferencesScreen extends StatelessWidget {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Caste',
-                                options: controller.religionResponse.religions
-                                    .map((religions) => religions.name)
+                                options: controller.casteListResponse.castes
+                                    .map((castes) => castes.name)
                                     .toList(),
                                 isMultiple: true,
-                                selectedValues: controller.prefReligion,
+                                selectedValues: controller.prefCaste,
                                 onChanged: (value) {
-                                  controller.updatePrefReligion(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    controller.updateCasteList(value);
+                                  } else {
+                                    controller.updatePrefReligion([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -258,20 +275,25 @@ class PreferencesScreen extends StatelessWidget {
                           children: [
                             Flexible(
                               child: CustomDropdownField(
-                                selectedValue: controller.country,
+                                selectedValues: controller.prefCountry,
+                                isMultiple: true,
                                 hintText: 'Country',
                                 options: controller.countryResponse.countries
                                     .map((country) => country.name)
                                     .toList(),
                                 onChanged: (value) {
-                                  controller.updateCountry(value ?? "");
-                                  controller.getStates(controller
-                                      .countryResponse.countries
-                                      .firstWhere(
-                                          (element) => element.name == value)
-                                      .id
-                                      .toString());
-                                  controller.updateState(null);
+                                  if (value != null && value.isNotEmpty) {
+                                    controller.updateCountryList(value);
+                                    List<String> countryIds = controller
+                                        .countryResponse.countries
+                                        .where((element) =>
+                                            value.contains(element.name))
+                                        .map((element) => element.id.toString())
+                                        .toList();
+                                    controller.getStatesList(countryIds);
+                                  } else {
+                                    controller.updateStateList([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -340,16 +362,14 @@ class PreferencesScreen extends StatelessWidget {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Complexion',
-                                  options: controller.dataModel.complexion
+                                options: controller.dataModel.complexion
                                     .map((complexion) => complexion.name)
                                     .toList(),
                                 isMultiple: true,
-                                selectedValues:
-                                    controller.prefComplexion,
+                                selectedValues: controller.prefComplexion,
                                 onChanged: (value) {
                                   debugPrint("value===> $value");
-                                  controller
-                                      .updatePrefComplexion(value ?? "");
+                                  controller.updatePrefComplexion(value ?? "");
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {

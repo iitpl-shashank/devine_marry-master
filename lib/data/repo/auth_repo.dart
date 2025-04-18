@@ -50,6 +50,9 @@ class AuthRepo {
   Future<Response> getCastes(String id) async {
     return await apiClient.postData(AppConstants.castes, {"religion_id":id});
   }
+   Future<Response> getCastesList(List<String> id) async {
+    return await apiClient.postData(AppConstants.castesList, {"religion_ids":id});
+  }
 
   Future<Response> getDegree() async {
     return await apiClient.getData(AppConstants.getDegrees,method: 'GET');
@@ -58,6 +61,11 @@ class AuthRepo {
   Future<Response> getstates(String id) async {
     return await apiClient.postData(AppConstants.states, {"country_id":id});
   }
+
+   Future<Response> getStateList(List<String> id) async {
+    return await apiClient.postData(AppConstants.statesList, {"country_ids":id});
+  }
+
 
 
   Future<Response> verifyOtp(String? phoneNo,String? otp,String? fcmToken) async {

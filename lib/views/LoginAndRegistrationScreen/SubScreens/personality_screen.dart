@@ -184,16 +184,6 @@ class PersonalityScreen extends StatelessWidget {
                                 hintText: 'Weight',
                                 inputType: TextInputType.number,
                                 suffixText: "Kg",
-
-                                // suffixIcon: Text(
-                                //   "Kg",
-                                //   style: TextStyle(
-                                //     color: Color(0xFFBA7270),
-                                //     fontSize: 16,
-                                //     fontFamily: 'DM Sans',
-                                //     fontWeight: FontWeight.w500,
-                                //   ),
-                                // ),
                                 isAmount: true,
                                 controller: controller.weightController,
                                 onChanged: (value) {},
@@ -347,117 +337,6 @@ class PersonalityScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 21),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  width: Get.size.width,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 21),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              StringTexts.Preferences,
-                              style: TextStyle(
-                                color: Color(0xFF86413F),
-                                fontSize: DmSansRegular.copyWith(fontSize: 14)
-                                    .fontSize,
-                                // fontFamily: 'DM Sans',
-                                fontWeight: DmSansBold.fontWeight,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Religion',
-                                options: controller.religionResponse.religions
-                                    .map((religions) => religions.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefReligion,
-                                onChanged: (value) {
-                                  controller.updatePrefReligion(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Qualification',
-                                options: controller.dataModel.qualifications
-                                    .map((qualification) => qualification.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues:
-                                    controller.prefHighestQualification,
-                                onChanged: (value) {
-                                  debugPrint("value===> $value");
-                                  controller
-                                      .updatePrefQualification(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Country',
-                                options: controller.countryResponse.countries
-                                    .map((country) => country.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefCountry,
-                                onChanged: (value) {
-                                  controller.updatePrefCountry(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 25),
                       ],
                     ),
                   ),

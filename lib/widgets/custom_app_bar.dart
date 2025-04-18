@@ -16,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   double? endIconWidth;
   double? endIconHeight;
   double? endIconBackgroundRadius;
+  double? appBarHeight;
 
   CustomAppBar({
     super.key,
@@ -31,6 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.endIconWidth,
     this.endIconHeight,
     this.endIconBackgroundRadius,
+    this.appBarHeight,
   });
 
   @override
@@ -90,5 +92,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      const Size.fromHeight(100); // Set the height of the app bar
+      Size.fromHeight(appBarHeight??100); // Set the height of the app bar
 }

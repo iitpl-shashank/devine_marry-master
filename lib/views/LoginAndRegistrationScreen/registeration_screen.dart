@@ -11,7 +11,6 @@ import 'SubScreens/create_screen.dart';
 import 'SubScreens/education_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-
   const RegisterScreen({super.key});
 
   @override
@@ -31,7 +30,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -85,17 +83,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Expanded(
                       child: CommonButton(
                     onPressed: () {
-                      if(controller.currentPage == 0){
+                      if (controller.currentPage == 0) {
                         controller.checkCreateAccountScreen();
                         log("Screen 0");
-                      } else if(controller.currentPage == 1){
+                      } else if (controller.currentPage == 1) {
                         controller.checkEducationScreen();
-                         log("Screen 1");
-                      } else if(controller.currentPage == 2){
+                        log("Screen 1");
+                      } else if (controller.currentPage == 2) {
                         controller.checkPersonalityScreen();
-                         log("Screen 2");
+                        log("Screen 2");
+                      } else if (controller.currentPage == 3) {
+                        controller.checkPreferencesScreen();
+                        log("Screen 3");
                       }
-                      controller.nextPage();
                     },
                     isLightColor: false,
                     text: controller.isLoginLoading

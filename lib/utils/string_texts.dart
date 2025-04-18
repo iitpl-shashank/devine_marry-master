@@ -45,9 +45,14 @@ static const String PROFESSION_DETAIL = 'PROFESSION DETAIL';
 //Preferences
    static const String set_preferences = 'Set Preferences';
 
+//Home Screen   
+  static const String matches_based_on_your_preferences = 'Matches Based on your Preferences';
+  
 //Connect Screen
   static const String connects = 'Connects';
   static const String tempDescription = 'Lorem Ipsum is simply dummy text of the printin...';
 
+//Notifications  
+  static const String notifications = 'Notifications';
 
 }

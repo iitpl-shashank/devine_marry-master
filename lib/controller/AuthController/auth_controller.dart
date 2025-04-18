@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -80,13 +81,28 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  void updateCasteList(List<String> value) {
+    prefCaste = value;
+    update();
+  }
+
   void updateCountry(String value) {
     country = value;
     update();
   }
 
+  void updateCountryList(List<String> value) {
+    prefCountry = value;
+    update();
+  }
+
   void updateState(String? value) {
     state = value;
+    update();
+  }
+
+  void updateStateList(List<String> value) {
+    prefState = value;
     update();
   }
 
@@ -143,6 +159,10 @@ class AuthController extends GetxController implements GetxService {
   String? complexion;
   String? disability;
 
+  CasteResponse casteResponse = CasteResponse(castes: []);
+  DegreeResponse degreeResponse = DegreeResponse(Degrees: []);
+  StateResponse stateResponse = StateResponse(states: []);
+
   //PreferencesDetails
 
   TextEditingController prefAgeController = TextEditingController();
@@ -158,6 +178,8 @@ class AuthController extends GetxController implements GetxService {
 
   CountryResponse countryResponse = CountryResponse(countries: []);
   ReligionResponse religionResponse = ReligionResponse(religions: []);
+  CasteResponse casteListResponse = CasteResponse(castes: []);
+
   DataModel dataModel = DataModel(
       maritalStatuses: [],
       genders: [],
@@ -167,9 +189,6 @@ class AuthController extends GetxController implements GetxService {
       bloodGroups: [],
       complexion: [],
       disabilities: []);
-  CasteResponse casteResponse = CasteResponse(castes: []);
-  DegreeResponse degreeResponse = DegreeResponse(Degrees: []);
-  StateResponse stateResponse = StateResponse(states: []);
 
   void updateBloodGroup(String value) {
     bloodGroup = value;
@@ -609,6 +628,81 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
+  Future<void> getStatesList(List<String> id) async {
+    print("Country ids : $id");
+    showLoading();
+    updateStateList([]);
+    stateResponse = StateResponse(states: []);
+    _isLoginLoading = true;
+    update();
+    try {
+      _isLoginLoading = true;
+      update();
+      Response response = await authRepo.getStateList(id);
+
+      if (response.body['status'] && response.body != null) {
+        var responseData = response.body;
+        StateResponse states = StateResponse.fromJson(responseData['data']);
+        stateResponse = states;
+        print("Country ids : ${response.body}");
+        _isLoginLoading = false;
+        update();
+      } else {
+        print('Failed to fetch the castes');
+        showCustomSnackBar("Something went wrong. Please try again.",
+            isError: true);
+        hideLoading();
+      }
+    } catch (e) {
+      closeSnackBar();
+      hideLoading();
+      showCustomSnackBar("Something went wrong. Please try again. $e",
+          isError: true);
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
+    }
+  }
+
+  Future<void> getCasteList(List<String> id) async {
+    print("Caste List ID: $id");
+    showLoading();
+    updateCasteList([]);
+    casteListResponse = CasteResponse(castes: []);
+    _isLoginLoading = true;
+    update();
+    try {
+      _isLoginLoading = true;
+      update();
+      Response response = await authRepo.getCastesList(id);
+      print("Castes Response : ${response.body}");
+      if (response.body == null) {}
+      if (response.body['status'] && response.body != null) {
+        var responseData = response.body;
+        CasteResponse castes = CasteResponse.fromJson(responseData['data']);
+        casteListResponse = castes;
+        print("Castes : ${casteListResponse.castes.length}");
+        _isLoginLoading = false;
+        update();
+      } else {
+        print('Failed to fetch the castes');
+        showCustomSnackBar("Something went wrong. Please try again.",
+            isError: true);
+        hideLoading();
+      }
+    } catch (e) {
+      closeSnackBar();
+      hideLoading();
+      showCustomSnackBar("Something went wrong. Please try again. $e",
+          isError: true);
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
+    }
+  }
+
   Future<void> getDegrees() async {
     showLoading();
     updateDegree(null);
@@ -714,7 +808,49 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-  Future<bool> registerUser(String updateType) async {
+
+
+Future<void> registerUser(String updateType) async {
+  var headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer 3157|0GvZcvKIgWZoZvm2P2yQfON76uoE0yG94E51nrcV'
+  };
+
+  var request = http.Request(
+    'POST',
+    Uri.parse('https://lab7.invoidea.in/divinemarry/api/register'),
+  );
+
+  request.body = json.encode({
+    "step": "preferences",
+    "age": 25,
+    "height": 25,
+    "religion": [7, 12, 13],
+    "smoking_status": 1,
+    "drinking_status": 1,
+    "caste": [],
+    "country": [2],
+    "state": [8, 9],
+    "qualifications": [14, 15, 16],
+    "complexions": [7, 8, 9],
+  });
+
+  request.headers.addAll(headers);
+
+  try {
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      print("✅ Success: $responseBody");
+    } else {
+      print("❌ Error ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  } catch (e) {
+    print("❗ Exception: $e");
+  }
+}
+  Future<bool> registerUssacaer(String updateType) async {
     showLoading();
     final String url = AppConstants.baseUrl +
         AppConstants.register; // Replace with your API URL
@@ -732,7 +868,7 @@ class AuthController extends GetxController implements GetxService {
       "Accept": "application/json",
     });
 
-    Map<dynamic, dynamic> finalMap = {};
+    Map<String, dynamic> finalMap = {};
 
     if (updateType == "register") {
       finalMap = {
@@ -751,10 +887,11 @@ class AuthController extends GetxController implements GetxService {
             .firstWhere((element) => element.name == religion)
             .id
             .toString(),
-        "caste": casteResponse.castes
-            .firstWhere((element) => (element.name ?? "") == caste)
-            .id
-            .toString(),
+        if (casteResponse.castes.isNotEmpty)
+          "caste": casteResponse.castes
+              .firstWhere((element) => (element.name ?? "") == caste)
+              .id
+              .toString(),
         "country": countryResponse.countries
             .firstWhere((element) => (element.name ?? "") == country)
             .id
@@ -795,29 +932,7 @@ class AuthController extends GetxController implements GetxService {
         "monthly_income": monthlyIncomeController.text,
         "experience": noOfYears,
       };
-    } else {
-      List<String> Religion = [];
-      List<String> HighestQualification = [];
-      List<String> Country = [];
-
-      religionResponse.religions.forEach((religion) {
-        if (prefReligion!.contains(religion.name)) {
-          Religion.add(religion.id.toString());
-        }
-      });
-
-      dataModel.qualifications.forEach((qualification) {
-        if (prefHighestQualification!.contains(qualification.name)) {
-          HighestQualification.add(qualification.id.toString());
-        }
-      });
-
-      countryResponse.countries.forEach((country) {
-        if (prefCountry!.contains(country.name)) {
-          Country.add(country.id.toString());
-        }
-      });
-
+    } else if (updateType == "physicalAttributeInfo") {
       finalMap = {
         "step": "physicalAttributeInfo",
         "hair_color": hairController.text,
@@ -845,16 +960,99 @@ class AuthController extends GetxController implements GetxService {
         "disabilities": dataModel.disabilities
             .firstWhere((dis) => dis.name == disability)
             .id,
-        "religions": Religion,
-        "Qualification": HighestQualification,
-        "country": Country,
       };
+    } else {
+      List<int> Religion = [];
+      List<int> HighestQualification = [];
+      List<int> Country = [];
+
+      List<int> State = [];
+      List<int> Caste = [];
+      List<int> Complexions = [];
+
+      religionResponse.religions!.forEach((religion) {
+        if (prefReligion!.contains(religion.name)) {
+          Religion.add(religion.id);
+        }
+      });
+
+      dataModel.qualifications.forEach((qualification) {
+        if (prefHighestQualification!.contains(qualification.name)) {
+          HighestQualification.add(qualification.id.toInt());
+        }
+      });
+
+      countryResponse.countries.forEach((country) {
+        if (prefCountry!.contains(country.name)) {
+          Country.add(country.id.toInt());
+        }
+      });
+
+      stateResponse.states.forEach((state) {
+        if (prefState!.contains(state.name)) {
+          State.add(state.id.toInt());
+        }
+      });
+
+      casteResponse.castes.forEach((caste) {
+        if (prefCaste!.contains(caste.name)) {
+          Caste.add(caste.id.toInt());
+        }
+      });
+
+      dataModel.complexion.forEach((c) {
+        if (prefComplexion!.contains(c.name)) {
+          Complexions.add(c.id.toInt());
+        }
+      });
+
+      finalMap = {
+        "step": "preferences",
+        // "age": 25,
+        // "height": 25,
+        // "religion[]": 2, 3,
+        // "smoking_status": 1,
+        // "drinking_status": 1,
+        // "caste[]": Caste,
+"country[]": [
+2
+],
+"state[]": [
+8,
+9
+],
+
+        "qualifications[]": HighestQualification,
+        "complexions[]": Complexions
+      };
+
+      
+      // finalMap = {
+      //   "step": "preferences",
+      //   "age": prefAgeController.text,
+      //   "height": prefHeightController.text,
+      //   "religion[]": Religion.join(",") ,
+      //   "smoking_status": dataModel.smoking
+      //       .firstWhere((element) => (element.name ?? "") == prefSmokingHabit)
+      //       .id
+      //       .toString(),
+      //   "drinking_status": dataModel.drinking
+      //       .firstWhere((element) => (element.name ?? "") == prefDrinkingHabit)
+      //       .id
+      //       .toString(),
+      //   "caste[]": Caste,
+      //   "country[]": Country,
+      //   "state[]": State.join(","),
+      //   "qualifications[]": HighestQualification.join(","),
+      //   "complexions": "2","3",
+      // };
     }
 
     log("Final Map: $finalMap\n===>");
+    print("HighestQualification");
     // Add fields
-    request.fields.addAll(finalMap.map(
-        (key, value) => MapEntry(key.toString(), value?.toString() ?? "")));
+    request.fields.addAll(finalMap
+        .map((key, value) => MapEntry(key.toString(), value.toString() ?? "")));
 
     // Add image file
     if (imageFile.path.isNotEmpty && updateType == "register") {
@@ -872,6 +1070,8 @@ class AuthController extends GetxController implements GetxService {
         print("Success: $responseData");
         if (currentPage == 4) {
           Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        } else {
+          nextPage();
         }
         return true;
       } else {
@@ -928,9 +1128,8 @@ class AuthController extends GetxController implements GetxService {
     if ((lookingFor ?? "").isNotEmpty &&
         (maritalStatus ?? "").isNotEmpty &&
         (country ?? "").isNotEmpty &&
-        (caste ?? "").isNotEmpty &&
+        ((caste ?? "").isNotEmpty || casteResponse.castes.isEmpty) &&
         (religion ?? "").isNotEmpty &&
-        (state ?? "").isNotEmpty &&
         (firstNameController.text ?? "").isNotEmpty &&
         (lastNameController.text ?? "").isNotEmpty &&
         (fathersProfessionController.text ?? "").isNotEmpty &&
@@ -966,7 +1165,7 @@ class AuthController extends GetxController implements GetxService {
       } else if ((state ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select a state", isError: true);
-      } else if ((caste ?? "").isEmpty) {
+      } else if ((caste ?? "").isEmpty && (casteResponse.castes.isNotEmpty)) {
         closeSnackBar();
         showCustomSnackBar("Please select a caste", isError: true);
       } else if ((religion ?? "").isEmpty) {
@@ -1056,11 +1255,11 @@ class AuthController extends GetxController implements GetxService {
         (drinkingHabit ?? "").isNotEmpty &&
         (bloodGroup ?? "").isNotEmpty &&
         (complexion ?? "").isNotEmpty &&
-        (prefCountry ?? []).isNotEmpty &&
-        (prefHighestQualification ?? []).isNotEmpty &&
-        (prefReligion ?? []).isNotEmpty &&
+        // (prefCountry ?? []).isNotEmpty &&
+        // (prefHighestQualification ?? []).isNotEmpty &&
+        // (prefReligion ?? []).isNotEmpty &&
         (disability ?? "").isNotEmpty) {
-      registerUser("personality");
+      registerUser("physicalAttributeInfo");
     } else {
       if ((hairController.text ?? "").isEmpty) {
         closeSnackBar();
@@ -1092,9 +1291,57 @@ class AuthController extends GetxController implements GetxService {
       } else if ((complexion ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select complexion", isError: true);
+        // } else if ((prefCountry ?? []).isEmpty) {
+        //   closeSnackBar();
+        //   showCustomSnackBar("Please select preferred country", isError: true);
+        // } else if ((prefHighestQualification ?? []).isEmpty) {
+        //   closeSnackBar();
+        //   showCustomSnackBar("Please select preferred highest qualification",
+        //       isError: true);
+        // } else if ((prefReligion ?? []).isEmpty) {
+        //   closeSnackBar();
+        //   showCustomSnackBar("Please select preferred religion", isError: true);
+      } else if ((disability ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select disability", isError: true);
+      }
+    }
+  }
+
+  void checkPreferencesScreen() {
+    if ((prefAgeController.text ?? "").isNotEmpty &&
+        (prefHeightController.text ?? "").isNotEmpty &&
+        (prefReligion ?? []).isNotEmpty &&
+        (prefCaste ?? []).isNotEmpty &&
+        (prefSmokingHabit ?? "").isNotEmpty &&
+        (prefDrinkingHabit ?? "").isNotEmpty &&
+        (prefCountry ?? []).isNotEmpty &&
+        (prefState ?? []).isNotEmpty &&
+        (prefHighestQualification ?? []).isNotEmpty &&
+        (prefComplexion ?? []).isNotEmpty) {
+      registerUser("preferences");
+    } else {
+      if ((prefAgeController.text ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select your age.", isError: true);
+      } else if ((prefHeightController.text ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select your height.", isError: true);
+      } else if ((prefSmokingHabit ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select Smoking habit", isError: true);
+      } else if ((prefDrinkingHabit ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select drinking habit", isError: true);
+      } else if ((prefComplexion ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select complexion", isError: true);
       } else if ((prefCountry ?? []).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select preferred country", isError: true);
+      } else if ((prefState ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred state", isError: true);
       } else if ((prefHighestQualification ?? []).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select preferred highest qualification",
@@ -1102,9 +1349,9 @@ class AuthController extends GetxController implements GetxService {
       } else if ((prefReligion ?? []).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select preferred religion", isError: true);
-      } else if ((disability ?? "").isEmpty) {
+      } else if ((prefCaste ?? []).isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select disability", isError: true);
+        showCustomSnackBar("Please select preferred caste.", isError: true);
       }
     }
   }

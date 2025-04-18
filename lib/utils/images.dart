@@ -13,5 +13,6 @@ class Svg {
   static const String connectsVector = "assets/svg/connects_vector.svg";
   static const String profileVector = "assets/svg/profile_vector.svg";
   static const String menuVector = "assets/svg/menu_vector.svg";
+  static const String backArrowVector = "assets/svg/back_arrow_vector.svg";
   static const String notificationVector = "assets/svg/notification_vector.svg";
 }

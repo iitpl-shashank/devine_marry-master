@@ -16,7 +16,7 @@ class DashBoardScreen extends StatelessWidget {
   final DashboardController dashboardController = Get.find();
 
   final List<Widget> _screens = [
-    const HomeScreen(),
+    HomeScreen(),
     const ConnectScreen(),
     const SearchScreen(),
     const ProfileScreen(),
@@ -26,7 +26,8 @@ class DashBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
-       appBar: CustomAppBar(
+      appBar: CustomAppBar(
+        appBarHeight: 120,
         startIconPath: Svg.menuVector,
         endIconPath: Svg.notificationVector,
         centerLogoPath: Svg.logo,
@@ -37,14 +38,13 @@ class DashBoardScreen extends StatelessWidget {
         centerLogoHeight: 51,
         centerLogoWidth: 104,
         onStartIconTap: () {
-          // Handle start icon tap
+          // TODO : Handle start icon tap
         },
         onEndIconTap: () {
-          // Handle end icon tap
+          dashboardController.navigateToNotification();
         },
       ),
-      body: Obx(() => _screens[dashboardController
-          .currentIndex.value]),
+      body: Obx(() => _screens[dashboardController.currentIndex.value]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

@@ -8,7 +8,7 @@ class ConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample data for the connect list
+   
     final List<Map<String, String>> connectList = [
       {
         "userName": "John Doe",
@@ -57,6 +57,7 @@ class ConnectScreen extends StatelessWidget {
                       time: item["time"]!,
                       description: StringTexts.tempDescription,
                       imageUrl: item["imageUrl"]!,
+                      hideNotificationIcon: true,
                     ),
                   );
                 }).toList(),

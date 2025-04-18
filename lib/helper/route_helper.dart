@@ -1,4 +1,5 @@
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
+import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -156,8 +157,8 @@ class RouteHelper {
 
   /// Pages ==================>
   static List<GetPage> routes = [
-    GetPage(name: initial, page: () => DashBoardScreen()),
-    // GetPage(name: initial, page: () => const SplashScreen()),
+    // GetPage(name: initial, page: () => DashBoardScreen()),
+    GetPage(name: initial, page: () => const SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(
       name: register,
@@ -172,6 +173,10 @@ class RouteHelper {
     GetPage(
         name: successFullRegisterationScreen,
         page: () => ProfileCompleteScreen()),
+    GetPage(
+      name: notification,
+      page: () => NotificationScreen(),
+    ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(
     //     name: selectSlot,
