@@ -629,6 +629,9 @@ class AuthController extends GetxController implements GetxService {
   }
 
   Future<void> getStatesList(List<String> id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(AppConstants.token) ?? "";
+    print("$token");
     print("Country ids : $id");
     showLoading();
     updateStateList([]);
@@ -638,7 +641,14 @@ class AuthController extends GetxController implements GetxService {
     try {
       _isLoginLoading = true;
       update();
-      Response response = await authRepo.getStateList(id);
+      Response response = await authRepo.getStateList(
+        id: id,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          // 'Accept' : 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
 
       if (response.body['status'] && response.body != null) {
         var responseData = response.body;
@@ -666,6 +676,8 @@ class AuthController extends GetxController implements GetxService {
   }
 
   Future<void> getCasteList(List<String> id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(AppConstants.token) ?? "";
     print("Caste List ID: $id");
     showLoading();
     updateCasteList([]);
@@ -675,7 +687,14 @@ class AuthController extends GetxController implements GetxService {
     try {
       _isLoginLoading = true;
       update();
-      Response response = await authRepo.getCastesList(id);
+      Response response = await authRepo.getCastesList(
+        id: id,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          // 'Accept' : 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
       print("Castes Response : ${response.body}");
       if (response.body == null) {}
       if (response.body['status'] && response.body != null) {
@@ -751,9 +770,59 @@ class AuthController extends GetxController implements GetxService {
   //   return prefs.getBool('isSubscriptionActive') ?? false;
   // }
   //
+  // Future<void> verifyOtpApi(String? otp) async {
+  //   ApiClient apiClient = ApiClient(
+  //       appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+  //   if (phoneController.text.isEmpty || otp == null) {
+  //     showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
+  //     return;
+  //   }
+
+  //   _isLoginLoading = true;
+  //   update();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   final String? deviceToken = "";
+  //   // await prefs.getString('FCM');
+  //   //debugPrint('Device token: $deviceToken');
+  //   try {
+  //     Response response = await authRepo.verifyOtp(
+  //         phoneController.text.trim(), otp, deviceToken);
+  //     print(response);
+  //     // Create a multipart request
+  //     bool isSaved =
+  //         await prefs.setString(AppConstants.token, response.body['token']);
+  //     print(response.body['token']);
+  //     apiClient.updateHeader(response.body['token']);
+  //     if (response.body['status']) {
+  //       closeSnackBar();
+  //       log("Body==> ${response.body['user']}");
+  //       UserModel user = UserModel.fromJson(response.body['user']);
+  //       if (!isSaved) return;
+  //       if (user.profileComplete == 0 || user.profileComplete == null) {
+  //         Get.toNamed(RouteHelper.register);
+  //         showCustomSnackBar(response.body['message'],
+  //             isError: false, isSuccess: true);
+  //       } else {
+  //         Get.toNamed(RouteHelper.dashboard);
+  //       }
+  //     } else {
+  //       showCustomSnackBar(response.body['message'], isError: true);
+  //     }
+  //   } catch (e) {
+  //     closeSnackBar();
+  //     showCustomSnackBar("Something went wrong. Please try again $e .",
+  //         isError: true);
+  //   } finally {
+  //     _isLoginLoading = false;
+  //     update();
+  //   }
+  // }
+
   Future<void> verifyOtpApi(String? otp) async {
     ApiClient apiClient = ApiClient(
         appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+
     if (phoneController.text.isEmpty || otp == null) {
       showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
       return;
@@ -761,26 +830,59 @@ class AuthController extends GetxController implements GetxService {
 
     _isLoginLoading = true;
     update();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String? deviceToken = "";
-    // await prefs.getString('FCM');
-    //debugPrint('Device token: $deviceToken');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceToken = ""; // Replace with actual device token logic
+
     try {
+      // Call the verifyOtp API
       Response response = await authRepo.verifyOtp(
           phoneController.text.trim(), otp, deviceToken);
-      // Create a multipart request
-      await prefs.setString(AppConstants.token, response.body['token']);
-      apiClient.updateHeader(response.body['token']);
+
+      print("API Response: ${response.body}");
+
+      // Extract and save the token
+      String? token = response.body['token'];
+      if (token == null || token.isEmpty) {
+        print("❌ Token is null or empty in the response");
+        showCustomSnackBar("Failed to retrieve token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      // Save the token to SharedPreferences
+      bool isSaved = await prefs.setString(AppConstants.token, token);
+      if (!isSaved) {
+        print("❌ Failed to save the token");
+        showCustomSnackBar("Failed to save token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      print("✅ Token saved successfully: $token");
+
+      // Update the API client header with the new token
+      apiClient.updateHeader(token);
+      print("Saved Token: ${prefs.getString(AppConstants.token)}");
+
+      // Ensure the header is updated before making any API calls
+      print("Updated Headers token: ${apiClient.token}");
+
+      // Handle the response and navigate accordingly
       if (response.body['status']) {
         closeSnackBar();
         log("Body==> ${response.body['user']}");
         UserModel user = UserModel.fromJson(response.body['user']);
+
         if (user.profileComplete == 0 || user.profileComplete == null) {
-          Get.toNamed(RouteHelper.register);
+          // Fetch required data before navigating
+          await fetchInitialData(); // Ensure all required data is fetched
+          Get.toNamed(
+              RouteHelper.register); // Navigate to the registration screen
           showCustomSnackBar(response.body['message'],
               isError: false, isSuccess: true);
         } else {
+          // Navigate to the dashboard
           Get.toNamed(RouteHelper.dashboard);
         }
       } else {
@@ -788,11 +890,97 @@ class AuthController extends GetxController implements GetxService {
       }
     } catch (e) {
       closeSnackBar();
-      showCustomSnackBar("Something went wrong. Please try again $e .",
+      showCustomSnackBar("Something went wrong. Please try again. $e",
           isError: true);
     } finally {
       _isLoginLoading = false;
       update();
+    }
+  }
+  // Future<void> verifyOtpApi(String? otp) async {
+  //   ApiClient apiClient = ApiClient(
+  //       appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+
+  //   if (phoneController.text.isEmpty || otp == null) {
+  //     showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
+  //     return;
+  //   }
+
+  //   _isLoginLoading = true;
+  //   update();
+
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final String? deviceToken = ""; // Replace with actual device token logic
+
+  //   try {
+  //     // Call the verifyOtp API
+  //     Response response = await authRepo.verifyOtp(
+  //         phoneController.text.trim(), otp, deviceToken);
+
+  //     print("API Response: ${response.body}");
+
+  //     // Extract and save the token
+  //     String? token = response.body['token'];
+  //     if (token == null || token.isEmpty) {
+  //       print("❌ Token is null or empty in the response");
+  //       showCustomSnackBar("Failed to retrieve token. Please try again.",
+  //           isError: true);
+  //       return;
+  //     }
+
+  //     // Save the token to SharedPreferences
+  //     bool isSaved = await prefs.setString(AppConstants.token, token);
+  //     if (!isSaved) {
+  //       print("❌ Failed to save the token");
+  //       showCustomSnackBar("Failed to save token. Please try again.",
+  //           isError: true);
+  //       return;
+  //     }
+
+  //     print("✅ Token saved successfully: $token");
+
+  //     // Update the API client header with the new token
+  //     apiClient.updateHeader(token);
+
+  //     // Handle the response and navigate accordingly
+  //     if (response.body['status']) {
+  //       closeSnackBar();
+  //       log("Body==> ${response.body['user']}");
+  //       UserModel user = UserModel.fromJson(response.body['user']);
+
+  //       if (user.profileComplete == 0 || user.profileComplete == null) {
+  //         // Navigate to the registration screen
+  //         Get.toNamed(RouteHelper.register);
+  //         showCustomSnackBar(response.body['message'],
+  //             isError: false, isSuccess: true);
+  //       } else {
+  //         // Navigate to the dashboard
+  //         Get.toNamed(RouteHelper.dashboard);
+  //       }
+  //     } else {
+  //       showCustomSnackBar(response.body['message'], isError: true);
+  //     }
+  //   } catch (e) {
+  //     closeSnackBar();
+  //     showCustomSnackBar("Something went wrong. Please try again. $e",
+  //         isError: true);
+  //   } finally {
+  //     _isLoginLoading = false;
+  //     update();
+  //   }
+  // }
+
+  Future<void> fetchInitialData() async {
+    try {
+      // Fetch required data sequentially
+      await getCountries();
+      await getReligion();
+      await getUserAttributes();
+      // Add other API calls if needed
+    } catch (e) {
+      print("❗ Error fetching initial data: $e");
+      showCustomSnackBar("Failed to fetch initial data. Please try again.",
+          isError: true);
     }
   }
 
@@ -808,49 +996,66 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  Future<void> registerUserPreferences({
+    required String token,
+    required String url,
+    required int smokingStatus,
+    required int drinkingStatus,
+    required List<int> religionList,
+    required List<int> casteList,
+    required List<int> countryList,
+    required List<int> stateList,
+    required List<int> qualificationList,
+    required List<int> complexionsList,
+  }) async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
 
+    var request = http.Request(
+      'POST',
+      Uri.parse(url),
+    );
 
-Future<void> registerUser(String updateType) async {
-  var headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer 3157|0GvZcvKIgWZoZvm2P2yQfON76uoE0yG94E51nrcV'
-  };
+    request.body = json.encode({
+      "step": "preferences",
+      "age": prefAgeController.text,
+      "height": prefHeightController.text,
+      "religion": religionList,
+      "smoking_status": smokingStatus,
+      "drinking_status": drinkingStatus,
+      "caste": casteList,
+      "country": countryList,
+      "state": stateList,
+      "qualifications": qualificationList,
+      "complexions": complexionsList,
+    });
 
-  var request = http.Request(
-    'POST',
-    Uri.parse('https://lab7.invoidea.in/divinemarry/api/register'),
-  );
+    request.headers.addAll(headers);
 
-  request.body = json.encode({
-    "step": "preferences",
-    "age": 25,
-    "height": 25,
-    "religion": [7, 12, 13],
-    "smoking_status": 1,
-    "drinking_status": 1,
-    "caste": [],
-    "country": [2],
-    "state": [8, 9],
-    "qualifications": [14, 15, 16],
-    "complexions": [7, 8, 9],
-  });
+    try {
+      http.StreamedResponse response = await request.send();
 
-  request.headers.addAll(headers);
-
-  try {
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      String responseBody = await response.stream.bytesToString();
-      print("✅ Success: $responseBody");
-    } else {
-      print("❌ Error ${response.statusCode}: ${response.reasonPhrase}");
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        print("✅ Success: $responseBody");
+      } else {
+        print("❌ Error ${response.statusCode}: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("❗ Exception: $e");
     }
-  } catch (e) {
-    print("❗ Exception: $e");
   }
-}
-  Future<bool> registerUssacaer(String updateType) async {
+
+  void onCompleteRegistration() {
+    Future.delayed(const Duration(seconds: 5), () {
+      Get.offAllNamed(RouteHelper.dashboard);
+    });
+  }
+
+  Future<bool> registerUser(String updateType) async {
     showLoading();
     final String url = AppConstants.baseUrl +
         AppConstants.register; // Replace with your API URL
@@ -1006,27 +1211,43 @@ Future<void> registerUser(String updateType) async {
         }
       });
 
-      finalMap = {
-        "step": "preferences",
-        // "age": 25,
-        // "height": 25,
-        // "religion[]": 2, 3,
-        // "smoking_status": 1,
-        // "drinking_status": 1,
-        // "caste[]": Caste,
-"country[]": [
-2
-],
-"state[]": [
-8,
-9
-],
+      int smokingStatusPref = dataModel.smoking
+          .firstWhere((element) => (element.name ?? "") == prefSmokingHabit)
+          .id;
 
-        "qualifications[]": HighestQualification,
-        "complexions[]": Complexions
-      };
+      int drinkingStatusPref = dataModel.drinking
+          .firstWhere((element) => (element.name ?? "") == prefDrinkingHabit)
+          .id;
 
-      
+      registerUserPreferences(
+          token: token,
+          url: url,
+          smokingStatus: smokingStatusPref,
+          drinkingStatus: drinkingStatusPref,
+          religionList: Religion,
+          casteList: Caste,
+          countryList: Country,
+          stateList: State,
+          qualificationList: HighestQualification,
+          complexionsList: Complexions);
+
+      return true;
+
+      // finalMap = {
+      //   "step": "preferences",
+      // "age": 25,
+      // "height": 25,
+      // "religion[]": 2, 3,
+      // "smoking_status": 1,
+      // "drinking_status": 1,
+      // "caste[]": Caste,
+      //   "country[]": [2],
+      //   "state[]": [8, 9],
+
+      //   "qualifications[]": HighestQualification,
+      //   "complexions[]": Complexions
+      // };
+
       // finalMap = {
       //   "step": "preferences",
       //   "age": prefAgeController.text,
@@ -1049,7 +1270,6 @@ Future<void> registerUser(String updateType) async {
     }
 
     log("Final Map: $finalMap\n===>");
-    print("HighestQualification");
     // Add fields
     request.fields.addAll(finalMap
         .map((key, value) => MapEntry(key.toString(), value.toString() ?? "")));

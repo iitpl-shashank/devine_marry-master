@@ -1,26 +1,24 @@
-
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../utils/app_constants.dart';
-
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:http/http.dart' as http;
 
 class ApiClient extends GetxService {
   final String appBaseUrl;
   final SharedPreferences sharedPreferences;
-  static const String noInternetMessage = 'Connection to API server failed due to internet connection';
+  static const String noInternetMessage =
+      'Connection to API server failed due to internet connection';
   final int timeoutInSeconds = 30;
   String? token;
   String? email;
-  String? image;String? id;String? lastName;
+  String? image;
+  String? id;
+  String? lastName;
 
   late Map<String, String> _mainHeaders;
 
@@ -30,8 +28,9 @@ class ApiClient extends GetxService {
     updateHeader(token);
   }
 
-  void updateHeader(String? token,) {
-
+  void updateHeader(
+    String? token,
+  ) {
     _mainHeaders = {
       'Content-Type': 'application/json; charset=UTF-8',
       // 'Accept' : 'application/json',
@@ -55,14 +54,16 @@ class ApiClient extends GetxService {
   // }
 
   Future<Response> getData(
-      String uri, {
-        Map<String, dynamic>? query,
-        Map<String, String>? headers,
-        String method = 'POST', // Default method
-        dynamic body,
-      }) async {
+    String uri, {
+    Map<String, dynamic>? query,
+    Map<String, String>? headers,
+    String method = 'POST', // Default method
+    dynamic body,
+  }) async {
     try {
-      final uriWithQuery = query != null ? Uri.parse('$appBaseUrl$uri').replace(queryParameters: query) : Uri.parse('$appBaseUrl$uri');
+      final uriWithQuery = query != null
+          ? Uri.parse('$appBaseUrl$uri').replace(queryParameters: query)
+          : Uri.parse('$appBaseUrl$uri');
       // log('====> API Call: $uriWithQuery\nHeader: ${headers ?? _mainHeaders}');
 
       http.Response response;
@@ -94,19 +95,23 @@ class ApiClient extends GetxService {
 
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await http.get(uriWithQuery, headers: headers ?? _mainHeaders)
+          response = await http
+              .get(uriWithQuery, headers: headers ?? _mainHeaders)
               .timeout(Duration(seconds: timeoutInSeconds));
           break;
         case 'POST':
-          response = await http.post(uriWithQuery, headers: headers ?? _mainHeaders, body: body)
+          response = await http
+              .post(uriWithQuery, headers: headers ?? _mainHeaders, body: body)
               .timeout(Duration(seconds: timeoutInSeconds));
           break;
         case 'PUT':
-          response = await http.put(uriWithQuery, headers: headers ?? _mainHeaders, body: body)
+          response = await http
+              .put(uriWithQuery, headers: headers ?? _mainHeaders, body: body)
               .timeout(Duration(seconds: timeoutInSeconds));
           break;
         case 'DELETE':
-          response = await http.delete(uriWithQuery, headers: headers ?? _mainHeaders)
+          response = await http
+              .delete(uriWithQuery, headers: headers ?? _mainHeaders)
               .timeout(Duration(seconds: timeoutInSeconds));
           break;
         default:
@@ -120,21 +125,21 @@ class ApiClient extends GetxService {
     }
   }
 
-
-
-
-  Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
+  Future<Response> postData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
     try {
       log('====> API Call: $uri\nHeader: $_mainHeaders');
       log('====> API Body: ${jsonEncode(body)}');
       var bodyEncoded = json.encode(body);
       // log("Encoded Body==> ${jsonEncode(body)}");
       // log("_mainHeaders: $_mainHeaders");
-      http.Response response = await http.post(
-        Uri.parse(appBaseUrl+uri),
-        body: jsonEncode(body),
-        headers: headers ?? _mainHeaders,
-      ).timeout(Duration(seconds: timeoutInSeconds));
+      http.Response response = await http
+          .post(
+            Uri.parse(appBaseUrl + uri),
+            body: jsonEncode(body),
+            headers: headers ?? _mainHeaders,
+          )
+          .timeout(Duration(seconds: timeoutInSeconds));
       log('====> API Response: [${response.statusCode}] $uri\n${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
@@ -182,28 +187,34 @@ class ApiClient extends GetxService {
   //   }
   // }
 
-  Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
+  Future<Response> putData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
     try {
       //log('====> API Call: $uri\nHeader: $_mainHeaders');
       //log('====> API Body: $body');
-      http.Response response = await http.put(
-        Uri.parse(appBaseUrl+uri),
-        body: jsonEncode(body),
-        headers: headers ?? _mainHeaders,
-      ).timeout(Duration(seconds: timeoutInSeconds));
+      http.Response response = await http
+          .put(
+            Uri.parse(appBaseUrl + uri),
+            body: jsonEncode(body),
+            headers: headers ?? _mainHeaders,
+          )
+          .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
 
-  Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
+  Future<Response> deleteData(String uri,
+      {Map<String, String>? headers}) async {
     try {
       //log('====> API Call: $uri\nHeader: $_mainHeaders');
-      http.Response response = await http.delete(
-        Uri.parse(appBaseUrl+uri),
-        headers: headers ?? _mainHeaders,
-      ).timeout(Duration(seconds: timeoutInSeconds));
+      http.Response response = await http
+          .delete(
+            Uri.parse(appBaseUrl + uri),
+            headers: headers ?? _mainHeaders,
+          )
+          .timeout(Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -213,22 +224,29 @@ class ApiClient extends GetxService {
   Response handleResponse(http.Response response, String uri) {
     dynamic body;
     try {
-      body = jsonDecode(response.body);    }catch(_) {}
+      body = jsonDecode(response.body);
+    } catch (_) {}
     Response response0 = Response(
-      body: body ?? response.body, bodyString: response.body.toString(),
-      headers: response.headers, statusCode: response.statusCode, statusText: response.reasonPhrase,
+      body: body ?? response.body,
+      bodyString: response.body.toString(),
+      headers: response.headers,
+      statusCode: response.statusCode,
+      statusText: response.reasonPhrase,
     );
-    if(response0.statusCode != 200 && response0.body != null && response0.body is !String) {
-      response0 = Response(statusCode: response0.statusCode, body: response0.body, statusText: response0.body['errors']['message']);
-    }else if(response0.statusCode != 200 && response0.body == null) {
+    if (response0.statusCode != 200 &&
+        response0.body != null &&
+        response0.body is! String) {
+      response0 = Response(
+          statusCode: response0.statusCode,
+          body: response0.body,
+          statusText: response0.body['errors']['message']);
+    } else if (response0.statusCode != 200 && response0.body == null) {
       response0 = const Response(statusCode: 0, statusText: noInternetMessage);
     }
     //log('====> API Response: [${response0.statusCode}] $uri\n${response.body}');
     return response0;
   }
-
 }
-
 
 class MultipartBody {
   String key;
