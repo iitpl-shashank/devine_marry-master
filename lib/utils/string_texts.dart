@@ -50,6 +50,7 @@ class StringTexts {
   static const String matches_based_on_your_preferences =
       'Matches Based on your Preferences';
   static const String find_your_match = 'Find Your Match';
+  static const String newMatches = 'New Matches';
 
 //Connect Screen
   static const String connects = 'Connects';
@@ -57,6 +58,24 @@ class StringTexts {
       'Lorem Ipsum is simply dummy text of the printin...';
   static const String discover_matches = 'Discover Matches';
 
+//Profile Screen
+  static const String profile = 'Profile';
+  static const String upload_profile_picture = "Upload Profile Picture";
+  static const String matches = 'Matches';
+  static const String personalDetails = 'Personal Details';
+  static const String familyBackground = 'Family Background';
+  static const String educationAndProfessionDetails =
+      'Education & Profession Details';
+
 //Notifications
   static const String notifications = 'Notifications';
+
+//Menu Screen
+  static const String menu = 'Menu';
+  static const String aboutDivineMarry = 'About Divine Marry';
+  static const String notification = 'Notification';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String termsAndConditions = 'Terms & Conditions';
+  static const String helpCenter = 'Help Center';
+  static const String rateUs = 'Rate Us';
 }

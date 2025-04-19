@@ -28,9 +28,9 @@ class DashBoardScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundGrey,
       appBar: CustomAppBar(
         appBarHeight: 120,
-        startIconPath: Svg.menuVector,
-        endIconPath: Svg.notificationVector,
-        centerLogoPath: Svg.logo,
+        startIconPath: Svgs.menuVector,
+        endIconPath: Svgs.notificationVector,
+        centerLogoPath: Svgs.logo,
         startIconHeight: 18,
         startIconWidth: 26,
         endIconHeight: 21,
@@ -38,7 +38,7 @@ class DashBoardScreen extends StatelessWidget {
         centerLogoHeight: 51,
         centerLogoWidth: 104,
         onStartIconTap: () {
-          // TODO : Handle start icon tap
+          dashboardController.navigateToMenu();
         },
         onEndIconTap: () {
           dashboardController.navigateToNotification();
@@ -67,7 +67,7 @@ class DashBoardScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svg.homeVector,
+                    svgIconPath: Svgs.homeVector,
                     label: "HOME",
                     isActive: dashboardController.currentIndex.value == 0,
                     onTap: () {
@@ -75,7 +75,7 @@ class DashBoardScreen extends StatelessWidget {
                     },
                   )),
               Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svg.connectsVector,
+                    svgIconPath: Svgs.connectsVector,
                     label: "CONNECTS",
                     isActive: dashboardController.currentIndex.value == 1,
                     onTap: () {
@@ -83,7 +83,7 @@ class DashBoardScreen extends StatelessWidget {
                     },
                   )),
               Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svg.searchVector,
+                    svgIconPath: Svgs.searchVector,
                     label: "SEARCH",
                     isActive: dashboardController.currentIndex.value == 2,
                     onTap: () {
@@ -91,7 +91,7 @@ class DashBoardScreen extends StatelessWidget {
                     },
                   )),
               Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svg.profileVector,
+                    svgIconPath: Svgs.profileVector,
                     label: "PROFILE",
                     isActive: dashboardController.currentIndex.value == 3,
                     onTap: () {

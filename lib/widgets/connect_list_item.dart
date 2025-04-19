@@ -43,7 +43,7 @@ class ConnectListItem extends StatelessWidget {
                     ),
                     child: Center(
                       child: flutter_svg.SvgPicture.asset(
-                        Svg.notificationVector,
+                        Svgs.notificationVector,
                         width: 24,
                         height: 24,
                       ),

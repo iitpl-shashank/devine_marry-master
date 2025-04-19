@@ -20,11 +20,11 @@ class NotificationScreen extends StatelessWidget {
       "userName": "New match found",
       "time": "11:20 PM",
     },
-     {
+    {
       "userName": "New match found",
       "time": "11:20 PM",
     },
-     {
+    {
       "userName": "Message from Ritu",
       "time": "11:20 PM",
     },
@@ -37,9 +37,9 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         appBarHeight: 120,
-        startIconPath: Svg.backArrowVector,
-        endIconPath: Svg.notificationVector,
-        centerLogoPath: Svg.logo,
+        startIconPath: Svgs.backArrowVector,
+        endIconPath: Svgs.notificationVector,
+        centerLogoPath: Svgs.logo,
         endIconHeight: 21,
         endIconWidth: 16,
         centerLogoHeight: 51,

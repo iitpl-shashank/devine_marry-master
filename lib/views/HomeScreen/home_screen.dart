@@ -1,7 +1,9 @@
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
+import '../../widgets/custom_discover_icon.dart';
 import '../../widgets/custom_search_field.dart';
 import '../../widgets/home_user_item.dart';
 
@@ -32,103 +34,158 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: CustomSearchBar(
-              hintText: 'Search...',
-              onChanged: (value) {
-                debugPrint('Search query: $value');
-              },
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-            ),
-            child: Text(
-              StringTexts.matches_based_on_your_preferences,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkTheme,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-            ),
-            child: SizedBox(
-              height: 120,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return UserItem(
-                    imageUrl: data[index]['image']!,
-                    name: data[index]['name']!,
-                  );
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CustomSearchBar(
+                hintText: 'Search...',
+                onChanged: (value) {
+                  debugPrint('Search query: $value');
                 },
               ),
             ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Container(
-            width: double.infinity,
-            color: AppColors.white,
-            child: Padding(
+            SizedBox(
+              height: 5,
+            ),
+            Padding(
               padding: const EdgeInsets.symmetric(
-                vertical: 25,
+                horizontal: 16.0,
+              ),
+              child: Text(
+                StringTexts.matches_based_on_your_preferences,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkTheme,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+              ),
+              child: SizedBox(
+                height: 120,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return UserItem(
+                      imageUrl: data[index]['image']!,
+                      name: data[index]['name']!,
+                    );
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Container(
+              width: double.infinity,
+              color: AppColors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 16,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      StringTexts.find_your_match,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.darkTheme,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 16,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Text(
+                StringTexts.discover_matches,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkTheme,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    StringTexts.find_your_match,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.darkTheme,
-                    ),
+                  CustomDiscoverIcon(
+                    svgPath: Svgs.religionVector,
+                    padding: 10.0,
+                    borderColor: AppColors.lightTheme,
+                    label: "Religion",
+                  ),
+                  CustomDiscoverIcon(
+                    svgPath: Svgs.qualificationVector,
+                    padding: 10.0,
+                    borderColor: AppColors.lightTheme,
+                    label: "Qualification",
+                  ),
+                  CustomDiscoverIcon(
+                    svgPath: Svgs.stateVector,
+                    padding: 10.0,
+                    borderColor: AppColors.lightTheme,
+                    label: "State",
                   ),
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
+            SizedBox(
+              height: 24,
             ),
-            child: Text(
-              StringTexts.discover_matches,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkTheme,
+            Container(
+              width: double.infinity,
+              color: AppColors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 16,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      StringTexts.newMatches,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.darkTheme,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 24,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

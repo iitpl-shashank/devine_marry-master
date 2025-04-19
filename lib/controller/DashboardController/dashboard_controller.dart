@@ -13,4 +13,10 @@ class DashboardController extends GetxController {
       RouteHelper.notification,
     );
   }
+
+  void navigateToMenu() {
+    Get.toNamed(
+      RouteHelper.menu,
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
+import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
 import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -56,6 +57,7 @@ class RouteHelper {
   static const String allServices = '/all-services';
   static const String clinic = '/clinic';
   static const String notification = '/notification';
+  static const String menu = '/menu';
   static const String search = '/search';
   static const String help = '/help';
   static const String subsHistory = '/subsHistory';
@@ -157,8 +159,8 @@ class RouteHelper {
 
   /// Pages ==================>
   static List<GetPage> routes = [
-    // GetPage(name: initial, page: () => DashBoardScreen()),
-    GetPage(name: initial, page: () => const SplashScreen()),
+    GetPage(name: initial, page: () => DashBoardScreen()),
+    // GetPage(name: initial, page: () => const SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(
       name: register,
@@ -176,6 +178,10 @@ class RouteHelper {
     GetPage(
       name: notification,
       page: () => NotificationScreen(),
+    ),
+    GetPage(
+      name: menu,
+      page: () => MenuScreen(),
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(

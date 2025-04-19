@@ -44,6 +44,7 @@ dependencies:
   dotted_border: ^2.1.0
   numberpicker: ^2.1.2
   flutter_svg: ^2.0.17
+  fluttertoast: ^8.2.12
 
 dev_dependencies:
   flutter_test:
