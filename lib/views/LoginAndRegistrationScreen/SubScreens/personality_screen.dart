@@ -259,7 +259,7 @@ class PersonalityScreen extends StatelessWidget {
                               child: CustomDropdownField(
                                 hintText: 'Drinking Habit',
                                 selectedValue: controller.drinkingHabit,
-                                options: controller.dataModel.smoking
+                                options: controller.dataModel.drinking
                                     .map((drinking) => drinking.name)
                                     .toList(),
                                 onChanged: (value) {

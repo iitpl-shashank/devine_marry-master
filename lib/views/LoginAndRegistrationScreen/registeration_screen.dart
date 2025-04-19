@@ -21,11 +21,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Get.find<AuthController>().getCountries();
-    //   Get.find<AuthController>().getReligion();
-    //   Get.find<AuthController>().getUserAttributes();
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AuthController>().getCountries();
+      Get.find<AuthController>().getReligion();
+      Get.find<AuthController>().getUserAttributes();
+    });
   }
 
   @override

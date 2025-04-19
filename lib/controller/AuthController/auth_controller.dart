@@ -530,6 +530,7 @@ class AuthController extends GetxController implements GetxService {
 
   Future<void> getUserAttributes() async {
     _isLoginLoading = true;
+    print("User Attributes");
     update();
     try {
       _isLoginLoading = true;
@@ -538,6 +539,7 @@ class AuthController extends GetxController implements GetxService {
 
       // var responseData = response.body;
       if (response.body['status']) {
+        print("User Attributes true");
         var responseData = response.body;
         DataModel userAttribute = DataModel.fromJson(responseData['data']);
         dataModel = userAttribute;
@@ -819,84 +821,6 @@ class AuthController extends GetxController implements GetxService {
   //   }
   // }
 
-  Future<void> verifyOtpApi(String? otp) async {
-    ApiClient apiClient = ApiClient(
-        appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
-
-    if (phoneController.text.isEmpty || otp == null) {
-      showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
-      return;
-    }
-
-    _isLoginLoading = true;
-    update();
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? deviceToken = ""; // Replace with actual device token logic
-
-    try {
-      // Call the verifyOtp API
-      Response response = await authRepo.verifyOtp(
-          phoneController.text.trim(), otp, deviceToken);
-
-      print("API Response: ${response.body}");
-
-      // Extract and save the token
-      String? token = response.body['token'];
-      if (token == null || token.isEmpty) {
-        print("❌ Token is null or empty in the response");
-        showCustomSnackBar("Failed to retrieve token. Please try again.",
-            isError: true);
-        return;
-      }
-
-      // Save the token to SharedPreferences
-      bool isSaved = await prefs.setString(AppConstants.token, token);
-      if (!isSaved) {
-        print("❌ Failed to save the token");
-        showCustomSnackBar("Failed to save token. Please try again.",
-            isError: true);
-        return;
-      }
-
-      print("✅ Token saved successfully: $token");
-
-      // Update the API client header with the new token
-      apiClient.updateHeader(token);
-      print("Saved Token: ${prefs.getString(AppConstants.token)}");
-
-      // Ensure the header is updated before making any API calls
-      print("Updated Headers token: ${apiClient.token}");
-
-      // Handle the response and navigate accordingly
-      if (response.body['status']) {
-        closeSnackBar();
-        log("Body==> ${response.body['user']}");
-        UserModel user = UserModel.fromJson(response.body['user']);
-
-        if (user.profileComplete == 0 || user.profileComplete == null) {
-          // Fetch required data before navigating
-          await fetchInitialData(); // Ensure all required data is fetched
-          Get.toNamed(
-              RouteHelper.register); // Navigate to the registration screen
-          showCustomSnackBar(response.body['message'],
-              isError: false, isSuccess: true);
-        } else {
-          // Navigate to the dashboard
-          Get.toNamed(RouteHelper.dashboard);
-        }
-      } else {
-        showCustomSnackBar(response.body['message'], isError: true);
-      }
-    } catch (e) {
-      closeSnackBar();
-      showCustomSnackBar("Something went wrong. Please try again. $e",
-          isError: true);
-    } finally {
-      _isLoginLoading = false;
-      update();
-    }
-  }
   // Future<void> verifyOtpApi(String? otp) async {
   //   ApiClient apiClient = ApiClient(
   //       appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
@@ -941,6 +865,10 @@ class AuthController extends GetxController implements GetxService {
 
   //     // Update the API client header with the new token
   //     apiClient.updateHeader(token);
+  //     print("Saved Token: ${prefs.getString(AppConstants.token)}");
+
+  //     // Ensure the header is updated before making any API calls
+  //     print("Updated Headers token: ${apiClient.token}");
 
   //     // Handle the response and navigate accordingly
   //     if (response.body['status']) {
@@ -949,8 +877,10 @@ class AuthController extends GetxController implements GetxService {
   //       UserModel user = UserModel.fromJson(response.body['user']);
 
   //       if (user.profileComplete == 0 || user.profileComplete == null) {
-  //         // Navigate to the registration screen
-  //         Get.toNamed(RouteHelper.register);
+  //         // Fetch required data before navigating
+  //         // await fetchInitialData(); // Ensure all required data is fetched
+  //         Get.toNamed(
+  //             RouteHelper.register); // Navigate to the registration screen
   //         showCustomSnackBar(response.body['message'],
   //             isError: false, isSuccess: true);
   //       } else {
@@ -969,20 +899,92 @@ class AuthController extends GetxController implements GetxService {
   //     update();
   //   }
   // }
+  Future<void> verifyOtpApi(String? otp) async {
+    ApiClient apiClient = ApiClient(
+        appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
 
-  Future<void> fetchInitialData() async {
+    if (phoneController.text.isEmpty || otp == null) {
+      showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
+      return;
+    }
+
+    _isLoginLoading = true;
+    update();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceToken = ""; // Replace with actual device token logic
+
     try {
-      // Fetch required data sequentially
-      await getCountries();
-      await getReligion();
-      await getUserAttributes();
-      // Add other API calls if needed
+      // Call the verifyOtp API
+      Response response = await authRepo.verifyOtp(
+          phoneController.text.trim(), otp, deviceToken);
+
+      print("API Response: ${response.body}");
+
+      // Extract and save the token
+      String? token = response.body['token'];
+      if (token == null || token.isEmpty) {
+        print("❌ Token is null or empty in the response");
+        showCustomSnackBar("Failed to retrieve token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      // Save the token to SharedPreferences
+      bool isSaved = await prefs.setString(AppConstants.token, token);
+      if (!isSaved) {
+        print("❌ Failed to save the token");
+        showCustomSnackBar("Failed to save token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      print("✅ Token saved successfully: $token");
+
+      // Update the API client header with the new token
+      apiClient.updateHeader(token);
+
+      // Handle the response and navigate accordingly
+      if (response.body['status']) {
+        closeSnackBar();
+        log("Body==> ${response.body['user']}");
+        UserModel user = UserModel.fromJson(response.body['user']);
+
+        if (user.profileComplete == 0 || user.profileComplete == null) {
+          // Navigate to the registration screen
+          Get.toNamed(RouteHelper.register);
+          showCustomSnackBar(response.body['message'],
+              isError: false, isSuccess: true);
+        } else {
+          // Navigate to the dashboard
+          Get.toNamed(RouteHelper.dashboard);
+        }
+      } else {
+        showCustomSnackBar(response.body['message'], isError: true);
+      }
     } catch (e) {
-      print("❗ Error fetching initial data: $e");
-      showCustomSnackBar("Failed to fetch initial data. Please try again.",
+      closeSnackBar();
+      showCustomSnackBar("Something went wrong. Please try again. $e",
           isError: true);
+    } finally {
+      _isLoginLoading = false;
+      update();
     }
   }
+//
+  // Future<void> fetchInitialData() async {
+  //   try {
+  //     // Fetch required data sequentially
+  //     await getCountries();
+  //     await getReligion();
+  //     await getUserAttributes();
+  //     // Add other API calls if needed
+  //   } catch (e) {
+  //     print("❗ Error fetching initial data: $e");
+  //     showCustomSnackBar("Failed to fetch initial data. Please try again.",
+  //         isError: true);
+  //   }
+  // }
 
   void updateSiblings(int i) {
     siblings = i;
@@ -1138,6 +1140,12 @@ class AuthController extends GetxController implements GetxService {
         "experience": noOfYears,
       };
     } else if (updateType == "physicalAttributeInfo") {
+      var ab = dataModel.drinking
+          .firstWhere((element) => (element.name ?? "") == drinkingHabit)
+          .id
+          .toString();
+      print("Drinking Habit ID: $ab");
+
       finalMap = {
         "step": "physicalAttributeInfo",
         "hair_color": hairController.text,
@@ -1166,7 +1174,7 @@ class AuthController extends GetxController implements GetxService {
             .firstWhere((dis) => dis.name == disability)
             .id,
       };
-    } else {
+    } else if (updateType == "preferences") {
       List<int> Religion = [];
       List<int> HighestQualification = [];
       List<int> Country = [];
@@ -1218,7 +1226,7 @@ class AuthController extends GetxController implements GetxService {
       int drinkingStatusPref = dataModel.drinking
           .firstWhere((element) => (element.name ?? "") == prefDrinkingHabit)
           .id;
-
+      print("Drinking Status ID: $drinkingStatusPref");
       registerUserPreferences(
           token: token,
           url: url,

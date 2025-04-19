@@ -253,7 +253,7 @@ class PreferencesScreen extends StatelessWidget {
                               child: CustomDropdownField(
                                 hintText: 'Drinking Habit',
                                 selectedValue: controller.prefDrinkingHabit,
-                                options: controller.dataModel.smoking
+                                options: controller.dataModel.drinking
                                     .map((drinking) => drinking.name)
                                     .toList(),
                                 onChanged: (value) {

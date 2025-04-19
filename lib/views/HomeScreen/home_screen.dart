@@ -13,6 +13,16 @@ class HomeScreen extends StatelessWidget {
       "name": "Anna"
     },
     {"image": "https://randomuser.me/api/portraits/men/3.jpg", "name": "Mike"},
+    {
+      "image":
+          "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+      "name": "Daven"
+    },
+    {
+      "image":
+          "https://img.freepik.com/free-photo/portrait-father-his-backyard_23-2149489567.jpg?semt=ais_hybrid&w=740",
+      "name": "Richard"
+    },
     // Add more users here
   ];
 
@@ -22,21 +32,27 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CustomSearchBar(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomSearchBar(
               hintText: 'Search...',
               onChanged: (value) {
                 debugPrint('Search query: $value');
               },
             ),
-            SizedBox(
-              height: 20,
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
             ),
-            Text(
+            child: Text(
               StringTexts.matches_based_on_your_preferences,
               style: TextStyle(
                 fontSize: 18,
@@ -44,10 +60,15 @@ class HomeScreen extends StatelessWidget {
                 color: AppColors.darkTheme,
               ),
             ),
-            SizedBox(
-              height: 20,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
             ),
-            SizedBox(
+            child: SizedBox(
               height: 120,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -60,8 +81,54 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Container(
+            width: double.infinity,
+            color: AppColors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 25,
+                horizontal: 16,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    StringTexts.find_your_match,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.darkTheme,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: Text(
+              StringTexts.discover_matches,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkTheme,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 24,
+          ),
+        ],
       ),
     );
   }
