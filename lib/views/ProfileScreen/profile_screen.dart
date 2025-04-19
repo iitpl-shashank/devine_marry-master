@@ -57,10 +57,10 @@ class ProfileScreen extends StatelessWidget {
                           Text(
                             StringTexts.upload_profile_picture,
                             style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.lightTheme,
-                            ),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.lightTheme,
+                                decoration: TextDecoration.underline),
                           ),
                         ],
                       )
@@ -71,60 +71,67 @@ class ProfileScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomLinearGradientButton(
-                        height: 76,
-                        width: 150,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "13",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.white,
+                    Expanded(
+                      child: CustomLinearGradientButton(
+                          height: 76,
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "13",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                              StringTexts.connects,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
+                              const SizedBox(
+                                height: 2,
                               ),
-                            ),
-                          ],
-                        )),
-                    CustomLinearGradientButton(
-                        height: 76,
-                        width: 150,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "3",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.white,
+                              Text(
+                                StringTexts.connects,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                              StringTexts.matches,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
+                            ],
+                          )),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: CustomLinearGradientButton(
+                          height: 76,
+                          width: 150,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "3",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.white,
+                                ),
                               ),
-                            ),
-                          ],
-                        )),
+                              const SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                StringTexts.matches,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),

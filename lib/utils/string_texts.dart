@@ -3,6 +3,7 @@
 class StringTexts {
   //General Texts
   static const String next = 'Next >';
+  static const String seeAll = 'See all';
 
   // login Screen Text
   static const String login = 'LOGIN';
@@ -51,6 +52,7 @@ class StringTexts {
       'Matches Based on your Preferences';
   static const String find_your_match = 'Find Your Match';
   static const String newMatches = 'New Matches';
+  static const String matchesInYourState = 'Matches in your state';
 
 //Connect Screen
   static const String connects = 'Connects';

@@ -1,4 +1,7 @@
 import 'package:devine_marry/utils/themes/app_colors.dart';
+import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
+import 'package:devine_marry/views/HomeScreen/find_your_match_section.dart';
+import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/images.dart';
@@ -51,6 +54,9 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: 5,
             ),
+
+            // <--- Matches Based on your Preferences Section --->
+
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
@@ -88,101 +94,35 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            Container(
-              width: double.infinity,
-              color: AppColors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 25,
-                  horizontal: 16,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      StringTexts.find_your_match,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.darkTheme,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+
+            // <--- Find Your Match Section --->
+
+            FindYourMatchSection(),
             SizedBox(
               height: 24,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Text(
-                StringTexts.discover_matches,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.darkTheme,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomDiscoverIcon(
-                    svgPath: Svgs.religionVector,
-                    padding: 10.0,
-                    borderColor: AppColors.lightTheme,
-                    label: "Religion",
-                  ),
-                  CustomDiscoverIcon(
-                    svgPath: Svgs.qualificationVector,
-                    padding: 10.0,
-                    borderColor: AppColors.lightTheme,
-                    label: "Qualification",
-                  ),
-                  CustomDiscoverIcon(
-                    svgPath: Svgs.stateVector,
-                    padding: 10.0,
-                    borderColor: AppColors.lightTheme,
-                    label: "State",
-                  ),
-                ],
-              ),
-            ),
+
+            // <--- Discover Matches Section --->
+
+            DiscoverMatchesSection(),
             SizedBox(
               height: 24,
             ),
-            Container(
-              width: double.infinity,
-              color: AppColors.white,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 25,
-                  horizontal: 16,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      StringTexts.newMatches,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.darkTheme,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
+            // <--- New Matches Section --->
+
+            NewMatchesSection(
+              title: StringTexts.newMatches,
+            ),
+
+            // <--- Matches in your state Section --->
+
+            NewMatchesSection(
+              title: StringTexts.matchesInYourState,
+              backgroundColor: AppColors.backgroundGrey,
+            ),
+            SizedBox(
+              height: 34,
             ),
           ],
         ),
