@@ -5,6 +5,7 @@ class Images {
   static const String bgPlain = 'assets/images/bgPlain.png';
   static const String successRegistration =
       'assets/images/success_registration_screen.png';
+  static const String matchUser = 'assets/images/match_user.png';
 }
 
 class Svgs {

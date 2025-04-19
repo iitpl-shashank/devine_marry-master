@@ -35,9 +35,54 @@ class FindYourMatchSection extends StatelessWidget {
             ),
             CustomAnimatedMatchCard(
               cards: [
-                MatchCard(name: "Mankirat", age: 28, height: "5ft 8in"),
-                MatchCard(name: "Aryan", age: 29, height: "6ft 0in"),
-                MatchCard(name: "Kunal", age: 27, height: "5ft 9in"),
+                MatchCard(
+                  name: "Mankirat",
+                  age: 28,
+                  height: "5ft 8in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Aryan",
+                  age: 29,
+                  height: "6ft 0in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
+                MatchCard(
+                  name: "Kunal",
+                  age: 27,
+                  height: "5ft 9in",
+                  religion: 'Hindu',
+                ),
               ],
             ),
           ],

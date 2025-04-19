@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../utils/images.dart';
+
 class MatchCard extends StatelessWidget {
   final String name;
   final int age;
   final String height;
+  final String religion;
 
   const MatchCard({
     super.key,
     required this.name,
     required this.age,
     required this.height,
+    required this.religion,
   });
 
   @override
@@ -20,20 +24,38 @@ class MatchCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage(
-              'assets/sample_image.jpg'), // use NetworkImage if needed
+          image: AssetImage(Images.matchUser), // use NetworkImage if needed
           fit: BoxFit.cover,
         ),
       ),
       alignment: Alignment.bottomLeft,
-      padding: const EdgeInsets.all(16),
-      child: Text(
-        "$name, $age\n$height",
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          shadows: [Shadow(blurRadius: 4, color: Colors.black)],
-        ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+        vertical: 20,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              shadows: [Shadow(blurRadius: 4, color: Colors.black)],
+            ),
+          ),
+          Text(
+            "$age yrs | $height | $religion",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              shadows: [Shadow(blurRadius: 4, color: Colors.black)],
+            ),
+          ),
+        ],
       ),
     );
   }
