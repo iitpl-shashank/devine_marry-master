@@ -1,13 +1,22 @@
+import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/widgets/custom_linear_gradient_button.dart';
 import 'package:devine_marry/widgets/profile_section_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,108 +40,123 @@ class ProfileScreen extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(12), // Rounded corners
-                        child: Image.network(
-                          'https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg', // Replace with your image URL
-                          height: 115,
-                          width: 115,
-                          fit: BoxFit
-                              .cover, // Ensures the image fits within the bounds
+                      Obx(
+                        () => ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            profileController
+                                    .profile.value?.data?.user?.imageUrl ??
+                                profileController.defaultProfileImage,
+                            height: 115,
+                            width: 115,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            Svgs.editImageVector,
-                            height: 18,
-                            width: 18,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            StringTexts.upload_profile_picture,
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.lightTheme,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          profileController.updateProfileImage();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              Svgs.editImageVector,
+                              height: 18,
+                              width: 18,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              StringTexts.upload_profile_picture,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.lightTheme,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),
                 ),
                 const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: CustomLinearGradientButton(
-                          height: 76,
-                          width: 150,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "13",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.white,
+                Obx(
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: CustomLinearGradientButton(
+                            height: 76,
+                            width: 150,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  profileController.profile.value?.data?.user
+                                          ?.connectCount
+                                          .toString() ??
+                                      "0",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                StringTexts.connects,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
+                                const SizedBox(
+                                  height: 2,
                                 ),
-                              ),
-                            ],
-                          )),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: CustomLinearGradientButton(
-                          height: 76,
-                          width: 150,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "3",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.white,
+                                Text(
+                                  StringTexts.connects,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                StringTexts.matches,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.white,
+                              ],
+                            )),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: CustomLinearGradientButton(
+                            height: 76,
+                            width: 150,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  profileController.profile.value?.data?.user
+                                          ?.matchesCount
+                                          .toString() ??
+                                      "0",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )),
-                    ),
-                  ],
+                                const SizedBox(
+                                  height: 2,
+                                ),
+                                Text(
+                                  StringTexts.matches,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8),
                 ProfileSectionButton(

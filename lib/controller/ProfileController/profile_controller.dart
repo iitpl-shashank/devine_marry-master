@@ -1,0 +1,71 @@
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/repo/profile_repo.dart';
+import '../../models/profile/profile_model.dart';
+import '../../utils/app_constants.dart';
+
+class ProfileController extends GetxController {
+  final ProfileRepo profileRepo;
+  final SharedPreferences sharedPreferences;
+  RxBool isLoading = false.obs;
+
+  final String defaultProfileImage =
+      'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg';
+
+  ProfileController({
+    required this.profileRepo,
+    required this.sharedPreferences,
+  });
+
+  Rx<ProfileModel?> profile = Rx<ProfileModel?>(null);
+
+  final ImagePicker _picker = ImagePicker(); // Initialize the ImagePicker
+
+  Future<void> fetchProfile() async {
+    try {
+      isLoading.value = true;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      final response = await profileRepo.getProfile(token: token);
+
+      if (response.statusCode == 200 && response.body['status'] == true) {
+        profile.value = ProfileModel.fromJson(response.body);
+        print("Profile fetched successfully: ${profile.value}");
+      } else {
+        print("Failed to fetch profile: ${response.body['message']}");
+      }
+    } catch (e) {
+      print("Error fetching profile: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+ Future<void> updateProfileImage() async {
+  try {
+
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      isLoading.value = true;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      await profileRepo.updateProfileImage(pickedFile.path, token);
+      await fetchProfile();
+
+    } else {
+      print("No image selected.");
+    }
+  } catch (e) {
+    print("Error updating profile image: $e");
+  } finally {
+    isLoading.value = false;
+  }
+}
+}

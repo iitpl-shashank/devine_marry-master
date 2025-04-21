@@ -18,6 +18,8 @@ class AppConstants {
   static const String getDegrees = "get-degrees";
   static const String states = "Getstate";
   static const String statesList = "get-state-list";
+  static const String getProfileDetails = "get-profile-details";
+  static const String updateProfileImage = "update-profile-image";
   static const String myProfileUrl = "userData";
   static const String register = "register";
   static const String privacyUrl = "page/";

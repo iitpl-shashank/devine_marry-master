@@ -1,16 +1,23 @@
+import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
 import 'package:devine_marry/views/HomeScreen/find_your_match_section.dart';
 import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/images.dart';
+import 'package:get/get.dart';
 import '../../utils/string_texts.dart';
-import '../../widgets/custom_discover_icon.dart';
 import '../../widgets/custom_search_field.dart';
 import '../../widgets/home_user_item.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
+  HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, String>> data = [
     {"image": "https://randomuser.me/api/portraits/men/1.jpg", "name": "John"},
     {
@@ -31,7 +38,13 @@ class HomeScreen extends StatelessWidget {
     // Add more users here
   ];
 
-  HomeScreen({super.key});
+  final ProfileController profileController = Get.find<ProfileController>();
+
+  @override
+  void initState() {
+    super.initState();
+    profileController.fetchProfile();
+  }
 
   @override
   Widget build(BuildContext context) {

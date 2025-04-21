@@ -267,8 +267,8 @@ class AuthController extends GetxController implements GetxService {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-      update();
       currentPage = pageController.page!.toInt() + 1;
+      update();
       log("Next Page number : ${currentPage.toString()}");
     }
   }
@@ -1051,12 +1051,6 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
-  void onCompleteRegistration() {
-    Future.delayed(const Duration(seconds: 5), () {
-      Get.offAllNamed(RouteHelper.dashboard);
-    });
-  }
-
   Future<bool> registerUser(String updateType) async {
     showLoading();
     final String url = AppConstants.baseUrl +
@@ -1174,7 +1168,8 @@ class AuthController extends GetxController implements GetxService {
             .firstWhere((dis) => dis.name == disability)
             .id,
       };
-    } else if (updateType == "preferences") {
+    } 
+    else if (updateType == "preferences") {
       List<int> Religion = [];
       List<int> HighestQualification = [];
       List<int> Country = [];
@@ -1315,42 +1310,6 @@ class AuthController extends GetxController implements GetxService {
       return false;
     }
   }
-
-//
-//
-// bool _userDataLoading = false;
-// bool get userDataLoading => _userDataLoading;
-//
-//
-// UserData? _userData;
-// PatientData? _patientData;
-//
-// UserData? get userData => _userData;
-// PatientData? get patientData => _patientData;
-//
-// Future<ApiResponse?> userDataApi() async {
-//   // LoadingDialog.showLoading(message: "Please wait...");
-//   _userDataLoading = true;
-//   _userData = null;
-//   _patientData = null;
-//   update();
-//   Response response = await authRepo.getUserData();
-//   if (response.statusCode == 200) {
-//     Map<String, dynamic> responseData = response.body;
-//     ApiResponse apiResponse = ApiResponse.fromJson(responseData);
-//     _userData = apiResponse.userData;
-//     _patientData = apiResponse.patientData;
-//     bool isSubscriptionActive = (responseData['subscriptionArray']['status'] ??false) as bool;
-//     debugPrint("Subscription status: ${responseData['subscriptionArray']['status']}");
-//     await saveSubscriptionStatus(isSubscriptionActive);
-//   } else {
-//
-//   }
-//   _userDataLoading = false;
-//   // LoadingDialog.hideLoading();
-//   update();
-//   return ApiResponse(userData: _userData, patientData: _patientData); // Return the combined response
-// }
 
   void checkCreateAccountScreen() {
     if ((lookingFor ?? "").isNotEmpty &&
