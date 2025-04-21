@@ -178,23 +178,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileSectionButton(
                     title: StringTexts.Personality_Details,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(StringTexts.Personality_Details),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      profileController
+                          .profilenavigation('personality_details');
                     }),
                 ProfileSectionButton(
                     title: StringTexts.Preferences,
                     showDivider: false,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(StringTexts.Preferences),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      profileController.profilenavigation('preference_details');
                     }),
               ],
             ),

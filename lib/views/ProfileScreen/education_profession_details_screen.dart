@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controller/AuthController/auth_controller.dart';
 import '../../controller/ProfileController/profile_controller.dart';
 import '../../helper/date_converter.dart';
 import '../../models/component_models/user_atributes.dart';
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
-import '../../utils/styles.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drop_down_field.dart';

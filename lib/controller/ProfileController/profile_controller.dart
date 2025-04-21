@@ -85,6 +85,25 @@ class ProfileController extends GetxController {
       Get.toNamed(
         RouteHelper.educationProfessionDetail,
       );
+    } else if (screen == "personality_details") {
+      Get.toNamed(
+        RouteHelper.personalityDetails,
+      );
+    } else if (screen == "preference_details") {
+      Get.toNamed(
+        RouteHelper.preferenceDetails,
+      );
     }
+  }
+
+// Profile Update Screen Controllers
+
+  String? lookingFor;
+
+  void setPersonalDetails() {}
+
+  void updateLookingFor(String value) {
+    lookingFor = value;
+    update();
   }
 }

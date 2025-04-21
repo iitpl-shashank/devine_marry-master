@@ -96,9 +96,9 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                     options: authController.lookingForList
                         .map((looking) => looking.title)
                         .toList(),
-                    selectedValue: authController.lookingFor,
+                    selectedValue: profileController.lookingFor,
                     onChanged: (value) {
-                      authController.updateLookingFor(value ?? "");
+                      profileController.updateLookingFor(value ?? "");
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
