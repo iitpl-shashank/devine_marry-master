@@ -13,7 +13,6 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        appBarHeight: 120,
         startIconPath: Svgs.backArrowVector,
         endIconPath: Svgs.notificationVector,
         centerLogoPath: Svgs.logo,

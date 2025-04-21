@@ -1,6 +1,7 @@
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
 import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/education_profession_details_screen.dart';
 import 'package:devine_marry/views/ProfileScreen/family_background_screen.dart';
 import 'package:devine_marry/views/ProfileScreen/personal_details_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,6 +53,8 @@ class RouteHelper {
   static const String dashboard = '/dashboard';
   static const String personalDetails = '/personal-details';
   static const String familyBackground = '/family-background';
+  static const String educationProfessionDetail =
+      '/education-profession-details';
   static const String successFullRegisterationScreen =
       '/successfull-registeration-screen';
   static const String selectSlot = '/select-slot';
@@ -194,6 +197,10 @@ class RouteHelper {
     GetPage(
       name: familyBackground,
       page: () => FamilyBackgroundScreen(),
+    ),
+    GetPage(
+      name: educationProfessionDetail,
+      page: () => EducationProfessionDetailsScreen(),
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(

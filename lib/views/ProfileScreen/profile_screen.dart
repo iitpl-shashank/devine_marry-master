@@ -167,18 +167,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileSectionButton(
                     title: StringTexts.familyBackground,
                     onTap: () {
-                     profileController.profilenavigation('family_background');
+                      profileController.profilenavigation('family_background');
                     }),
                 ProfileSectionButton(
                     title: StringTexts.educationAndProfessionDetails,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content:
-                              Text(StringTexts.educationAndProfessionDetails),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      profileController
+                          .profilenavigation('education_profession');
                     }),
                 ProfileSectionButton(
                     title: StringTexts.Personality_Details,

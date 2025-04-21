@@ -27,7 +27,6 @@ class DashBoardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: CustomAppBar(
-        appBarHeight: 120,
         startIconPath: Svgs.menuVector,
         endIconPath: Svgs.notificationVector,
         centerLogoPath: Svgs.logo,

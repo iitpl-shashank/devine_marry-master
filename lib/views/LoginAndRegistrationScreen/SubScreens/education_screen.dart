@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../../helper/date_converter.dart';
 import '../../../utils/string_texts.dart';
 import '../../../utils/styles.dart';
+import '../../../utils/themes/app_colors.dart';
 import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
 
@@ -108,12 +109,14 @@ class EducationScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   controller
                                       .updateHighestQualification(value ?? "");
-                                  if(value != "High School" && value != "Intermediate"){
+                                  if (value != "High School" &&
+                                      value != "Intermediate") {
                                     controller.updateDegree(null);
                                     controller.getDegrees();
                                   } else {
                                     controller.updateDegree(null);
-                                    controller.degreeResponse = DegreeResponse(Degrees: []);
+                                    controller.degreeResponse =
+                                        DegreeResponse(Degrees: []);
                                   }
                                 },
                                 validator: (value) {
@@ -164,8 +167,9 @@ class EducationScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                      Visibility(
-                          visible: controller.degreeResponse.Degrees.isNotEmpty,
+                        Visibility(
+                            visible:
+                                controller.degreeResponse.Degrees.isNotEmpty,
                             child: SizedBox(height: 25)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -186,10 +190,13 @@ class EducationScreen extends StatelessWidget {
                                     hintText: 'Starting Date',
                                     onTap: () async {
                                       DateTime currentDate = DateTime.now();
-                                      DateTime firstAllowedDate = DateTime(currentDate.year - 100);
-                                      DateTime lastAllowedDate = DateTime(currentDate.year);
+                                      DateTime firstAllowedDate =
+                                          DateTime(currentDate.year - 100);
+                                      DateTime lastAllowedDate =
+                                          DateTime(currentDate.year);
 
-                                      DateTime? selectedDate = await showDatePicker(
+                                      DateTime? selectedDate =
+                                          await showDatePicker(
                                         context: Get.context!,
                                         initialDate: lastAllowedDate,
                                         firstDate: firstAllowedDate,
@@ -198,17 +205,20 @@ class EducationScreen extends StatelessWidget {
                                           return Theme(
                                             data: Theme.of(context).copyWith(
                                               colorScheme: ColorScheme.light(
-                                                primary: Theme.of(context).primaryColor,
+                                                primary: Theme.of(context)
+                                                    .primaryColor,
                                                 onPrimary: Colors.white,
                                                 onSurface: Colors.black,
                                                 secondary: Colors.red,
                                               ),
-                                              textButtonTheme: TextButtonThemeData(
+                                              textButtonTheme:
+                                                  TextButtonThemeData(
                                                 style: TextButton.styleFrom(
                                                   foregroundColor: Colors.black,
                                                 ),
                                               ),
-                                              dialogBackgroundColor: Colors.white,
+                                              dialogBackgroundColor:
+                                                  Colors.white,
                                             ),
                                             child: child!,
                                           );
@@ -216,19 +226,27 @@ class EducationScreen extends StatelessWidget {
                                       );
 
                                       if (selectedDate != null) {
-                                        print("Selected Start Date: ${selectedDate.toLocal()}");
-                                        String value = DateConverter.formatDate(selectedDate.toLocal());
-                                        controller.selectedStartDate = selectedDate;
-                                        controller.startDateController.text = value;
+                                        print(
+                                            "Selected Start Date: ${selectedDate.toLocal()}");
+                                        String value = DateConverter.formatDate(
+                                            selectedDate.toLocal());
+                                        controller.selectedStartDate =
+                                            selectedDate;
+                                        controller.startDateController.text =
+                                            value;
 
                                         // Reset ending date if it's before the newly selected start date
-                                        if (controller.selectedEndDate != null &&
-                                            controller.selectedEndDate!.isBefore(selectedDate)) {
+                                        if (controller.selectedEndDate !=
+                                                null &&
+                                            controller.selectedEndDate!
+                                                .isBefore(selectedDate)) {
                                           controller.selectedEndDate = null;
                                           controller.endDayController.clear();
                                         }
                                       } else {
-                                        showCustomSnackBar("Please select a Start Date", isError: true);
+                                        showCustomSnackBar(
+                                            "Please select a Start Date",
+                                            isError: true);
                                       }
                                     },
                                     onChanged: (value) {},
@@ -263,35 +281,46 @@ class EducationScreen extends StatelessWidget {
                                     ),
                                     hintText: 'Ending Date',
                                     onTap: () async {
-                                      if (controller.startDateController.text == "") {
-                                        showCustomSnackBar("Please select a starting date first",
+                                      if (controller.startDateController.text ==
+                                          "") {
+                                        showCustomSnackBar(
+                                            "Please select a starting date first",
                                             isError: true);
                                         return;
                                       }
 
-                                      DateTime firstAllowedDate = controller.selectedStartDate!;
-                                      DateTime lastAllowedDate = DateTime(DateTime.now().year);
+                                      DateTime firstAllowedDate =
+                                          controller.selectedStartDate!;
+                                      DateTime lastAllowedDate =
+                                          DateTime(DateTime.now().year);
 
-                                      DateTime? selectedDate = await showDatePicker(
+                                      DateTime? selectedDate =
+                                          await showDatePicker(
                                         context: Get.context!,
-                                        initialDate: firstAllowedDate.add(Duration(days: 1)),
-                                        firstDate: firstAllowedDate.add(Duration(days: 1)), // Disable past dates
+                                        initialDate: firstAllowedDate
+                                            .add(Duration(days: 1)),
+                                        firstDate: firstAllowedDate.add(
+                                            Duration(
+                                                days: 1)), // Disable past dates
                                         lastDate: lastAllowedDate,
                                         builder: (context, child) {
                                           return Theme(
                                             data: Theme.of(context).copyWith(
                                               colorScheme: ColorScheme.light(
-                                                primary: Theme.of(context).primaryColor,
+                                                primary: Theme.of(context)
+                                                    .primaryColor,
                                                 onPrimary: Colors.white,
                                                 onSurface: Colors.black,
                                                 secondary: Colors.red,
                                               ),
-                                              textButtonTheme: TextButtonThemeData(
+                                              textButtonTheme:
+                                                  TextButtonThemeData(
                                                 style: TextButton.styleFrom(
                                                   foregroundColor: Colors.black,
                                                 ),
                                               ),
-                                              dialogBackgroundColor: Colors.white,
+                                              dialogBackgroundColor:
+                                                  Colors.white,
                                             ),
                                             child: child!,
                                           );
@@ -299,13 +328,18 @@ class EducationScreen extends StatelessWidget {
                                       );
 
                                       if (selectedDate != null) {
-                                        print("Selected End Date: ${selectedDate.toLocal()}");
-                                        controller.selectedEndDate = selectedDate;
-                                        String value = DateConverter.formatDate(selectedDate.toLocal());
+                                        print(
+                                            "Selected End Date: ${selectedDate.toLocal()}");
+                                        controller.selectedEndDate =
+                                            selectedDate;
+                                        String value = DateConverter.formatDate(
+                                            selectedDate.toLocal());
                                         controller.endDayController.text =
                                             value;
                                       } else {
-                                        showCustomSnackBar("Please select a date", isError: true);
+                                        showCustomSnackBar(
+                                            "Please select a date",
+                                            isError: true);
                                       }
                                     },
                                     onChanged: (value) {},
@@ -348,7 +382,7 @@ class EducationScreen extends StatelessWidget {
                             Text(
                               StringTexts.PROFESSION_DETAIL,
                               style: TextStyle(
-                                color: Color(0xFF86413F),
+                                color: AppColors.darkTheme,
                                 fontSize: DmSansRegular.copyWith(fontSize: 14)
                                     .fontSize,
                                 // fontFamily: 'DM Sans',
@@ -474,9 +508,11 @@ class EducationScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(6),
-                                          color: controller.experience == null ||
+                                          color: controller.experience ==
+                                                      null ||
                                                   controller.experience == 30 ||
-                                                  (controller.experience ?? 30) >=
+                                                  (controller.experience ??
+                                                          30) >=
                                                       30
                                               ? Color(0xFFBA7270)
                                               : Color(0xFF86413F),

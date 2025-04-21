@@ -44,49 +44,47 @@ class ProfileController extends GetxController {
     }
   }
 
- Future<void> updateProfileImage() async {
-  try {
+  Future<void> updateProfileImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
 
-    final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-    );
+      if (pickedFile != null) {
+        isLoading.value = true;
 
-    if (pickedFile != null) {
-      isLoading.value = true;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String token = prefs.getString(AppConstants.token) ?? "";
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString(AppConstants.token) ?? "";
-
-      await profileRepo.updateProfileImage(pickedFile.path, token);
-      await fetchProfile();
-
-    } else {
-      print("No image selected.");
+        await profileRepo.updateProfileImage(pickedFile.path, token);
+        await fetchProfile();
+      } else {
+        print("No image selected.");
+      }
+    } catch (e) {
+      print("Error updating profile image: $e");
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-    print("Error updating profile image: $e");
-  } finally {
-    isLoading.value = false;
   }
-}
 
-void profilenavigation(String screen)
-{
-  if (screen == "personal_details") {
+  void profilenavigation(String screen) {
+    if (screen == "personal_details") {
       Get.toNamed(
-      RouteHelper.personalDetails,
-    );
-  } else if(screen == "notification")
-  {
-     Get.toNamed(
-      RouteHelper.notification,
-    );
-  } else if(screen == "family_background")
-  {
-     Get.toNamed(
-      RouteHelper.familyBackground,
-    );
+        RouteHelper.personalDetails,
+      );
+    } else if (screen == "notification") {
+      Get.toNamed(
+        RouteHelper.notification,
+      );
+    } else if (screen == "family_background") {
+      Get.toNamed(
+        RouteHelper.familyBackground,
+      );
+    } else if (screen == "education_profession") {
+      Get.toNamed(
+        RouteHelper.educationProfessionDetail,
+      );
+    }
   }
-}
-
 }

@@ -1,16 +1,11 @@
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_drop_down_field.dart';
-import '../../widgets/custom_snack_bar.dart';
 import '../../widgets/custom_text_field.dart';
 
 class FamilyBackgroundScreen extends StatefulWidget {
@@ -34,7 +29,7 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
         child: SizedBox(
           width: double.infinity,
           height: 50,
@@ -60,7 +55,6 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
         ),
       ),
       appBar: CustomAppBar(
-        appBarHeight: 120,
         startIconPath: Svgs.backArrowVector,
         endIconPath: Svgs.notificationVector,
         centerLogoPath: Svgs.logo,

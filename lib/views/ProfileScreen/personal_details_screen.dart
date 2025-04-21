@@ -32,35 +32,32 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: ElevatedButton(
-          onPressed: () {
-            
-            print("Save button pressed");
-          
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () {
+              print("Save button pressed");
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
             ),
-          ),
-          child: Text(
-            StringTexts.saveChanges,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.white,
+            child: Text(
+              StringTexts.saveChanges,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppColors.white,
+              ),
             ),
           ),
         ),
       ),
-    ),
       appBar: CustomAppBar(
-        appBarHeight: 120,
         startIconPath: Svgs.backArrowVector,
         endIconPath: Svgs.notificationVector,
         centerLogoPath: Svgs.logo,
@@ -77,9 +74,8 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(
               height: 4,
             ),
@@ -290,11 +286,10 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                         hintText: 'D.O.B',
                         onTap: () async {
                           DateTime currentDate = DateTime.now();
-                          DateTime firstAllowedDate = DateTime(
-                              currentDate.year -
-                                  100);
-                          DateTime lastAllowedDate = DateTime(
-                              currentDate.year - 18); 
+                          DateTime firstAllowedDate =
+                              DateTime(currentDate.year - 100);
+                          DateTime lastAllowedDate =
+                              DateTime(currentDate.year - 18);
 
                           DateTime? selectedDate = await showDatePicker(
                             context: Get.context!,
@@ -305,23 +300,17 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                               return Theme(
                                 data: Theme.of(context).copyWith(
                                   colorScheme: ColorScheme.light(
-                                    primary: Theme.of(context)
-                                        .primaryColor,
-                                    onPrimary:
-                                        Colors.white, 
-                                    onSurface:
-                                        Colors.black,
-                                    secondary: Colors
-                                        .red, 
+                                    primary: Theme.of(context).primaryColor,
+                                    onPrimary: Colors.white,
+                                    onSurface: Colors.black,
+                                    secondary: Colors.red,
                                   ),
                                   textButtonTheme: TextButtonThemeData(
                                     style: TextButton.styleFrom(
-                                      foregroundColor:
-                                          Colors.black, 
+                                      foregroundColor: Colors.black,
                                     ),
                                   ),
-                                  dialogBackgroundColor: Colors
-                                      .white,
+                                  dialogBackgroundColor: Colors.white,
                                 ),
                                 child: child!,
                               );
