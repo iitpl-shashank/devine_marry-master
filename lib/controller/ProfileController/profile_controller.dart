@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repo/profile_repo.dart';
+import '../../helper/route_helper.dart';
 import '../../models/profile/profile_model.dart';
 import '../../utils/app_constants.dart';
 
@@ -68,4 +69,24 @@ class ProfileController extends GetxController {
     isLoading.value = false;
   }
 }
+
+void profilenavigation(String screen)
+{
+  if (screen == "personal_details") {
+      Get.toNamed(
+      RouteHelper.personalDetails,
+    );
+  } else if(screen == "notification")
+  {
+     Get.toNamed(
+      RouteHelper.notification,
+    );
+  } else if(screen == "family_background")
+  {
+     Get.toNamed(
+      RouteHelper.familyBackground,
+    );
+  }
+}
+
 }

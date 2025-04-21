@@ -158,26 +158,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 ProfileSectionButton(
                     title: StringTexts.personalDetails,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(StringTexts.personalDetails),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      profileController.profilenavigation('personal_details');
                     }),
                 ProfileSectionButton(
                     title: StringTexts.familyBackground,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(StringTexts.familyBackground),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                     profileController.profilenavigation('family_background');
                     }),
                 ProfileSectionButton(
                     title: StringTexts.educationAndProfessionDetails,

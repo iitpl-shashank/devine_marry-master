@@ -4,6 +4,7 @@ class StringTexts {
   //General Texts
   static const String next = 'Next >';
   static const String seeAll = 'See all';
+  static const String saveChanges = 'Save Changes';
 
   // login Screen Text
   static const String login = 'LOGIN';

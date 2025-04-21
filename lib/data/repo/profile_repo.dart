@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/app_constants.dart';
 import '../../utils/themes/app_colors.dart';
@@ -17,6 +16,7 @@ class ProfileRepo {
       Response response = await apiClient.getData(
         AppConstants.getProfileDetails,
         method: 'GET',
+        headers: { 'Authorization': 'Bearer $token'}
       );
       print("Get Profile Response: ${response.body}");
       return response;
@@ -46,7 +46,7 @@ class ProfileRepo {
           "Success",
           "Profile image updated successfully.",
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Get.theme.primaryColor.withOpacity(0.8),
+          backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
         );
@@ -55,7 +55,7 @@ class ProfileRepo {
           "Error",
           "Failed to update profile image: ${response.reasonPhrase}",
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.red.withOpacity(0.8),
+          backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
         );
@@ -65,7 +65,7 @@ class ProfileRepo {
         "Error",
         "Error in updateProfileImage: $e",
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.red.withOpacity(0.8),
+        backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),
       );

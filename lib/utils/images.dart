@@ -23,4 +23,5 @@ class Svgs {
   static const String qualificationVector =
       "assets/svg/qualification_vector.svg";
   static const String stateVector = "assets/svg/state_vector.svg";
+  static const String downArrowVector = "assets/svg/down_arrow_vector.svg";
 }

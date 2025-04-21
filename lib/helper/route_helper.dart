@@ -1,10 +1,12 @@
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
 import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/family_background_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/personal_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../views/DashBoardScreen/dash_board_screen.dart';
+import '../views/DashBoardScreen/dashboard_screen.dart';
 import '../views/LoginAndRegistrationScreen/SubScreens/profile_complete_screen.dart';
 import '../views/LoginAndRegistrationScreen/login_screen.dart';
 import '../views/LoginAndRegistrationScreen/otp_screen.dart';
@@ -48,6 +50,8 @@ class RouteHelper {
   static const String otpVerification = '/otp-verification';
   static const String letsBegin = '/lets-begin';
   static const String dashboard = '/dashboard';
+  static const String personalDetails = '/personal-details';
+  static const String familyBackground = '/family-background';
   static const String successFullRegisterationScreen =
       '/successfull-registeration-screen';
   static const String selectSlot = '/select-slot';
@@ -182,6 +186,14 @@ class RouteHelper {
     GetPage(
       name: menu,
       page: () => MenuScreen(),
+    ),
+    GetPage(
+      name: personalDetails,
+      page: () => PersonalDetailsScreen(),
+    ),
+    GetPage(
+      name: familyBackground,
+      page: () => FamilyBackgroundScreen(),
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(
