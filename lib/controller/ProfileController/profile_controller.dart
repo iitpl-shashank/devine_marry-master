@@ -33,6 +33,7 @@ class ProfileController extends GetxController {
   Future<void> fetchProfile() async {
     try {
       isLoading.value = true;
+      showLoading();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString(AppConstants.token) ?? "";
 
@@ -47,6 +48,7 @@ class ProfileController extends GetxController {
     } catch (e) {
       print("Error fetching profile: $e");
     } finally {
+      hideLoading();
       isLoading.value = false;
     }
   }
@@ -268,134 +270,134 @@ class ProfileController extends GetxController {
     update();
   }
 
-Future<void> updatePersonalDetails() async {
- 
-  if (lookingFor == null) {
-    Get.snackbar(
-      "Error",
-      "Looking for cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+  Future<void> updatePersonalDetails() async {
+    if (lookingFor == null) {
+      Get.snackbar(
+        "Error",
+        "Looking for cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (maritalStatus == null) {
-    Get.snackbar(
-      "Error",
-      "Marital status cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (maritalStatus == null) {
+      Get.snackbar(
+        "Error",
+        "Marital status cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (firstNameController.text.isEmpty) {
-    Get.snackbar(
-      "Error",
-      "First name cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (firstNameController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "First name cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (lastNameController.text.isEmpty) {
-    Get.snackbar(
-      "Error",
-      "Last name cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (lastNameController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Last name cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (religion == null || religion!.isEmpty) {
-    Get.snackbar(
-      "Error",
-      "Religion cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (religion == null || religion!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Religion cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (state == null || state!.isEmpty) {
-    Get.snackbar(
-      "Error",
-      "State cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (state == null || state!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "State cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (dobController.text.isEmpty) {
-    Get.snackbar(
-      "Error",
-      "Date of birth cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (dobController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Date of birth cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  if (gender == null) {
-    Get.snackbar(
-      "Error",
-      "Gender cannot be empty.",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-    return;
-  }
+    if (gender == null) {
+      Get.snackbar(
+        "Error",
+        "Gender cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
 
-  Map<String, dynamic> data = {
-    "looking_for": authController.lookingForList
-        .firstWhere((item) => item.title == lookingFor,
-            orElse: () => LookingFor(id: 0, title: 'Unknown'))
-        .id,
-    "marital_status": authController.dataModel.maritalStatuses
-        .firstWhere((item) => item.title == maritalStatus,
-            orElse: () => MaritalStatus(id: 0, title: 'Unknown'))
-        .id,
-    "firstname": firstNameController.text,
-    "lastname": lastNameController.text,
-    "religions": religion,
-    "caste": caste,
-    "state": state,
-    "birthDate": dobController.text,
-    "gender": authController.dataModel.genders
-        .firstWhere((item) => item.gender == gender,
-            orElse: () => Gender(id: 0, gender: 'Unknown'))
-        .id,
-  };
+    Map<String, dynamic> data = {
+      "looking_for": authController.lookingForList
+          .firstWhere((item) => item.title == lookingFor,
+              orElse: () => LookingFor(id: 0, title: 'Unknown'))
+          .id,
+      "marital_status": authController.dataModel.maritalStatuses
+          .firstWhere((item) => item.title == maritalStatus,
+              orElse: () => MaritalStatus(id: 0, title: 'Unknown'))
+          .id,
+      "firstname": firstNameController.text,
+      "lastname": lastNameController.text,
+      "religions": religion,
+      "caste": caste,
+      "state": state,
+      "birthDate": dobController.text,
+      "gender": authController.dataModel.genders
+          .firstWhere((item) => item.gender == gender,
+              orElse: () => Gender(id: 0, gender: 'Unknown'))
+          .id,
+    };
 
-  try {
-    showLoading();
-    await profileRepo.updateProfileDetails(data: data, type: "personalDetails");
-    fetchProfile();
-    hideLoading();
-  } catch (e) {
-    Get.snackbar(
-      "Error",
-      "Failed to update personal details: $e",
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.red,
-      colorText: AppColors.white,
-    );
-  } finally {
-    hideLoading();
+    try {
+      showLoading();
+      await profileRepo.updateProfileDetails(
+          data: data, type: "personalDetails");
+      fetchProfile();
+      hideLoading();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to update personal details: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+    } finally {
+      hideLoading();
+    }
   }
-}
 
   //Family Background
 

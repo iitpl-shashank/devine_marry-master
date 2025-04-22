@@ -3,6 +3,7 @@ import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
 import 'package:devine_marry/views/HomeScreen/find_your_match_section.dart';
 import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
+import 'package:devine_marry/widgets/common_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/string_texts.dart';
@@ -10,7 +11,6 @@ import '../../widgets/custom_search_field.dart';
 import '../../widgets/home_user_item.dart';
 
 class HomeScreen extends StatefulWidget {
-
   HomeScreen({super.key});
 
   @override
@@ -39,11 +39,19 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final ProfileController profileController = Get.find<ProfileController>();
-
   @override
   void initState() {
     super.initState();
-    profileController.fetchProfile();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        showLoading();
+        await profileController.fetchProfile();
+      } catch (e) {
+        debugPrint('Error fetching profile: $e');
+      } finally {
+        hideLoading();
+      }
+    });
   }
 
   @override
