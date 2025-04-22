@@ -83,6 +83,7 @@ class ProfileRepo {
       if (type == "educational") {
         data = {
           "step": "educational",
+          "degree": data["degree"] ?? null,
           "highest_qualification": data["highest_qualification"] ?? 1,
           "institute": data["institute"] ?? "",
           "starting_year": data["starting_year"] ?? "",

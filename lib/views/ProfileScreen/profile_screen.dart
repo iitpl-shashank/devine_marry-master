@@ -1,4 +1,5 @@
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
+import 'package:devine_marry/widgets/common_loading.dart';
 import 'package:devine_marry/widgets/custom_linear_gradient_button.dart';
 import 'package:devine_marry/widgets/profile_section_button.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +23,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    Get.find<AuthController>().getCountries();
-    Get.find<AuthController>().getReligion();
-    Get.find<AuthController>().getUserAttributes();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<AuthController>().getCountries();
+      Get.find<AuthController>().getReligion();
+      Get.find<AuthController>().getUserAttributes();
+    });
   }
 
   @override

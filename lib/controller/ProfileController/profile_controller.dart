@@ -1,5 +1,6 @@
 import 'package:devine_marry/models/component_models/country.dart';
 import 'package:devine_marry/models/component_models/religion.dart';
+import 'package:devine_marry/widgets/common_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -340,16 +341,12 @@ class ProfileController extends GetxController {
       "number_of_siblings": numberOfSiblings,
     };
     try {
+      showLoading();
       await profileRepo.updateProfileDetails(data: data, type: "family");
-      Get.snackbar(
-        "Success",
-        "Family details updated successfully.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Get.theme.primaryColor,
-        colorText: Get.theme.colorScheme.onPrimary,
-      );
       fetchProfile();
+      hideLoading();
     } catch (e) {
+      hideLoading();
       Get.snackbar(
         "Error",
         "Failed to update family details: $e",
@@ -357,34 +354,267 @@ class ProfileController extends GetxController {
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
+    } finally {
+      hideLoading();
     }
   }
 
 //Education & Profession Details
 
-  Future<void> updateEducationalDetails({
-    required int highestQualification,
-    required String institute,
-    required String startingYear,
-    required String endingYear,
-    required String company,
-    required String designation,
-    required int monthlyIncome,
-    required int experience,
-  }) async {
-    // Construct the data map for educational details
+  String? highestQualification;
+  String? degree;
+  TextEditingController schoolUniversityController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDayController = TextEditingController();
+  TextEditingController companyOrganisationController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
+  TextEditingController monthlyIncomeController = TextEditingController();
+  DateTime? selectedStartDate;
+  DateTime? selectedEndDate;
+  int? experience = 0;
+  String? noOfYears;
+
+  void setEducationProfesionDetails() {
+    isLoading.value = true;
+
+    setHighestQualification(int.parse(profile
+            .value?.data?.user?.educationInfoData?.first.highestQualification ??
+        '1'));
+    setDegree(int.parse(
+        profile.value?.data?.user?.educationInfoData?.first.degree ?? '1'));
+    schoolUniversityController.text =
+        profile.value?.data?.user?.educationInfoData?.first.institute ??
+            "Not Available";
+
+    if (profile.value?.data?.user?.educationInfoData?.first.startingYear !=
+        null) {
+      String startingYear = profile
+          .value!.data!.user!.educationInfoData!.first.startingYear!
+          .toString();
+      startDateController.text =
+          DateConverter.formatDate(DateTime.parse(startingYear));
+      selectedStartDate = DateTime.parse(startingYear);
+    } else {
+      startDateController.text = "Not Available";
+      selectedStartDate = null;
+    }
+
+    if (profile.value?.data?.user?.educationInfoData?.first.endingYear !=
+        null) {
+      String endingYear = profile
+          .value!.data!.user!.educationInfoData!.first.endingYear!
+          .toString();
+      endDayController.text =
+          DateConverter.formatDate(DateTime.parse(endingYear));
+      selectedEndDate = DateTime.parse(endingYear);
+    } else {
+      endDayController.text = "Not Available";
+      selectedEndDate = null;
+    }
+
+    companyOrganisationController.text =
+        profile.value?.data?.user?.careerInfo?.first.company ?? "Not Available";
+    designationController.text =
+        profile.value?.data?.user?.careerInfo?.first.designation ??
+            "Not Available";
+    monthlyIncomeController.text =
+        profile.value?.data?.user?.careerInfo?.first.monthlyIncome ?? "0";
+    experience = profile.value?.data?.user?.careerInfo?.first.experience ?? 0;
+    noOfYears = experience.toString();
+
+    isLoading.value = false;
+  }
+
+  void setHighestQualification(int id) {
+    final matchingQualification =
+        authController.dataModel.qualifications.firstWhere(
+      (qualification) => qualification.id == id,
+      orElse: () => Qualification(id: 0, name: 'Unknown'),
+    );
+    highestQualification = matchingQualification.name;
+  }
+
+  void setDegree(int id) {
+    final matchingDegree = authController.degreeResponse.Degrees.firstWhere(
+      (status) => status.id == id,
+      orElse: () => Degree(id: 0, name: 'Unknown'),
+    );
+    degree = matchingDegree.name;
+  }
+
+  void updateHighestQualification(String value) {
+    highestQualification = value;
+    update();
+  }
+
+  void updateDegree(String? value) {
+    degree = value;
+    update();
+  }
+
+  void updateExperience(int i) {
+    experience = i;
+    noOfYears = experience.toString();
+    update();
+  }
+
+  Future<void> updateEducationalDetails() async {
+    if (highestQualification == null || highestQualification!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Highest qualification cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (schoolUniversityController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Institute name cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (startDateController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Starting year cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (endDayController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Ending year cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (companyOrganisationController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Company/Organization name cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (designationController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Designation cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (monthlyIncomeController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Monthly income cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (noOfYears == null ||
+        noOfYears!.isEmpty ||
+        int.tryParse(noOfYears!) == null) {
+      Get.snackbar(
+        "Error",
+        "Experience must be a valid number.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (highestQualification != "High School" &&
+        highestQualification != "Intermediate") {
+      if ((degree == null || degree!.isEmpty)) {
+        Get.snackbar(
+          "Error",
+          "Degree cannot be empty.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+        );
+        return;
+      }
+    }
+
+    int? qualificationId = authController.dataModel.qualifications
+        .firstWhere(
+          (qualification) => qualification.name == highestQualification,
+          orElse: () => Qualification(id: 0, name: 'Unknown'),
+        )
+        .id;
+
+    int? degreeId = authController.degreeResponse.Degrees
+        .firstWhere(
+          (degreeItem) => degreeItem.name == degree,
+          orElse: () => Degree(id: 0, name: 'Unknown'),
+        )
+        .id;
+
+    if (qualificationId == 0) {
+      Get.snackbar(
+        "Error",
+        "Invalid highest qualification selected.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
     Map<String, dynamic> data = {
-      "highest_qualification": highestQualification,
-      "institute": institute,
-      "starting_year": startingYear,
-      "ending_year": endingYear,
-      "company": company,
-      "designation": designation,
-      "monthly_income": monthlyIncome,
-      "experience": experience,
+      "highest_qualification": qualificationId,
+      "institute": schoolUniversityController.text,
+      "starting_year": startDateController.text,
+      "ending_year": endDayController.text,
+      "company": companyOrganisationController.text,
+      "designation": designationController.text,
+      "monthly_income": monthlyIncomeController.text,
+      "experience": noOfYears,
+      if (degreeId != 0) "degree": degreeId
     };
 
-    // Call the updateProfileDetails method
-    await profileRepo.updateProfileDetails(data: data, type: "educational");
+    try {
+      showLoading();
+      await profileRepo.updateProfileDetails(data: data, type: "educational");
+      fetchProfile();
+      hideLoading();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to update educational details: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+    } finally {
+      hideLoading();
+    }
   }
 }
