@@ -23,6 +23,7 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
   void initState() {
     super.initState();
     //TODO : Change the authController to ProfileController
+    profileController.setFamilyBackground();
   }
 
   @override
@@ -35,7 +36,7 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              print("Save button pressed");
+              profileController.updateFamilyDetails();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).primaryColor,
@@ -71,80 +72,83 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(
-            height: 4,
-          ),
-          Text(
-            StringTexts.familyBackground.toUpperCase(),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.darkTheme,
+        child: SingleChildScrollView(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 4,
             ),
-          ),
-          SizedBox(height: 25),
-          CustomTextField(
-            hintText: 'Father\'s Name',
-            controller: authController.hairController,
-            onChanged: (value) {},
-            validation: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 25),
-          CustomTextField(
-            hintText: 'Father\'s Profession',
-            controller: authController.hairController,
-            onChanged: (value) {},
-            validation: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 25),
-          CustomTextField(
-            hintText: 'Mother\'s Name',
-            controller: authController.hairController,
-            onChanged: (value) {},
-            validation: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 25),
-          CustomTextField(
-            hintText: 'Mother\'s Profession',
-            controller: authController.hairController,
-            onChanged: (value) {},
-            validation: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 25),
-          CustomTextField(
-            inputType: TextInputType.number,
-            hintText: 'Number of Siblings',
-            controller: authController.hairController,
-            onChanged: (value) {},
-            validation: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
-          ),
-        ]),
+            Text(
+              StringTexts.familyBackground.toUpperCase(),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.darkTheme,
+              ),
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              hintText: 'Father\'s Name',
+              controller: profileController.fathersNameController,
+              onChanged: (value) {},
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              hintText: 'Father\'s Profession',
+              controller: profileController.fathersProfessionController,
+              onChanged: (value) {},
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              hintText: 'Mother\'s Name',
+              controller: profileController.motherNameController,
+              onChanged: (value) {},
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              hintText: 'Mother\'s Profession',
+              controller: profileController.motherProfessionController,
+              onChanged: (value) {},
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 25),
+            CustomTextField(
+              inputType: TextInputType.number,
+              hintText: 'Number of Siblings',
+              controller: profileController.numberOfSiblingsController,
+              onChanged: (value) {},
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'This field is required';
+                }
+                return null;
+              },
+            ),
+          ]),
+        ),
       ),
     );
   }

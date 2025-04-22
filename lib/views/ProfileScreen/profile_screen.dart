@@ -4,6 +4,7 @@ import 'package:devine_marry/widgets/profile_section_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import '../../controller/AuthController/auth_controller.dart';
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
@@ -17,6 +18,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController profileController = Get.find<ProfileController>();
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<AuthController>().getCountries();
+    Get.find<AuthController>().getReligion();
+    Get.find<AuthController>().getUserAttributes();
+  }
 
   @override
   Widget build(BuildContext context) {

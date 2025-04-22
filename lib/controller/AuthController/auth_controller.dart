@@ -564,17 +564,20 @@ class AuthController extends GetxController implements GetxService {
     showLoading();
     updateCaste(null);
     casteResponse = CasteResponse(castes: []);
+ 
     _isLoginLoading = true;
     update();
     try {
       _isLoginLoading = true;
       update();
       Response response = await authRepo.getCastes(id);
+      debugPrint("casts====> ${response.body.toString()}");
       if (response.body == null) {}
       if (response.body['status'] && response.body != null) {
         var responseData = response.body;
         CasteResponse castes = CasteResponse.fromJson(responseData['data']);
         casteResponse = castes;
+        // debugPrint("casts====> in if${casteResponse.castes.length}");
         _isLoginLoading = false;
         update();
       } else {
@@ -589,6 +592,7 @@ class AuthController extends GetxController implements GetxService {
       showCustomSnackBar("Something went wrong. Please try again. $e",
           isError: true);
     } finally {
+
       hideLoading();
       _isLoginLoading = false;
       update();

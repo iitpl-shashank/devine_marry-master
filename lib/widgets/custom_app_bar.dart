@@ -82,9 +82,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+         
         ],
       ),
     );
@@ -92,5 +90,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(appBarHeight ?? 80); // Set the height of the app bar
+      Size.fromHeight(appBarHeight ?? 110); // Set the height of the app bar
 }
