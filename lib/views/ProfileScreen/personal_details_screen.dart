@@ -25,7 +25,10 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   void initState() {
     super.initState();
     //TODO : Change the authController to ProfileController
-    profileController.setPersonalDetails();
+   WidgetsBinding.instance.addPostFrameCallback((_) {
+       profileController.setPersonalDetails();
+   });
+    
   }
 
   @override
@@ -40,7 +43,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  print("Save button pressed");
+                 profileController.updatePersonalDetails();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,

@@ -1,3 +1,4 @@
+// To parse this JSON data, do
 import 'dart:convert';
 
 ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
@@ -56,7 +57,7 @@ class User {
     final int? country;
     final String? mobile;
     final String? balance;
-    final dynamic caste;
+    final String? caste;
     final int? status;
     final dynamic kycData;
     final int? kv;
@@ -428,7 +429,7 @@ class PartnerExpectation {
     final List<int>? religion;
     final int? smokingStatus;
     final int? drinkingStatus;
-    final List<dynamic>? caste;
+    final List<int>? caste;
     final List<int>? country;
     final List<int>? state;
     final List<int>? qualifications;
@@ -461,7 +462,7 @@ class PartnerExpectation {
         religion: json["religion"] == null ? [] : List<int>.from(json["religion"]!.map((x) => x)),
         smokingStatus: json["smoking_status"],
         drinkingStatus: json["drinking_status"],
-        caste: json["caste"] == null ? [] : List<dynamic>.from(json["caste"]!.map((x) => x)),
+        caste: json["caste"] == null ? [] : List<int>.from(json["caste"]!.map((x) => x)),
         country: json["country"] == null ? [] : List<int>.from(json["country"]!.map((x) => x)),
         state: json["state"] == null ? [] : List<int>.from(json["state"]!.map((x) => x)),
         qualifications: json["qualifications"] == null ? [] : List<int>.from(json["qualifications"]!.map((x) => x)),
@@ -493,18 +494,17 @@ class PhysicalAttributes {
     final int? userId;
     final int? height;
     final int? weight;
-    final String? bloodGroup;
+    final int? bloodGroup;
     final String? eyeColor;
     final String? hairColor;
-    final String? complexion;
-    final String? disabilities;
-    final DateTime? createdAt;
-    final DateTime? updatedAt;
+    final int? complexion;
+    final int? disabilities;
     final int? drinkingHabit;
     final int? smokingHabit;
     final String? bio;
     final String? interestsHobbies;
-    final String? disabilitie;
+    final DateTime? createdAt;
+    final DateTime? updatedAt;
 
     PhysicalAttributes({
         this.id,
@@ -516,13 +516,12 @@ class PhysicalAttributes {
         this.hairColor,
         this.complexion,
         this.disabilities,
-        this.createdAt,
-        this.updatedAt,
         this.drinkingHabit,
         this.smokingHabit,
         this.bio,
         this.interestsHobbies,
-        this.disabilitie,
+        this.createdAt,
+        this.updatedAt,
     });
 
     factory PhysicalAttributes.fromJson(Map<String, dynamic> json) => PhysicalAttributes(
@@ -535,13 +534,12 @@ class PhysicalAttributes {
         hairColor: json["hair_color"],
         complexion: json["complexion"],
         disabilities: json["disabilities"],
-        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
         drinkingHabit: json["drinking_habit"],
         smokingHabit: json["smoking_habit"],
         bio: json["bio"],
         interestsHobbies: json["interests_hobbies"],
-        disabilitie: json["disabilitie"],
+        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -554,12 +552,11 @@ class PhysicalAttributes {
         "hair_color": hairColor,
         "complexion": complexion,
         "disabilities": disabilities,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
         "drinking_habit": drinkingHabit,
         "smoking_habit": smokingHabit,
         "bio": bio,
         "interests_hobbies": interestsHobbies,
-        "disabilitie": disabilitie,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
     };
 }

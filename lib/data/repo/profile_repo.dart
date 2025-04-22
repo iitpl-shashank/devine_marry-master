@@ -102,7 +102,35 @@ class ProfileRepo {
           "mother_profession": data["mother_profession"] ?? "",
           "number_of_siblings": data["number_of_siblings"] ?? 0,
         };
-      }
+      } else if (type == "physicalAttributeInfo") {
+        data = {
+          "step": "physicalAttributeInfo",
+          "height": data["height"] ?? 0,
+          "weight": data["weight"] ?? 0,
+          "eye_color": data["eye_color"] ?? "",
+          "hair_color": data["hair_color"] ?? "",
+          "blood_group": data["blood_group"] ?? "",
+          "complexion": data["complexion"] ?? "",
+          "disabilities": data["disabilities"] ?? "",
+          "smoking_habit": data["smoking_habit"] ?? "",
+          "drinking_habit": data["drinking_habit"] ?? "",
+          "bio": data["bio"] ?? "",
+          "interests_hobbies": data["interests_hobbies"] ?? "",
+        };
+      } else if (type == "personalDetails") {
+      data = {
+        "step": "personalDetails",
+        "looking_for": data["looking_for"],
+        "marital_status": data["marital_status"],
+        "firstname": data["firstname"] ?? "",
+        "lastname": data["lastname"] ?? "",
+        "religions": data["religions"] ?? "",
+        "caste": data["caste"] ?? "",
+        "state": data["state"] ?? "",
+        "birthDate": data["birthDate"] ?? "",
+        "gender": data["gender"],
+      };
+    }
 
       Response response = await apiClient.postData(
         AppConstants.profileUpdate,

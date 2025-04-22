@@ -103,7 +103,7 @@ class ProfileController extends GetxController {
     }
   }
 
-// Profile Update Screen Controllers
+// Profile Update Screen Controllers <-------------------------------------------->
 //Personal Details
 
   String? lookingFor;
@@ -127,13 +127,18 @@ class ProfileController extends GetxController {
     setMaritalStatus(
         int.parse(profile.value?.data?.user?.maritalStatus ?? '1'));
     setReligion(int.parse(profile.value?.data?.user?.religions ?? '1'));
-    setCaste(int.parse(profile.value?.data?.user?.caste ?? '1'));
+    setCaste(
+        casteId: int.parse(profile.value?.data?.user?.caste ?? '1'),
+        religionId: int.parse(profile.value?.data?.user?.religions ?? '1'));
     setCountry(profile.value?.data?.user?.country ?? 1);
-    setState(profile.value?.data?.user?.state ?? 1);
+    setState(
+        stateId: profile.value?.data?.user?.state ?? 1,
+        countryId: profile.value?.data?.user?.country ?? 1);
     setGender(int.parse(profile.value?.data?.user?.gender ?? '1'));
     dob = dobController.text;
 
     isLoading.value = false;
+    update();
   }
 
   void setLookingFor(int id) {
@@ -150,6 +155,7 @@ class ProfileController extends GetxController {
       orElse: () => MaritalStatus(id: 0, title: 'Unknown'),
     );
     maritalStatus = matchingStatus.title;
+    update();
   }
 
   void setReligion(int id) {
@@ -160,16 +166,34 @@ class ProfileController extends GetxController {
           Religion(id: 0, name: 'Unknown', createdAt: '', updatedAt: ''),
     );
     religion = matchingReligion.name;
-    authController.getCastes(id.toString());
+    update();
   }
 
-  void setCaste(int id) {
+  void setCaste({required int casteId, required int religionId}) async {
+    debugPrint("In Set Caste Function");
+
+    await authController.getCastes(religionId.toString());
+    update();
+    authController.casteResponse.castes.forEach((caste) {
+      debugPrint("Caste ID: ${caste.id}");
+    });
+
+    debugPrint("Requested Caste ID: $casteId");
     final matchingCaste = authController.casteResponse.castes.firstWhere(
-      (caste) => caste.id == id,
-      orElse: () => Caste(id: 0, name: 'Unknown'),
+      (caste) => caste.id == casteId,
+      orElse: () {
+        debugPrint(
+            "Requested ID: $casteId not found. Printing all castes again:");
+        authController.casteResponse.castes.forEach((caste) {
+          debugPrint("Caste ID: ${caste.id} and Requested ID: $casteId");
+        });
+        return Caste(id: 0, name: 'Unknown');
+      },
     );
+
     caste = matchingCaste.name;
-    debugPrint("Caste: $caste");
+    debugPrint("Selected Caste: $caste");
+    update();
   }
 
   void setCountry(int id) {
@@ -178,17 +202,20 @@ class ProfileController extends GetxController {
       orElse: () => Country(id: 0, name: 'Unknown'),
     );
     country = matchingCountry.name;
-    authController.getStates(id.toString());
+    debugPrint("Country: $country");
+    update();
   }
 
-  void setState(int id) {
+  void setState({required int stateId, required int countryId}) async {
+    await authController.getStates(countryId.toString());
     debugPrint("States: ${authController.stateResponse.states}");
     final matchingState = authController.stateResponse.states.firstWhere(
-      (state) => state.id == id,
+      (state) => state.id == stateId,
       orElse: () => StateModel(id: 0, name: 'Unknown'),
     );
     state = matchingState.name;
     debugPrint("State: $state");
+    update();
   }
 
   void setGender(int id) {
@@ -240,6 +267,135 @@ class ProfileController extends GetxController {
     gender = value;
     update();
   }
+
+Future<void> updatePersonalDetails() async {
+ 
+  if (lookingFor == null) {
+    Get.snackbar(
+      "Error",
+      "Looking for cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (maritalStatus == null) {
+    Get.snackbar(
+      "Error",
+      "Marital status cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (firstNameController.text.isEmpty) {
+    Get.snackbar(
+      "Error",
+      "First name cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (lastNameController.text.isEmpty) {
+    Get.snackbar(
+      "Error",
+      "Last name cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (religion == null || religion!.isEmpty) {
+    Get.snackbar(
+      "Error",
+      "Religion cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (state == null || state!.isEmpty) {
+    Get.snackbar(
+      "Error",
+      "State cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (dobController.text.isEmpty) {
+    Get.snackbar(
+      "Error",
+      "Date of birth cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  if (gender == null) {
+    Get.snackbar(
+      "Error",
+      "Gender cannot be empty.",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+    return;
+  }
+
+  Map<String, dynamic> data = {
+    "looking_for": authController.lookingForList
+        .firstWhere((item) => item.title == lookingFor,
+            orElse: () => LookingFor(id: 0, title: 'Unknown'))
+        .id,
+    "marital_status": authController.dataModel.maritalStatuses
+        .firstWhere((item) => item.title == maritalStatus,
+            orElse: () => MaritalStatus(id: 0, title: 'Unknown'))
+        .id,
+    "firstname": firstNameController.text,
+    "lastname": lastNameController.text,
+    "religions": religion,
+    "caste": caste,
+    "state": state,
+    "birthDate": dobController.text,
+    "gender": authController.dataModel.genders
+        .firstWhere((item) => item.gender == gender,
+            orElse: () => Gender(id: 0, gender: 'Unknown'))
+        .id,
+  };
+
+  try {
+    showLoading();
+    await profileRepo.updateProfileDetails(data: data, type: "personalDetails");
+    fetchProfile();
+    hideLoading();
+  } catch (e) {
+    Get.snackbar(
+      "Error",
+      "Failed to update personal details: $e",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.red,
+      colorText: AppColors.white,
+    );
+  } finally {
+    hideLoading();
+  }
+}
 
   //Family Background
 
@@ -383,8 +539,7 @@ class ProfileController extends GetxController {
     setDegree(int.parse(
         profile.value?.data?.user?.educationInfoData?.first.degree ?? '1'));
     schoolUniversityController.text =
-        profile.value?.data?.user?.educationInfoData?.first.institute ??
-            "Not Available";
+        profile.value?.data?.user?.educationInfoData?.first.institute ?? "";
 
     if (profile.value?.data?.user?.educationInfoData?.first.startingYear !=
         null) {
@@ -395,7 +550,7 @@ class ProfileController extends GetxController {
           DateConverter.formatDate(DateTime.parse(startingYear));
       selectedStartDate = DateTime.parse(startingYear);
     } else {
-      startDateController.text = "Not Available";
+      startDateController.text = "";
       selectedStartDate = null;
     }
 
@@ -408,15 +563,14 @@ class ProfileController extends GetxController {
           DateConverter.formatDate(DateTime.parse(endingYear));
       selectedEndDate = DateTime.parse(endingYear);
     } else {
-      endDayController.text = "Not Available";
+      endDayController.text = "";
       selectedEndDate = null;
     }
 
     companyOrganisationController.text =
-        profile.value?.data?.user?.careerInfo?.first.company ?? "Not Available";
+        profile.value?.data?.user?.careerInfo?.first.company ?? "";
     designationController.text =
-        profile.value?.data?.user?.careerInfo?.first.designation ??
-            "Not Available";
+        profile.value?.data?.user?.careerInfo?.first.designation ?? "";
     monthlyIncomeController.text =
         profile.value?.data?.user?.careerInfo?.first.monthlyIncome ?? "0";
     experience = profile.value?.data?.user?.careerInfo?.first.experience ?? 0;
@@ -609,6 +763,277 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update educational details: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+    } finally {
+      hideLoading();
+    }
+  }
+
+  //Personality Details
+  String? complexion;
+  String? bloodGroup;
+  String? smokingHabit;
+  String? disability;
+  String? drinkingHabit;
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController hairController = TextEditingController();
+  TextEditingController eyeColorController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
+  TextEditingController interestController = TextEditingController();
+
+  void setPersonalityDetails() {
+    isLoading.value = true;
+    heightController.text =
+        profile.value?.data?.user?.physicalAttributes?.height.toString() ?? "0";
+    weightController.text =
+        profile.value?.data?.user?.physicalAttributes?.weight.toString() ?? "0";
+    hairController.text =
+        profile.value?.data?.user?.physicalAttributes?.hairColor ?? "";
+    eyeColorController.text =
+        profile.value?.data?.user?.physicalAttributes?.eyeColor ?? "";
+    bioController.text =
+        profile.value?.data?.user?.physicalAttributes?.bio ?? "";
+    interestController.text =
+        profile.value?.data?.user?.physicalAttributes?.interestsHobbies ?? "";
+    setComplexion(
+        profile.value?.data?.user?.physicalAttributes?.complexion ?? 1);
+    setBloodGroup(
+        profile.value?.data?.user?.physicalAttributes?.bloodGroup ?? 1);
+    setSmokingHabit(int.parse(profile
+            .value?.data?.user?.physicalAttributes?.smokingHabit
+            .toString() ??
+        '1'));
+    setDrinkingHabit(int.parse(profile
+            .value?.data?.user?.physicalAttributes?.drinkingHabit
+            .toString() ??
+        '1'));
+    setDisability(
+        profile.value?.data?.user?.physicalAttributes?.disabilities ?? 1);
+
+    isLoading.value = false;
+  }
+
+  void setComplexion(int id) {
+    final matchingComplexion = authController.dataModel.complexion.firstWhere(
+      (complexion) => complexion.id == id,
+      orElse: () => Complexion(id: 1, name: 'Unknown'),
+    );
+    complexion = matchingComplexion.name;
+  }
+
+  void setBloodGroup(int id) {
+    final matchingBloodGroup = authController.dataModel.bloodGroups.firstWhere(
+      (bloodGroup) => bloodGroup.id == id,
+      orElse: () => BloodGroup(id: 1, name: 'Unknown'),
+    );
+    bloodGroup = matchingBloodGroup.name;
+  }
+
+  void setSmokingHabit(int id) {
+    final matchingSmokingHabit = authController.dataModel.smoking.firstWhere(
+      (smokingHabit) => smokingHabit.id == id,
+      orElse: () => Smoking(id: 1, name: 'Unknown'),
+    );
+    smokingHabit = matchingSmokingHabit.name;
+  }
+
+  void setDrinkingHabit(int id) {
+    final matchingDrinkingHabit = authController.dataModel.drinking.firstWhere(
+      (drinkingHabit) => drinkingHabit.id == id,
+      orElse: () => Drinking(id: 1, name: 'Unknown'),
+    );
+    drinkingHabit = matchingDrinkingHabit.name;
+  }
+
+  void setDisability(int id) {
+    final matchingDisability = authController.dataModel.disabilities.firstWhere(
+      (disability) => disability.id == id,
+      orElse: () => Disability(id: 1, name: 'Unknown'),
+    );
+    disability = matchingDisability.name;
+  }
+
+  void updateComplexion(String value) {
+    complexion = value;
+    update();
+  }
+
+  void updateBloodGroup(String value) {
+    bloodGroup = value;
+    update();
+  }
+
+  void updateSmokingHabit(String value) {
+    smokingHabit = value;
+    update();
+  }
+
+  void updateDrinkingHabit(String value) {
+    drinkingHabit = value;
+    update();
+  }
+
+  void updateDisability(String values) {
+    disability = values;
+    update();
+  }
+
+  Future<void> updatePhysicalAttributes() async {
+    if (heightController.text.isEmpty ||
+        int.tryParse(heightController.text) == null) {
+      Get.snackbar(
+        "Error",
+        "Height must be a valid number.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (weightController.text.isEmpty ||
+        int.tryParse(weightController.text) == null) {
+      Get.snackbar(
+        "Error",
+        "Weight must be a valid number.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (bloodGroup == null || bloodGroup!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Blood group cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (eyeColorController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Eye color cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (hairController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Hair color cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (complexion == null || complexion!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Complexion cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (smokingHabit == null || smokingHabit!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Smoking habit cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (drinkingHabit == null || drinkingHabit!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Drinking habit cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (bioController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Bio cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (interestController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Interests and hobbies cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    Map<String, dynamic> data = {
+      "height": int.parse(heightController.text),
+      "weight": int.parse(weightController.text),
+      "blood_group": authController.dataModel.bloodGroups
+          .firstWhere((item) => item.name == bloodGroup,
+              orElse: () => BloodGroup(id: 0, name: 'Unknown'))
+          .id,
+      "eye_color": eyeColorController.text,
+      "hair_color": hairController.text,
+      "complexion": authController.dataModel.complexion
+          .firstWhere((item) => item.name == complexion,
+              orElse: () => Complexion(id: 0, name: 'Unknown'))
+          .id,
+      "disabilities": authController.dataModel.disabilities
+          .firstWhere((item) => item.name == disability,
+              orElse: () => Disability(id: 0, name: 'Unknown'))
+          .id,
+      "smoking_habit": authController.dataModel.smoking
+          .firstWhere((item) => item.name == smokingHabit,
+              orElse: () => Smoking(id: 0, name: 'Unknown'))
+          .id,
+      "drinking_habit": authController.dataModel.drinking
+          .firstWhere((item) => item.name == drinkingHabit,
+              orElse: () => Drinking(id: 0, name: 'Unknown'))
+          .id,
+      "bio": bioController.text,
+      "interests_hobbies": interestController.text,
+    };
+
+    try {
+      showLoading();
+      await profileRepo.updateProfileDetails(
+          data: data, type: "physicalAttributeInfo");
+      fetchProfile();
+      hideLoading();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to update physical attributes: $e",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
