@@ -16,6 +16,10 @@ class HomeController extends GetxController {
     Get.toNamed(RouteHelper.userDetailsScreen, arguments: id);
   }
 
+  void clearSelectedUser() {
+    selectedUser.value = null;
+  }
+
   Future<void> getUsersBasedOnPreference({required String filter}) async {
     try {
       Response response = await homeRepo.getMatchedUsers(filter);
@@ -36,10 +40,9 @@ class HomeController extends GetxController {
     }
   }
 
-
   Future<void> getUserDetails({required String userId}) async {
     try {
-   
+      clearSelectedUser();
       Response response = await homeRepo.getUserDetails(userId);
 
       if (response.statusCode == 200) {
@@ -55,5 +58,4 @@ class HomeController extends GetxController {
       print("Exception in getUserDetails: $e");
     }
   }
-
 }
