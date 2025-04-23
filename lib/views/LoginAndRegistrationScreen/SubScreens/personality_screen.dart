@@ -172,19 +172,21 @@ class PersonalityScreen extends StatelessWidget {
                                 readOnly: true,
                                 onTap: () {
                                   showHeightPickerDialog(
+                                    title: "Select Weight (in kg)",
                                     context: context,
                                     maxHeight: 150,
                                     onHeightSelected: (value) {
                                       controller.weightController.text =
                                           value.toString();
                                     },
-                                    initialHeight: 25,
+                                    initialHeight: 60,
                                   );
                                 },
                                 hintText: 'Weight',
                                 inputType: TextInputType.number,
                                 suffixText: "Kg",
                                 isAmount: true,
+                                
                                 controller: controller.weightController,
                                 onChanged: (value) {},
                                 validation: (value) {

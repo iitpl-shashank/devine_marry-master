@@ -140,7 +140,7 @@ class PreferencesScreen extends StatelessWidget {
                                       controller.prefHeightController.text =
                                           value.toString();
                                     },
-                                    initialHeight: 25,
+                                    initialHeight: 170,
                                   );
                                 },
                                 hintText: 'Height',

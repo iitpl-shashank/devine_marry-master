@@ -697,7 +697,6 @@ class AuthController extends GetxController implements GetxService {
         id: id,
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          // 'Accept' : 'application/json',
           'Authorization': 'Bearer $token'
         },
       );

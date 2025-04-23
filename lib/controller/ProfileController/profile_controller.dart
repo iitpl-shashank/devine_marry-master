@@ -189,7 +189,7 @@ class ProfileController extends GetxController {
         authController.casteResponse.castes.forEach((caste) {
           debugPrint("Caste ID: ${caste.id} and Requested ID: $casteId");
         });
-        return Caste(id: 0, name: 'Unknown');
+        return Caste(id: 0, name: 'Unknown', religionId: 0);
       },
     );
 
@@ -1043,5 +1043,255 @@ class ProfileController extends GetxController {
     } finally {
       hideLoading();
     }
+  }
+
+  //Preference Details
+
+  TextEditingController prefAgeController = TextEditingController();
+  TextEditingController prefHeightController = TextEditingController();
+  List<String>? prefReligion;
+  List<String>? prefCaste;
+  List<String>? prefHighestQualification;
+  List<String>? prefCountry;
+  List<String>? prefState;
+  List<String>? prefComplexion;
+  String? prefSmokingHabit;
+  String? prefDrinkingHabit;
+
+  Future<void> setPreferenceDetails() async {
+    isLoading.value = true;
+
+    prefAgeController.text =
+        profile.value?.data?.user?.partnerExpectation?.age.toString() ?? "0";
+    prefHeightController.text =
+        profile.value?.data?.user?.partnerExpectation?.height.toString() ?? "0";
+    setPrefSmokingHabit(
+        profile.value?.data?.user?.partnerExpectation?.smokingStatus ?? 1);
+    setPrefDrinkingHabit(
+        profile.value?.data?.user?.partnerExpectation?.drinkingStatus ?? 1);
+    await setPrefReligion(
+        profile.value?.data?.user?.partnerExpectation?.religion);
+    await setPrefCountry(
+        profile.value?.data?.user?.partnerExpectation?.country);
+    setPrefQualification(
+        profile.value?.data?.user?.partnerExpectation?.qualifications);
+    setPrefComplexion(
+        profile.value?.data?.user?.partnerExpectation?.complexions);
+
+    isLoading.value = false;
+  }
+
+  Future<void> setPrefState(List<String> value) async {
+    if (value.isEmpty) {
+      prefState = [];
+      update();
+      return;
+    }
+
+    debugPrint("Values passed State: ${value.map((id) => id.toString()).toList()}");
+    debugPrint("Values passed State: $value");
+
+    await authController.getStatesList(value);
+    List<int>? selectedStateIds =
+        profile.value?.data?.user?.partnerExpectation?.state;
+
+    if (selectedStateIds == null || selectedStateIds.isEmpty) {
+      prefState = [];
+      update();
+      return;
+    }
+
+    List<String> matchingStates = selectedStateIds.map((id) {
+      final state = authController.stateResponse.states.firstWhere(
+        (status) => status.id == id,
+        orElse: () => StateModel(id: 0, name: 'Unknown'),
+      );
+      return state.name;
+    }).toList();
+
+    prefState = matchingStates;
+    update();
+  }
+
+ Future<void> setPrefCountry(List<int>? value) async {
+  if (value == null || value.isEmpty) {
+    prefCountry = [];
+    update();
+    return;
+  }
+  List<String> matchingCountries = [];
+  List<int> countryIdsForStates = [];
+
+  value.forEach((id) {
+    final country = authController.countryResponse.countries.firstWhere(
+      (status) => status.id == id,
+      orElse: () => Country(id: 0, name: 'Unknown'),
+    );
+
+    if (country.id != 0) {
+      matchingCountries.add(country.name);
+      countryIdsForStates.add(country.id);
+    }
+  });
+
+  prefCountry = matchingCountries;
+  update();
+
+  await setPrefState(countryIdsForStates.map((id) => id.toString()).toList());
+}
+
+  void setPrefQualification(List<int>? value) {
+    if (value == null || value.isEmpty) {
+      prefHighestQualification = [];
+      update();
+      return;
+    }
+    List<String> matchingQualifications = value.map((id) {
+      final qualification = authController.dataModel.qualifications.firstWhere(
+        (status) => status.id == id,
+        orElse: () => Qualification(id: 0, name: 'Unknown'),
+      );
+      return qualification.name;
+    }).toList();
+
+    prefHighestQualification = matchingQualifications;
+    update();
+  }
+
+  void setPrefComplexion(List<int>? value) {
+    if (value == null || value.isEmpty) {
+      prefComplexion = [];
+      update();
+      return;
+    }
+    List<String> matchingComplexion = value.map((id) {
+      final complexion = authController.dataModel.complexion.firstWhere(
+        (status) => status.id == id,
+        orElse: () => Complexion(id: 0, name: 'Unknown'),
+      );
+      return complexion.name;
+    }).toList();
+
+    prefComplexion = matchingComplexion;
+    update();
+  }
+
+  void setPrefSmokingHabit(int id) {
+    final matchingSmokingHabit = authController.dataModel.smoking.firstWhere(
+      (smokingHabit) => smokingHabit.id == id,
+      orElse: () => Smoking(id: 1, name: ''),
+    );
+    prefSmokingHabit = matchingSmokingHabit.name;
+    update();
+  }
+
+  void setPrefDrinkingHabit(int id) {
+    final matchingDrinkingHabit = authController.dataModel.drinking.firstWhere(
+      (drinkingHabit) => drinkingHabit.id == id,
+      orElse: () => Drinking(id: 1, name: ''),
+    );
+    prefDrinkingHabit = matchingDrinkingHabit.name;
+    update();
+  }
+
+  Future<void> setPrefReligion(List<int>? value) async {
+    if (value == null || value.isEmpty) {
+      prefReligion = [];
+      update();
+      return;
+    }
+    List<String> matchingReligions = value.map((id) {
+      final religion = authController.religionResponse.religions.firstWhere(
+        (status) => status.id == id,
+        orElse: () =>
+            Religion(id: 0, name: 'Unknown', createdAt: '', updatedAt: ''),
+      );
+      return religion.name;
+    }).toList();
+
+    prefReligion = matchingReligions;
+    update();
+    await setPrefCaste(value);
+    debugPrint("Pref Religion: $prefReligion");
+    debugPrint("Pref Religion IDs: $value");
+  }
+
+  Future<void> setPrefCaste(List<int>? value) async {
+    debugPrint("Pref Religion IDs in Caste: $value");
+
+    if (value == null || value.isEmpty) {
+      prefCaste = [];
+      update();
+      return;
+    }
+
+    debugPrint("Values passed : ${value.map((id) => id.toString()).toList()}");
+
+    await authController.getCasteList(
+      value.map((id) => id.toString()).toList(),
+    );
+
+    List<int>? selectedCasteIds =
+        profile.value?.data?.user?.partnerExpectation?.caste;
+    debugPrint("Selected Caste IDs: $selectedCasteIds");
+    debugPrint("Caste Response: ${authController.casteResponse.castes}");
+
+    if (selectedCasteIds == null || selectedCasteIds.isEmpty) {
+      prefCaste = [];
+      update();
+      return;
+    }
+
+    List<String> matchingCaste = selectedCasteIds.map((id) {
+      final caste = authController.casteResponse.castes.firstWhere(
+        (status) => status.id == id,
+        orElse: () => Caste(id: 0, name: 'Unknown', religionId: 0),
+      );
+      return caste.name;
+    }).toList();
+
+    prefCaste = matchingCaste;
+    update();
+    debugPrint("Pref Castes: $prefCaste");
+  }
+
+  void updatePrefReligion(List<String> value) {
+    prefReligion = value;
+    update();
+  }
+
+  void updatePrefCasteList(List<String> value) {
+    prefCaste = value;
+    update();
+  }
+
+  void updatePrefSmokingHabit(String value) {
+    prefSmokingHabit = value;
+    update();
+  }
+
+  void updatePrefDrinkingHabit(String value) {
+    prefDrinkingHabit = value;
+    update();
+  }
+
+  void updatePrefComplexion(List<String> value) {
+    prefComplexion = value;
+    update();
+  }
+
+  void updatePrefCountryList(List<String> value) {
+    prefCountry = value;
+    update();
+  }
+
+  void updatePrefStateList(List<String> value) {
+    prefState = value;
+    update();
+  }
+
+  void updatePrefQualification(List<String> value) {
+    prefHighestQualification = value;
+    update();
   }
 }
