@@ -23,11 +23,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       showLoading();
-      Get.find<AuthController>().getCountries();
-      Get.find<AuthController>().getReligion();
-      Get.find<AuthController>().getUserAttributes();
+      await Get.find<AuthController>().getCountries();
+      await Get.find<AuthController>().getReligion();
+      await Get.find<AuthController>().getUserAttributes();
       hideLoading();
     });
   }

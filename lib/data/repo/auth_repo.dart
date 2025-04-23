@@ -1,6 +1,5 @@
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../utils/app_constants.dart';
 import '../api/api.dart';
 

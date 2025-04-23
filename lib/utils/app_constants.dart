@@ -18,6 +18,8 @@ class AppConstants {
   static const String getDegrees = "get-degrees";
   static const String states = "Getstate";
   static const String statesList = "get-state-list";
+  static const String getMatchedUsers = "get-matched-users";
+  static const String getUserDetails = "get-user-details";
   static const String getProfileDetails = "get-profile-details";
   static const String profileUpdate = "profile-update";
   static const String updateProfileImage = "update-profile-image";

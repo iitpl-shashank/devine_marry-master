@@ -1,3 +1,4 @@
+import 'package:devine_marry/views/DetailScreen/user_details_screen.dart';
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
 import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
@@ -57,6 +58,7 @@ class RouteHelper {
   static const String familyBackground = '/family-background';
   static const String personalityDetails = '/personality-details';
   static const String preferenceDetails = '/preference-details';
+  static const String userDetailsScreen = '/user-details-screen';
   static const String educationProfessionDetail =
       '/education-profession-details';
   static const String successFullRegisterationScreen =
@@ -213,6 +215,12 @@ class RouteHelper {
     GetPage(
       name: preferenceDetails,
       page: () => PreferenceDetailsScreen(),
+    ),
+    GetPage(
+      name: userDetailsScreen,
+      page: () => UserDetailsScreen(
+        userId: Get.arguments as String,
+      ),
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(

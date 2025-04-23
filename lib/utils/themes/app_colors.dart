@@ -13,7 +13,7 @@ abstract class AppColors {
   static const Color backgroundGrey = Color(0xFFF5F5F7);
   static const Color grey = Color(0xFF363666);
   static const Color red = Color.fromARGB(255, 194, 1, 1);
-  static const Color green = Color.fromARGB(255, 0, 201, 67);
+  static const Color green = Color(0xFF478742);
   static const Color appBarBackground = Color(0xFFF5F5F7);
   static const Color divider= Color(0xFF212121);
 

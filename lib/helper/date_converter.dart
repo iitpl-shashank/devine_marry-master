@@ -161,3 +161,26 @@ class SimpleTimeConverter {
     return DateFormat("HH:mm").format(dateTime); // Outputs as "08:25" or "20:25" depending on input
   }
 }
+
+class HeightConverter {
+  static String convertCmToFeetAndInches(int heightInCm) {
+    double totalInches = heightInCm * 0.393701;
+    int feet = totalInches ~/ 12;
+    int inches = (totalInches % 12).round();
+    return "$feet ft $inches in";
+  }
+}
+
+class AgeCalculator {
+  static String calculateAge(String birthDateString) {
+
+    DateTime birthDate = DateFormat('yyyy-MM-dd').parse(birthDateString);
+    DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month || 
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return "$age";
+  }
+}

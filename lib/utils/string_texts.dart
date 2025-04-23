@@ -5,6 +5,7 @@ class StringTexts {
   static const String next = 'Next >';
   static const String seeAll = 'See all';
   static const String saveChanges = 'Save Changes';
+  static const String connect = 'Connect';
 
   // login Screen Text
   static const String login = 'LOGIN';
@@ -81,4 +82,19 @@ class StringTexts {
   static const String termsAndConditions = 'Terms & Conditions';
   static const String helpCenter = 'Help Center';
   static const String rateUs = 'Rate Us';
+
+//User Details Screen
+  static const String about = 'About';
+  static const String basicInformation = 'Basic Information';
+  static const String interestsAndHobbies = 'Interests & Hobbies';
+  static const String height = 'Height:';
+  static const String age = 'Age:';
+  static const String religion = 'Religion:';
+  static const String currentLocation = 'Current Location:';
+  static const String qualification = 'Qualification:';
+  static const String profession = 'Profession:';
+  static const String demoAbout =
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries';
+  static const String matchesYourProfile = 'Matches Your Profile';
+  static const String matched = 'Matched';
 }

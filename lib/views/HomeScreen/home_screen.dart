@@ -1,3 +1,4 @@
+import 'package:devine_marry/controller/HomeController/home_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
@@ -39,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final ProfileController profileController = Get.find<ProfileController>();
+  final HomeController homeController = Get.find<HomeController>();
   @override
   void initState() {
     super.initState();
@@ -46,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         showLoading();
         await profileController.fetchProfile();
+        await homeController.getUsersBasedOnPreference(
+          filter: "all",
+        );
       } catch (e) {
         debugPrint('Error fetching profile: $e');
       } finally {
@@ -59,93 +64,112 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CustomSearchBar(
-                hintText: 'Search...',
-                onChanged: (value) {
-                  debugPrint('Search query: $value');
-                },
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-
-            // <--- Matches Based on your Preferences Section --->
-
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
-              child: Text(
-                StringTexts.matches_based_on_your_preferences,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.darkTheme,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
-              child: SizedBox(
-                height: 120,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return UserItem(
-                      imageUrl: data[index]['image']!,
-                      name: data[index]['name']!,
-                    );
+        child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CustomSearchBar(
+                  hintText: 'Search...',
+                  onChanged: (value) {
+                    debugPrint('Search query: $value');
                   },
                 ),
               ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
+              SizedBox(
+                height: 5,
+              ),
 
-            // <--- Find Your Match Section --->
+              // <--- Matches Based on your Preferences Section --->
 
-            FindYourMatchSection(),
-            SizedBox(
-              height: 24,
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                child: Text(
+                  StringTexts.matches_based_on_your_preferences,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.darkTheme,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                child: SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: homeController.matchedUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = homeController.matchedUsers[index];
+                      return UserItem(
+                        imageUrl:
+                            user.imageUrl ?? "",
+                        name:
+                            user.id.toString() ??
+                                "Unknown",
+                                onImageTap: () {
+                                  homeController.homeUserNavigation(
+                                    id: user.id.toString(),
+                                  );
+                                },
+                        connectButtonTap: () {
+                          Get.snackbar("Connect", "Connect with ${user.id.toString()}",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: AppColors.lightTheme,
+                            colorText: Colors.white,
+                            duration: Duration(seconds: 2),
+                          );
+                        }
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
 
-            // <--- Discover Matches Section --->
+              // <--- Find Your Match Section --->
 
-            DiscoverMatchesSection(),
-            SizedBox(
-              height: 24,
-            ),
+              FindYourMatchSection(),
+              SizedBox(
+                height: 24,
+              ),
 
-            // <--- New Matches Section --->
+              // <--- Discover Matches Section --->
 
-            NewMatchesSection(
-              title: StringTexts.newMatches,
-            ),
+              DiscoverMatchesSection(),
+              SizedBox(
+                height: 24,
+              ),
 
-            // <--- Matches in your state Section --->
+              // <--- New Matches Section --->
 
-            NewMatchesSection(
-              title: StringTexts.matchesInYourState,
-              backgroundColor: AppColors.backgroundGrey,
-            ),
-            SizedBox(
-              height: 34,
-            ),
-          ],
+              NewMatchesSection(
+                title: StringTexts.newMatches,
+              ),
+
+              // <--- Matches in your state Section --->
+
+              NewMatchesSection(
+                title: StringTexts.matchesInYourState,
+                backgroundColor: AppColors.backgroundGrey,
+              ),
+              SizedBox(
+                height: 34,
+              ),
+            ],
+          ),
         ),
       ),
     );
