@@ -118,19 +118,33 @@ class ProfileRepo {
           "interests_hobbies": data["interests_hobbies"] ?? "",
         };
       } else if (type == "personalDetails") {
-      data = {
-        "step": "personalDetails",
-        "looking_for": data["looking_for"],
-        "marital_status": data["marital_status"],
-        "firstname": data["firstname"] ?? "",
-        "lastname": data["lastname"] ?? "",
-        "religions": data["religions"] ?? "",
-        "caste": data["caste"] ?? "",
-        "state": data["state"] ?? "",
-        "birthDate": data["birthDate"] ?? "",
-        "gender": data["gender"],
-      };
-    }
+        data = {
+          "step": "personalDetails",
+          "looking_for": data["looking_for"],
+          "marital_status": data["marital_status"],
+          "firstname": data["firstname"] ?? "",
+          "lastname": data["lastname"] ?? "",
+          "religions": data["religions"] ?? "",
+          "caste": data["caste"] ?? "",
+          "state": data["state"] ?? "",
+          "birthDate": data["birthDate"] ?? "",
+          "gender": data["gender"],
+        };
+      } else if (type == "preferences") {
+        data = {
+          "step": "preferences",
+          "age": data["age"] ?? 0,
+          "height": data["height"] ?? 0,
+          "religion": data["religion"] ?? [],
+          "smoking_status": data["smoking_status"] ?? 0,
+          "drinking_status": data["drinking_status"] ?? 0,
+          "caste": data["caste"] ?? [],
+          "country": data["country"] ?? [],
+          "state": data["state"] ?? [],
+          "qualifications": data["qualifications"] ?? [],
+          "complexions": data["complexions"] ?? [],
+        };
+      }
 
       Response response = await apiClient.postData(
         AppConstants.profileUpdate,

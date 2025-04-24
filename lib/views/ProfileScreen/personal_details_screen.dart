@@ -23,9 +23,8 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    //TODO : Change the authController to ProfileController
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      profileController.setPersonalDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await profileController.setPersonalDetails();
     });
   }
 
@@ -96,6 +95,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       children: [
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.lookingFor),
                             hintText: 'Looking For',
                             options: controller.lookingForList
                                 .map((looking) => looking.title)
@@ -117,6 +117,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                         ),
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.maritalStatus),
                             hintText: 'Marital Status',
                             options: controller.dataModel.maritalStatuses
                                 .map((religions) => religions.title)
@@ -175,6 +176,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       children: [
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.religion),
                             hintText: 'Religion',
                             selectedValue: profileController.religion,
                             options: controller.religionResponse.religions
@@ -203,6 +205,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                         ),
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.caste),
                             hintText: 'Caste',
                             selectedValue: profileController.caste,
                             options: controller.casteResponse.castes
@@ -227,6 +230,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       children: [
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.country),
                             selectedValue: profileController.country,
                             hintText: 'Country',
                             options: controller.countryResponse.countries
@@ -255,6 +259,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                         ),
                         Flexible(
                           child: CustomDropdownField(
+                            key: ValueKey(profileController.state),
                             hintText: 'State',
                             selectedValue: profileController.state,
                             options: controller.stateResponse.states
@@ -347,6 +352,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                         Flexible(
                           child: IntrinsicHeight(
                             child: CustomDropdownField(
+                              key: ValueKey(profileController.gender),
                               hintText: 'Gender',
                               options: controller.dataModel.genders
                                   .map((religions) => religions.gender)

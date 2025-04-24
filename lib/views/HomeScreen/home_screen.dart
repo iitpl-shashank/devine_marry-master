@@ -60,126 +60,115 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void dispose() {
-    // Dispose of the controllers when the screen is closed
-    Get.delete<ProfileController>();
-    Get.delete<HomeController>();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       body: SingleChildScrollView(
-        child: Obx(() {
-          final user = homeController.selectedUser.value;
-          return user == null
-              ? Center(child: CircularProgressIndicator())
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CustomSearchBar(
-                        hintText: 'Search...',
-                        onChanged: (value) {
-                          debugPrint('Search query: $value');
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
+        child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CustomSearchBar(
+                  hintText: 'Search...',
+                  onChanged: (value) {
+                    debugPrint('Search query: $value');
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
 
-                    // <--- Matches Based on your Preferences Section --->
+              // <--- Matches Based on your Preferences Section --->
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                      ),
-                      child: Text(
-                        StringTexts.matches_based_on_your_preferences,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.darkTheme,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                      ),
-                      child: SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: homeController.matchedUsers.length,
-                          itemBuilder: (context, index) {
-                            final user = homeController.matchedUsers[index];
-                            return UserItem(
-                                imageUrl: user.imageUrl ?? "",
-                                name: user.id.toString() ?? "Unknown",
-                                onImageTap: () {
-                                  homeController.homeUserNavigation(
-                                    id: user.id.toString(),
-                                  );
-                                },
-                                connectButtonTap: () {
-                                  Get.snackbar(
-                                    "Connect",
-                                    "Connect with ${user.id.toString()}",
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: AppColors.lightTheme,
-                                    colorText: Colors.white,
-                                    duration: Duration(seconds: 2),
-                                  );
-                                });
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                child: Text(
+                  StringTexts.matches_based_on_your_preferences,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.darkTheme,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                ),
+                child: SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: homeController.matchedUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = homeController.matchedUsers[index];
+                      return UserItem(
+                          imageUrl: user.imageUrl ?? "",
+                          name: user.id.toString() ?? "Unknown",
+                          onImageTap: () {
+                            homeController.homeUserNavigation(
+                              id: user.id.toString(),
+                            );
                           },
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
+                          connectButtonTap: () {
+                            Get.snackbar(
+                              "Connect",
+                              "Connect with ${user.id.toString()}",
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: AppColors.lightTheme,
+                              colorText: Colors.white,
+                              duration: Duration(seconds: 2),
+                            );
+                          });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
 
-                    // <--- Find Your Match Section --->
+              // <--- Find Your Match Section --->
 
-                    FindYourMatchSection(),
-                    SizedBox(
-                      height: 24,
-                    ),
+              FindYourMatchSection(),
+              SizedBox(
+                height: 24,
+              ),
 
-                    // <--- Discover Matches Section --->
+              // <--- Discover Matches Section --->
 
-                    DiscoverMatchesSection(),
-                    SizedBox(
-                      height: 24,
-                    ),
+              DiscoverMatchesSection(),
+              SizedBox(
+                height: 24,
+              ),
 
-                    // <--- New Matches Section --->
+              // <--- New Matches Section --->
 
-                    NewMatchesSection(
-                      title: StringTexts.newMatches,
-                    ),
+              NewMatchesSection(
+                title: StringTexts.newMatches,
+              ),
 
-                    // <--- Matches in your state Section --->
+              // <--- Matches in your state Section --->
 
-                    NewMatchesSection(
-                      title: StringTexts.matchesInYourState,
-                      backgroundColor: AppColors.backgroundGrey,
-                    ),
-                    SizedBox(
-                      height: 34,
-                    ),
-                  ],
-                );
-        }),
+              NewMatchesSection(
+                title: StringTexts.matchesInYourState,
+                backgroundColor: AppColors.backgroundGrey,
+              ),
+              SizedBox(
+                height: 34,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

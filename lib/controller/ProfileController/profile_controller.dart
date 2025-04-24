@@ -120,27 +120,27 @@ class ProfileController extends GetxController {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
 
-  void setPersonalDetails() {
+  Future<void> setPersonalDetails() async {
     isLoading.value = true;
+
     firstNameController.text = profile.value?.data?.user?.firstname ?? "";
     lastNameController.text = profile.value?.data?.user?.lastname ?? "";
     dobController.text = profile.value?.data?.user?.birthDate.toString() ?? "";
     setLookingFor(profile.value?.data?.user?.lookingFor ?? 1);
-    setMaritalStatus(
-        int.parse(profile.value?.data?.user?.maritalStatus ?? '1'));
-    setReligion(int.parse(profile.value?.data?.user?.religions ?? '1'));
-    setCaste(
-        casteId: int.parse(profile.value?.data?.user?.caste ?? '1'),
-        religionId: int.parse(profile.value?.data?.user?.religions ?? '1'));
+    setMaritalStatus(profile.value?.data?.user?.maritalStatus ?? 1);
+    setReligion(profile.value?.data?.user?.religions ?? 1);
+    await setCaste(
+        casteId: profile.value?.data?.user?.caste ?? 1,
+        religionId: profile.value?.data?.user?.religions ?? 1);
     setCountry(profile.value?.data?.user?.country ?? 1);
-    setState(
+    await setState(
         stateId: profile.value?.data?.user?.state ?? 1,
         countryId: profile.value?.data?.user?.country ?? 1);
-    setGender(int.parse(profile.value?.data?.user?.gender ?? '1'));
+    setGender(profile.value?.data?.user?.gender ?? 1);
     dob = dobController.text;
+    update();
 
     isLoading.value = false;
-    update();
   }
 
   void setLookingFor(int id) {
@@ -171,7 +171,7 @@ class ProfileController extends GetxController {
     update();
   }
 
-  void setCaste({required int casteId, required int religionId}) async {
+  Future<void> setCaste({required int casteId, required int religionId}) async {
     debugPrint("In Set Caste Function");
 
     await authController.getCastes(religionId.toString());
@@ -179,8 +179,10 @@ class ProfileController extends GetxController {
     authController.casteResponse.castes.forEach((caste) {
       debugPrint("Caste ID: ${caste.id}");
     });
-
+    update();
     debugPrint("Requested Caste ID: $casteId");
+    debugPrint(
+        "AuthController : ${authController.casteResponse.castes.toList()}");
     final matchingCaste = authController.casteResponse.castes.firstWhere(
       (caste) => caste.id == casteId,
       orElse: () {
@@ -208,12 +210,13 @@ class ProfileController extends GetxController {
     update();
   }
 
-  void setState({required int stateId, required int countryId}) async {
+  Future<void> setState({required int stateId, required int countryId}) async {
     await authController.getStates(countryId.toString());
-    debugPrint("States: ${authController.stateResponse.states}");
+    debugPrint("States: ${authController.stateResponse.states.toList()}");
+    debugPrint("Requested State ID: $stateId");
     final matchingState = authController.stateResponse.states.firstWhere(
       (state) => state.id == stateId,
-      orElse: () => StateModel(id: 0, name: 'Unknown'),
+      orElse: () => StateModel(id: 0, name: 'Unknown', countryId: 0),
     );
     state = matchingState.name;
     debugPrint("State: $state");
@@ -326,6 +329,17 @@ class ProfileController extends GetxController {
       return;
     }
 
+    if (country == null || country!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Country cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
     if (state == null || state!.isEmpty) {
       Get.snackbar(
         "Error",
@@ -370,10 +384,24 @@ class ProfileController extends GetxController {
           .id,
       "firstname": firstNameController.text,
       "lastname": lastNameController.text,
-      "religions": religion,
-      "caste": caste,
-      "state": state,
+      "religions": authController.religionResponse.religions
+          .firstWhere((item) => item.name == religion,
+              orElse: () => Religion(
+                  id: 0, name: 'Unknown', createdAt: '', updatedAt: ''))
+          .id,
+      "caste": authController.casteResponse.castes
+          .firstWhere((item) => item.name == caste,
+              orElse: () => Caste(id: 0, name: 'Unknown', religionId: 0))
+          .id,
+      "state": authController.stateResponse.states
+          .firstWhere((item) => item.name == state,
+              orElse: () => StateModel(id: 0, name: 'Unknown', countryId: 0))
+          .id,
       "birthDate": dobController.text,
+      "country": authController.countryResponse.countries
+          .firstWhere((item) => item.name == country,
+              orElse: () => Country(id: 0, name: 'Unknown'))
+          .id,
       "gender": authController.dataModel.genders
           .firstWhere((item) => item.gender == gender,
               orElse: () => Gender(id: 0, gender: 'Unknown'))
@@ -1088,7 +1116,8 @@ class ProfileController extends GetxController {
       return;
     }
 
-    debugPrint("Values passed State: ${value.map((id) => id.toString()).toList()}");
+    debugPrint(
+        "Values passed State: ${value.map((id) => id.toString()).toList()}");
     debugPrint("Values passed State: $value");
 
     await authController.getStatesList(value);
@@ -1104,7 +1133,7 @@ class ProfileController extends GetxController {
     List<String> matchingStates = selectedStateIds.map((id) {
       final state = authController.stateResponse.states.firstWhere(
         (status) => status.id == id,
-        orElse: () => StateModel(id: 0, name: 'Unknown'),
+        orElse: () => StateModel(id: 0, name: 'Unknown', countryId: 0),
       );
       return state.name;
     }).toList();
@@ -1113,32 +1142,32 @@ class ProfileController extends GetxController {
     update();
   }
 
- Future<void> setPrefCountry(List<int>? value) async {
-  if (value == null || value.isEmpty) {
-    prefCountry = [];
-    update();
-    return;
-  }
-  List<String> matchingCountries = [];
-  List<int> countryIdsForStates = [];
-
-  value.forEach((id) {
-    final country = authController.countryResponse.countries.firstWhere(
-      (status) => status.id == id,
-      orElse: () => Country(id: 0, name: 'Unknown'),
-    );
-
-    if (country.id != 0) {
-      matchingCountries.add(country.name);
-      countryIdsForStates.add(country.id);
+  Future<void> setPrefCountry(List<int>? value) async {
+    if (value == null || value.isEmpty) {
+      prefCountry = [];
+      update();
+      return;
     }
-  });
+    List<String> matchingCountries = [];
+    List<int> countryIdsForStates = [];
 
-  prefCountry = matchingCountries;
-  update();
+    value.forEach((id) {
+      final country = authController.countryResponse.countries.firstWhere(
+        (status) => status.id == id,
+        orElse: () => Country(id: 0, name: 'Unknown'),
+      );
 
-  await setPrefState(countryIdsForStates.map((id) => id.toString()).toList());
-}
+      if (country.id != 0) {
+        matchingCountries.add(country.name);
+        countryIdsForStates.add(country.id);
+      }
+    });
+
+    prefCountry = matchingCountries;
+    update();
+
+    await setPrefState(countryIdsForStates.map((id) => id.toString()).toList());
+  }
 
   void setPrefQualification(List<int>? value) {
     if (value == null || value.isEmpty) {
@@ -1243,7 +1272,7 @@ class ProfileController extends GetxController {
     }
 
     List<String> matchingCaste = selectedCasteIds.map((id) {
-      final caste = authController.casteResponse.castes.firstWhere(
+      final caste = authController.casteListResponse.castes.firstWhere(
         (status) => status.id == id,
         orElse: () => Caste(id: 0, name: 'Unknown', religionId: 0),
       );
@@ -1293,5 +1322,144 @@ class ProfileController extends GetxController {
   void updatePrefQualification(List<String> value) {
     prefHighestQualification = value;
     update();
+  }
+
+  Future<void> updatePreferenceDetails() async {
+    if (prefAgeController.text.isEmpty ||
+        int.tryParse(prefAgeController.text) == null) {
+      Get.snackbar(
+        "Error",
+        "Age must be a valid number.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefHeightController.text.isEmpty ||
+        int.tryParse(prefHeightController.text) == null) {
+      Get.snackbar(
+        "Error",
+        "Height must be a valid number.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefReligion == null || prefReligion!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Religion cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefCaste == null || prefCaste!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Caste cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefCountry == null || prefCountry!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Country cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefState == null || prefState!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "State cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (prefComplexion == null || prefComplexion!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Complexion cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    Map<String, dynamic> data = {
+      "age": int.parse(prefAgeController.text),
+      "height": int.parse(prefHeightController.text),
+      "religion": authController.religionResponse.religions
+          .where((item) => prefReligion?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+      "caste": authController.casteListResponse.castes
+          .where((item) => prefCaste?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+      "complexions": authController.dataModel.complexion
+          .where((item) => prefComplexion?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+      "country": authController.countryResponse.countries
+          .where((item) => prefCountry?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+      "state": authController.stateResponse.states
+          .where((item) => prefState?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+      "smoking_status": authController.dataModel.smoking
+          .firstWhere((item) => item.name == prefSmokingHabit,
+              orElse: () => Smoking(id: 0, name: 'Unknown'))
+          .id,
+      "drinking_status": authController.dataModel.drinking
+          .firstWhere((item) => item.name == prefDrinkingHabit,
+              orElse: () => Drinking(id: 0, name: 'Unknown'))
+          .id,
+      "qualifications": authController.dataModel.qualifications
+          .where(
+              (item) => prefHighestQualification?.contains(item.name) ?? false)
+          .map((item) => item.id)
+          .toList(),
+    };
+
+
+    try {
+      showLoading();
+      await profileRepo.updateProfileDetails(
+          data: data, type: "preferences");
+      fetchProfile();
+      hideLoading();
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to update physical attributes: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+    } finally {
+      hideLoading();
+    }
+
   }
 }

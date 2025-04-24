@@ -38,8 +38,8 @@ class BasicInfoCard extends StatelessWidget {
               StringTexts.age,
               AgeCalculator.calculateAge(
                   userProfile?.data?.user?.birthDate?.toIso8601String() ?? "")),
-          infoRow(
-              StringTexts.religion, userProfile?.data?.user?.religions ?? ""),
+          infoRow(StringTexts.religion,
+              userProfile?.data?.user?.religions.toString() ?? ""),
           infoRow(StringTexts.currentLocation, "New Delhi"),
           infoRow(StringTexts.qualification, "CA"),
           infoRow(StringTexts.profession, "Accountant", hideDivider: true),

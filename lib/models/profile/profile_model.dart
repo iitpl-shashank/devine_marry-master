@@ -1,4 +1,7 @@
 // To parse this JSON data, do
+//
+//     final profileModel = profileModelFromJson(jsonString);
+
 import 'dart:convert';
 
 ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
@@ -57,7 +60,7 @@ class User {
     final int? country;
     final String? mobile;
     final String? balance;
-    final String? caste;
+    final int? caste;
     final int? status;
     final dynamic kycData;
     final int? kv;
@@ -75,11 +78,11 @@ class User {
     final DateTime? createdAt;
     final DateTime? updatedAt;
     final String? bloodGroup;
-    final String? religions;
-    final String? maritalStatus;
+    final int? religions;
+    final int? maritalStatus;
     final dynamic motherTongue;
     final dynamic community;
-    final String? gender;
+    final int? gender;
     final dynamic profession;
     final dynamic middleName;
     final dynamic fun;
@@ -281,7 +284,7 @@ class User {
         "diet": diet,
         "interest": interest,
         "device_token": deviceToken,
-        "birth_date": "${birthDate!.year.toString().padLeft(4, '0')}-${birthDate!.month.toString().padLeft(2, '0')}-${birthDate!.day.toString().padLeft(2, '0')}",
+        "birth_date": birthDate?.toIso8601String(),
         "profile_image": profileImage,
         "father_name": fatherName,
         "father_profession": fatherProfession,

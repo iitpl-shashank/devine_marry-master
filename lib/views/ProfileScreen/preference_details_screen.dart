@@ -44,7 +44,7 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  print("Save button pressed");
+                  profileController.updatePreferenceDetails();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -346,7 +346,7 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                         children: [
                           Flexible(
                             child: CustomDropdownField(
-                               key: ValueKey(profileController.prefState),
+                              key: ValueKey(profileController.prefState),
                               hintText: 'State',
                               isMultiple: true,
                               selectedValues: profileController.prefState,
@@ -372,7 +372,8 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                         children: [
                           Flexible(
                             child: CustomDropdownField(
-                              key: ValueKey(profileController.prefHighestQualification),
+                              key: ValueKey(
+                                  profileController.prefHighestQualification),
                               hintText: 'Qualification',
                               options: controller.dataModel.qualifications
                                   .map((qualification) => qualification.name)

@@ -64,6 +64,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 115,
                             width: 115,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.network(
+                              profileController.defaultProfileImage,
+                              height: 115,
+                              width: 115,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
