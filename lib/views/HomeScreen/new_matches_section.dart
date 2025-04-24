@@ -1,9 +1,10 @@
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/helper/date_converter.dart';
+import 'package:devine_marry/helper/route_helper.dart';
 import 'package:devine_marry/models/home/match_preference_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'dart:math' as math;
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/custom_match_card.dart';
@@ -45,12 +46,20 @@ class NewMatchesSection extends StatelessWidget {
                     color: AppColors.darkTheme,
                   ),
                 ),
-                Text(
-                  StringTexts.seeAll,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black.withOpacity(0.60),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(RouteHelper.seeAllScreen, arguments: {
+                      'users': users,
+                      'title': title,
+                    });
+                  },
+                  child: Text(
+                    StringTexts.seeAll,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black.withOpacity(0.60),
+                    ),
                   ),
                 ),
               ],
@@ -62,7 +71,7 @@ class NewMatchesSection extends StatelessWidget {
               height: 255,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: users.length,
+                itemCount: math.min(users.length, 10),
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(

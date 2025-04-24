@@ -75,11 +75,18 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     children: [
                       Image.network(
                         homeController
-                                .selectedUser.value?.data?.user?.imageUrl ??
-                            "",
+                                .selectedUser.value.data?.user?.imageUrl ??
+                            homeController.defaultUserImage,
                         width: double.infinity,
                         height: 500,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.network(
+                          homeController.defaultUserImage,
+                          width: double.infinity,
+                          height: 500,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       Positioned(
                         top: 10,
@@ -120,7 +127,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           height: 4,
                         ),
                         Text(
-                          homeController.selectedUser.value?.data?.user
+                          homeController.selectedUser.value.data?.user
                                   ?.physicalAttributes?.bio ??
                               "",
                           style: TextStyle(

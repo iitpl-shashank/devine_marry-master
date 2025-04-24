@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         await homeController.getDefaultUsersBasedOnPreference();
         await homeController.getLatestUserList();
         await homeController.getMyStateUserList();
+        await homeController.getAllMatchedUserList();
       } catch (e) {
         debugPrint('Error fetching profile: $e');
       } finally {
@@ -120,17 +121,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // <--- Find Your Match Section --->
 
-              FindYourMatchSection(),
-              SizedBox(
-                height: 24,
+              FindYourMatchSection(
+                allMatchedUsers: homeController.allMatchedUsers,
               ),
 
               // <--- Discover Matches Section --->
 
               DiscoverMatchesSection(),
-              SizedBox(
-                height: 24,
-              ),
 
               // <--- New Matches Section --->
 

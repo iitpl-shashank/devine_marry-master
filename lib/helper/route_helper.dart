@@ -1,4 +1,6 @@
+import 'package:devine_marry/models/home/match_preference_model.dart';
 import 'package:devine_marry/views/DetailScreen/user_details_screen.dart';
+import 'package:devine_marry/views/HomeScreen/see_all_matches_screen.dart';
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
 import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
 import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
@@ -59,6 +61,7 @@ class RouteHelper {
   static const String personalityDetails = '/personality-details';
   static const String preferenceDetails = '/preference-details';
   static const String userDetailsScreen = '/user-details-screen';
+  static const String seeAllScreen = '/see-all-screen';
   static const String educationProfessionDetail =
       '/education-profession-details';
   static const String successFullRegisterationScreen =
@@ -221,6 +224,19 @@ class RouteHelper {
       page: () => UserDetailsScreen(
         userId: Get.arguments as String,
       ),
+    ),
+    GetPage(
+      name: seeAllScreen,
+      page: () {
+        final arguments = Get.arguments as Map<String, dynamic>; // Cast to Map
+        final String title = arguments['title'] as String; // Extract title
+        final List<User> users =
+            arguments['users'] as List<User>; // Extract users
+        return SeeAllMatchesScreen(
+          title: title,
+          users: users,
+        );
+      },
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(

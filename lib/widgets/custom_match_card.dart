@@ -26,7 +26,7 @@ class CustomMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 255,
+      height: 250,
       width: 180,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

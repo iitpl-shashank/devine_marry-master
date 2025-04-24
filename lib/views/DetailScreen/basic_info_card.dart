@@ -37,17 +37,21 @@ class BasicInfoCard extends StatelessWidget {
           infoRow(
               StringTexts.height,
               HeightConverter.convertCmToFeetAndInches(
-                  userProfile?.data?.user?.physicalAttributes?.height ?? 0)),
+                  userProfile.data?.user?.physicalAttributes?.height ?? 0)),
           infoRow(
-              StringTexts.age,
-              AgeCalculator.calculateAge(
-                  userProfile?.data?.user?.birthDate?.toIso8601String() ?? "")),
+            StringTexts.age,
+            userProfile.data?.user?.birthDate != null
+                ? AgeCalculator.calculateAge(
+                    userProfile.data!.user!.birthDate!.toIso8601String(),
+                  )
+                : "N/A", // Fallback value if birthDate is null
+          ),
           infoRow(
               StringTexts.religion,
               authController.religionResponse.religions
                   .firstWhere(
                       (element) =>
-                          element.id == userProfile?.data?.user?.religions,
+                          element.id == userProfile.data?.user?.religions,
                       orElse: () =>
                           authController.religionResponse.religions.first)
                   .name),

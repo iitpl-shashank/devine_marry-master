@@ -69,13 +69,27 @@ class MatchCard extends StatelessWidget {
                                     child: GetBuilder<ProfileController>(
                                         builder: (profileController) {
                                       return CircleAvatar(
+                                        radius: 42,
                                         backgroundImage: NetworkImage(
                                           profileController.profile.value?.data
                                                   ?.user?.imageUrl ??
                                               profileController
                                                   .defaultProfileImage,
                                         ),
-                                        radius: 42,
+                                        onBackgroundImageError:
+                                            (exception, stackTrace) {
+                                          debugPrint(
+                                              'Error loading image: $exception');
+                                        },
+                                        child: (profileController.profile.value
+                                                    ?.data?.user?.imageUrl ==
+                                                null)
+                                            ? Icon(
+                                                Icons.person, // Fallback icon
+                                                size: 42,
+                                                color: Colors.grey,
+                                              )
+                                            : null,
                                       );
                                     })),
                               ),
@@ -87,12 +101,24 @@ class MatchCard extends StatelessWidget {
                                     width: 4,
                                   ),
                                 ),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    userImageUrl,
-                                  ),
-                                  radius: 42,
-                                ),
+                                child: Builder(builder: (context) {
+                                  return CircleAvatar(
+                                    radius: 42,
+                                    backgroundImage: NetworkImage(userImageUrl),
+                                    onBackgroundImageError:
+                                        (exception, stackTrace) {
+                                      debugPrint(
+                                          'Error loading image: $exception');
+                                    },
+                                    child: (userImageUrl.isEmpty)
+                                        ? Icon(
+                                            Icons.person, // Fallback icon
+                                            size: 42,
+                                            color: Colors.grey,
+                                          )
+                                        : null,
+                                  );
+                                }),
                               ),
                             ],
                           ),

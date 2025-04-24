@@ -1,12 +1,20 @@
+import 'package:devine_marry/models/home/match_preference_model.dart';
 import 'package:devine_marry/widgets/custom_animated_match_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import '../../controller/AuthController/auth_controller.dart';
+import '../../helper/date_converter.dart';
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/match_card.dart';
 
 class FindYourMatchSection extends StatelessWidget {
-  const FindYourMatchSection({super.key});
+  final List<User> allMatchedUsers;
+  final AuthController authController = Get.find();
+  FindYourMatchSection({
+    super.key,
+    required this.allMatchedUsers,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,56 +42,21 @@ class FindYourMatchSection extends StatelessWidget {
               height: 25,
             ),
             CustomAnimatedMatchCard(
-              cards: [
-                MatchCard(
-                  name: "Mankirat",
-                  age: 28,
-                  height: "5ft 8in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Aryan",
-                  age: 29,
-                  height: "6ft 0in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-                MatchCard(
-                  name: "Kunal",
-                  age: 27,
-                  height: "5ft 9in",
-                  religion: 'Hindu',
-                ),
-              ],
+              cards: allMatchedUsers.map((user) {
+                return MatchCard(
+                  name: user.firstName ?? "Unknown",
+                  age: int.parse(
+                      AgeCalculator.calculateAge(user.birthDate.toString())),
+                  height: HeightConverter.convertCmToFeetAndInches(
+                      user.height ?? 180),
+                  religion: authController.religionResponse.religions
+                      .firstWhere((element) => element.id == user.religion,
+                          orElse: () =>
+                              authController.religionResponse.religions.first)
+                      .name,
+                  imageUrl: user.imageUrl ?? "",
+                );
+              }).toList(),
             ),
           ],
         ),

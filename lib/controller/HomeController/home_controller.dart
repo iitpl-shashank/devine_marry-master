@@ -1,6 +1,7 @@
 import 'package:devine_marry/data/repo/home_repo.dart';
 import 'package:devine_marry/models/details/user_details_model.dart'
     as MatchedUser;
+import 'package:devine_marry/widgets/common_loading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../helper/route_helper.dart';
@@ -19,8 +20,15 @@ class HomeController extends GetxController {
   RxList<User> matchedUsers = <User>[].obs;
   RxList<User> latestUsers = <User>[].obs;
   RxList<User> myStateUsers = <User>[].obs;
+  RxList<User> religionUsers = <User>[].obs;
+  RxList<User> qualificationUsers = <User>[].obs;
+  RxList<User> stateUsers = <User>[].obs;
+  RxList<User> allMatchedUsers = <User>[].obs;
+
   Rx<MatchedUser.UserDetailsModel> selectedUser =
       Rx<MatchedUser.UserDetailsModel>(MatchedUser.UserDetailsModel());
+  final String defaultUserImage =
+      'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg';
 
   void homeUserNavigation({required String id}) {
     Get.toNamed(RouteHelper.userDetailsScreen, arguments: id);
@@ -123,6 +131,134 @@ class HomeController extends GetxController {
 
         print(
             "Filtered Users: ${myStateUsers.map((user) => user.id).toList()}");
+      } else {
+        print("Error: ${response.statusText}");
+      }
+    } catch (e) {
+      print("Exception in getUserList: $e");
+    }
+  }
+
+  Future<void> getReligionUserList() async {
+    try {
+      showLoading();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.getUsersList(
+        filter: "religion",
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        MatchPreferenceModel matchPreferenceModel =
+            matchPreferenceModelFromJson(response.bodyString ?? "");
+
+        religionUsers.value = matchPreferenceModel.data?.users ?? [];
+        update();
+        hideLoading();
+        print(
+            "Filtered Users: ${religionUsers.map((user) => user.id).toList()}");
+      } else {
+        hideLoading();
+        print("Error: ${response.statusText}");
+      }
+    } catch (e) {
+      hideLoading();
+      print("Exception in getUserList: $e");
+    }
+  }
+
+  Future<void> getQualificationUserList() async {
+    try {
+      showLoading();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.getUsersList(
+        filter: "highest_qualification",
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        MatchPreferenceModel matchPreferenceModel =
+            matchPreferenceModelFromJson(response.bodyString ?? "");
+
+        qualificationUsers.value = matchPreferenceModel.data?.users ?? [];
+        update();
+        hideLoading();
+        print(
+            "Filtered Users: ${qualificationUsers.map((user) => user.id).toList()}");
+      } else {
+        hideLoading();
+        print("Error: ${response.statusText}");
+      }
+    } catch (e) {
+      hideLoading();
+      print("Exception in getUserList: $e");
+    }
+  }
+
+  Future<void> getStateUserList() async {
+    try {
+      showLoading();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.getUsersList(
+        filter: "state",
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        MatchPreferenceModel matchPreferenceModel =
+            matchPreferenceModelFromJson(response.bodyString ?? "");
+
+        stateUsers.value = matchPreferenceModel.data?.users ?? [];
+        update();
+        hideLoading();
+        print("Filtered Users: ${stateUsers.map((user) => user.id).toList()}");
+      } else {
+        hideLoading();
+        print("Error: ${response.statusText}");
+      }
+    } catch (e) {
+      hideLoading();
+      print("Exception in getUserList: $e");
+    }
+  }
+
+  Future<void> getAllMatchedUserList() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.getUsersList(
+        filter: "all",
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        MatchPreferenceModel matchPreferenceModel =
+            matchPreferenceModelFromJson(response.bodyString ?? "");
+
+        allMatchedUsers.value = matchPreferenceModel.data?.users ?? [];
+        update();
+
+        print(
+            "Filtered Users: ${allMatchedUsers.map((user) => user.id).toList()}");
       } else {
         print("Error: ${response.statusText}");
       }

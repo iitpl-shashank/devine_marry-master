@@ -19,12 +19,23 @@ class CustomAnimatedMatchCard extends StatefulWidget {
 
 class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
   late PageController _pageController;
-  double _currentPage = 0.0;
+  double _currentPage = 1.0; // Set the initial current page to 1
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.75);
+    _pageController = PageController(
+      viewportFraction: 0.75,
+      initialPage: 1, // Set the default card to index 1
+    );
+
+    // Ensure the PageView starts at the correct page after the widget tree is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _currentPage = 1.0;
+      });
+    });
+
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page!;
@@ -46,6 +57,7 @@ class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
         controller: _pageController,
         itemCount: widget.cards.length,
         itemBuilder: (context, index) {
+          // Calculate scale and translation for the cards
           final double scale = (_currentPage - index).abs() < 1
               ? 1 - (_currentPage - index).abs() * 0.1
               : 0.9;
@@ -61,14 +73,14 @@ class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
                 curve: Curves.easeInOut,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    )
-                  ],
-                ),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.black26,
+                    //     blurRadius: 10,
+                    //     offset: Offset(0, 5),
+                    //   )
+                    // ],
+                    ),
                 child: widget.cards[index],
               ),
             ),
