@@ -67,40 +67,51 @@ class NewMatchesSection extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            SizedBox(
-              height: 255,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: math.min(users.length, 10),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      right: index == 4 ? 0 : 16,
-                    ),
-                    child: Obx(
-                      () => CustomMatchCard(
-                        imageUrl: users[index].imageUrl ?? "",
-                        name:
-                            "${users[index].firstName ?? 'Unknown'} ${users[index].lastName ?? ''}"
-                                .trim(),
-                        age: int.parse(AgeCalculator.calculateAge(
-                            users[index].birthDate.toString())),
-                        height: HeightConverter.convertCmToFeetAndInches(
-                            users[index].height ?? 180),
-                        religion: authController.religionResponse.religions
-                            .firstWhere(
-                                (element) =>
-                                    element.id == users[index].religion,
-                                orElse: () => authController
-                                    .religionResponse.religions.first)
-                            .name,
-                        userId: users[index].id.toString(),
+            users.isEmpty
+                ? Center(
+                    child: Text(
+                      "No matches found",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.black.withOpacity(0.6),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : SizedBox(
+                    height: 255,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: math.min(users.length, 10),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            right: index == 4 ? 0 : 16,
+                          ),
+                          child: Obx(
+                            () => CustomMatchCard(
+                              imageUrl: users[index].imageUrl ?? "",
+                              name:
+                                  "${users[index].firstName ?? 'Unknown'} ${users[index].lastName ?? ''}"
+                                      .trim(),
+                              age: int.parse(AgeCalculator.calculateAge(
+                                  users[index].birthDate.toString())),
+                              height: HeightConverter.convertCmToFeetAndInches(
+                                  users[index].height ?? 180),
+                              religion: authController
+                                  .religionResponse.religions
+                                  .firstWhere(
+                                      (element) =>
+                                          element.id == users[index].religion,
+                                      orElse: () => authController
+                                          .religionResponse.religions.first)
+                                  .name,
+                              userId: users[index].id.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
