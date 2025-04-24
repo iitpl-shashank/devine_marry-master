@@ -55,6 +55,7 @@ class FindYourMatchSection extends StatelessWidget {
                               authController.religionResponse.religions.first)
                       .name,
                   imageUrl: user.imageUrl ?? "",
+                  userId: user.id.toString(),
                 );
               }).toList(),
             ),

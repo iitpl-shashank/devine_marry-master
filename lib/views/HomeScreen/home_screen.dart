@@ -1,15 +1,15 @@
+import 'package:devine_marry/controller/DashboardController/dashboard_controller.dart';
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
 import 'package:devine_marry/views/HomeScreen/find_your_match_section.dart';
 import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
-import 'package:devine_marry/widgets/common_loading.dart';
+import 'package:devine_marry/widgets/tappable_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controller/AuthController/auth_controller.dart';
+import '../../helper/route_helper.dart';
 import '../../utils/string_texts.dart';
-import '../../widgets/custom_search_field.dart';
 import '../../widgets/home_user_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,27 +22,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ProfileController profileController = Get.find<ProfileController>();
   final HomeController homeController = Get.find<HomeController>();
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        showLoading();
-        await profileController.fetchProfile();
-        await Get.find<AuthController>().getCountries();
-        await Get.find<AuthController>().getReligion();
-        await Get.find<AuthController>().getUserAttributes();
-        await homeController.getDefaultUsersBasedOnPreference();
-        await homeController.getLatestUserList();
-        await homeController.getMyStateUserList();
-        await homeController.getAllMatchedUserList();
-      } catch (e) {
-        debugPrint('Error fetching profile: $e');
-      } finally {
-        hideLoading();
-      }
-    });
-  }
+  final DashboardController dashboardController =
+      Get.find<DashboardController>();
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: CustomSearchBar(
+                child: TappableSearchBar(
                   hintText: 'Search...',
-                  onChanged: (value) {
-                    debugPrint('Search query: $value');
+                  onTap: () {
+                    dashboardController.updateIndex(2);
                   },
                 ),
               ),

@@ -6,6 +6,7 @@ class StringTexts {
   static const String seeAll = 'See all';
   static const String saveChanges = 'Save Changes';
   static const String connect = 'Connect';
+  static const String search = 'Search';
 
   // login Screen Text
   static const String login = 'LOGIN';

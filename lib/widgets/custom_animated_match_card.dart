@@ -19,23 +19,18 @@ class CustomAnimatedMatchCard extends StatefulWidget {
 
 class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
   late PageController _pageController;
-  double _currentPage = 1.0; // Set the initial current page to 1
+  double _currentPage = 0.0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(
       viewportFraction: 0.75,
-      initialPage: 1, // Set the default card to index 1
+      initialPage: 1000, // Start at a high value to simulate infinite scrolling
     );
 
-    // Ensure the PageView starts at the correct page after the widget tree is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _currentPage = 1.0;
-      });
-    });
-
+    _currentPage = 1000
+        .toDouble(); // Set the initial current page to match the initialPage
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page!;
@@ -51,12 +46,26 @@ class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.cards.isEmpty) {
+      // Show a fallback UI if the cards list is empty
+      return Center(
+        child: Text(
+          "Finding best Matches for you...",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
     return SizedBox(
       height: widget.cardHeight,
       child: PageView.builder(
         controller: _pageController,
-        itemCount: widget.cards.length,
         itemBuilder: (context, index) {
+          // Use modulo to loop through the cards
+          final int actualIndex = index % widget.cards.length;
+
           // Calculate scale and translation for the cards
           final double scale = (_currentPage - index).abs() < 1
               ? 1 - (_currentPage - index).abs() * 0.1
@@ -78,10 +87,10 @@ class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
                     //     color: Colors.black26,
                     //     blurRadius: 10,
                     //     offset: Offset(0, 5),
-                    //   )
+                    //   ),
                     // ],
                     ),
-                child: widget.cards[index],
+                child: widget.cards[actualIndex],
               ),
             ),
           );

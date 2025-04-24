@@ -4,23 +4,56 @@ import 'package:devine_marry/views/ProfileScreen/profile_screen.dart';
 import 'package:devine_marry/views/SearchScreen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controller/AuthController/auth_controller.dart';
 import '../../controller/DashboardController/dashboard_controller.dart';
+import '../../controller/HomeController/home_controller.dart';
+import '../../controller/ProfileController/profile_controller.dart';
 import '../../utils/images.dart';
+import '../../widgets/common_loading.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_bottom_navigationbar_item.dart';
 import '../HomeScreen/home_screen.dart';
 
-class DashBoardScreen extends StatelessWidget {
-  DashBoardScreen({super.key});
+class DashBoardScreen extends StatefulWidget {
+  const DashBoardScreen({super.key});
 
+  @override
+  State<DashBoardScreen> createState() => _DashBoardScreenState();
+}
+
+class _DashBoardScreenState extends State<DashBoardScreen> {
   final DashboardController dashboardController = Get.find();
+  final ProfileController profileController = Get.find<ProfileController>();
+  final HomeController homeController = Get.find<HomeController>();
 
   final List<Widget> _screens = [
-    HomeScreen(),
+    const HomeScreen(),
     const ConnectScreen(),
-    const SearchScreen(),
+    SearchScreen(),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        showLoading();
+        await profileController.fetchProfile();
+        await Get.find<AuthController>().getCountries();
+        await Get.find<AuthController>().getReligion();
+        await Get.find<AuthController>().getUserAttributes();
+        await homeController.getDefaultUsersBasedOnPreference();
+        await homeController.getLatestUserList();
+        await homeController.getMyStateUserList();
+        await homeController.getAllMatchedUserList();
+      } catch (e) {
+        debugPrint('Error fetching profile: $e');
+      } finally {
+        hideLoading();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
