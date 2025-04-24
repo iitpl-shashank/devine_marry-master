@@ -22,132 +22,133 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
   @override
   void initState() {
     super.initState();
-    //TODO : Change the authController to ProfileController
     profileController.setFamilyBackground();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
-        child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              profileController.updateFamilyDetails();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {
+                profileController.updateFamilyDetails();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
               ),
-            ),
-            child: Text(
-              StringTexts.saveChanges,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: AppColors.white,
+              child: Text(
+                StringTexts.saveChanges,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      appBar: CustomAppBar(
-        startIconPath: Svgs.backArrowVector,
-        endIconPath: Svgs.notificationVector,
-        centerLogoPath: Svgs.logo,
-        endIconHeight: 21,
-        endIconWidth: 16,
-        centerLogoHeight: 51,
-        centerLogoWidth: 104,
-        onStartIconTap: () {
-          Get.back();
-        },
-        onEndIconTap: () {
-          profileController.profilenavigation("notification");
-        },
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(
-              height: 4,
-            ),
-            Text(
-              StringTexts.familyBackground.toUpperCase(),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkTheme,
+        appBar: CustomAppBar(
+          startIconPath: Svgs.backArrowVector,
+          endIconPath: Svgs.notificationVector,
+          centerLogoPath: Svgs.logo,
+          endIconHeight: 21,
+          endIconWidth: 16,
+          centerLogoHeight: 51,
+          centerLogoWidth: 104,
+          onStartIconTap: () {
+            Get.back();
+          },
+          onEndIconTap: () {
+            profileController.profilenavigation("notification");
+          },
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(
+                height: 4,
               ),
-            ),
-            SizedBox(height: 25),
-            CustomTextField(
-              hintText: 'Father\'s Name',
-              controller: profileController.fathersNameController,
-              onChanged: (value) {},
-              validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 25),
-            CustomTextField(
-              hintText: 'Father\'s Profession',
-              controller: profileController.fathersProfessionController,
-              onChanged: (value) {},
-              validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 25),
-            CustomTextField(
-              hintText: 'Mother\'s Name',
-              controller: profileController.motherNameController,
-              onChanged: (value) {},
-              validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 25),
-            CustomTextField(
-              hintText: 'Mother\'s Profession',
-              controller: profileController.motherProfessionController,
-              onChanged: (value) {},
-              validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 25),
-            CustomTextField(
-              inputType: TextInputType.number,
-              hintText: 'Number of Siblings',
-              controller: profileController.numberOfSiblingsController,
-              onChanged: (value) {},
-              validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This field is required';
-                }
-                return null;
-              },
-            ),
-          ]),
+              Text(
+                StringTexts.familyBackground.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkTheme,
+                ),
+              ),
+              SizedBox(height: 25),
+              CustomTextField(
+                hintText: 'Father\'s Name',
+                controller: profileController.fathersNameController,
+                onChanged: (value) {},
+                validation: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 25),
+              CustomTextField(
+                hintText: 'Father\'s Profession',
+                controller: profileController.fathersProfessionController,
+                onChanged: (value) {},
+                validation: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 25),
+              CustomTextField(
+                hintText: 'Mother\'s Name',
+                controller: profileController.motherNameController,
+                onChanged: (value) {},
+                validation: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 25),
+              CustomTextField(
+                hintText: 'Mother\'s Profession',
+                controller: profileController.motherProfessionController,
+                onChanged: (value) {},
+                validation: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 25),
+              CustomTextField(
+                inputType: TextInputType.number,
+                hintText: 'Number of Siblings',
+                controller: profileController.numberOfSiblingsController,
+                onChanged: (value) {},
+                validation: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This field is required';
+                  }
+                  return null;
+                },
+              ),
+            ]),
+          ),
         ),
       ),
     );

@@ -21,18 +21,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController profileController = Get.find<ProfileController>();
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      showLoading();
-      await Get.find<AuthController>().getCountries();
-      await Get.find<AuthController>().getReligion();
-      await Get.find<AuthController>().getUserAttributes();
-      hideLoading();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.white,

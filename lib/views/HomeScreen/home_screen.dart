@@ -7,38 +7,19 @@ import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
 import 'package:devine_marry/widgets/common_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controller/AuthController/auth_controller.dart';
 import '../../utils/string_texts.dart';
 import '../../widgets/custom_search_field.dart';
 import '../../widgets/home_user_item.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Map<String, String>> data = [
-    {"image": "https://randomuser.me/api/portraits/men/1.jpg", "name": "John"},
-    {
-      "image": "https://randomuser.me/api/portraits/women/2.jpg",
-      "name": "Anna"
-    },
-    {"image": "https://randomuser.me/api/portraits/men/3.jpg", "name": "Mike"},
-    {
-      "image":
-          "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-      "name": "Daven"
-    },
-    {
-      "image":
-          "https://img.freepik.com/free-photo/portrait-father-his-backyard_23-2149489567.jpg?semt=ais_hybrid&w=740",
-      "name": "Richard"
-    },
-    // Add more users here
-  ];
-
   final ProfileController profileController = Get.find<ProfileController>();
   final HomeController homeController = Get.find<HomeController>();
   @override
@@ -48,9 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         showLoading();
         await profileController.fetchProfile();
-        await homeController.getUsersBasedOnPreference(
-          filter: "all",
-        );
+        await Get.find<AuthController>().getCountries();
+        await Get.find<AuthController>().getReligion();
+        await Get.find<AuthController>().getUserAttributes();
+        await homeController.getDefaultUsersBasedOnPreference();
+        await homeController.getLatestUserList();
+        await homeController.getMyStateUserList();
       } catch (e) {
         debugPrint('Error fetching profile: $e');
       } finally {
@@ -64,8 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       body: SingleChildScrollView(
-        child: Obx(
-          () => Column(
+        child: GetBuilder<HomeController>(builder: (controller) {
+          return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -108,21 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 120,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: homeController.matchedUsers.length,
+                    itemCount: controller.matchedUsers.length,
                     itemBuilder: (context, index) {
-                      final user = homeController.matchedUsers[index];
+                      final user = controller.matchedUsers[index];
                       return UserItem(
                           imageUrl: user.imageUrl ?? "",
-                          name: user.id.toString() ?? "Unknown",
+                          name: user.firstName ?? "",
                           onImageTap: () {
-                            homeController.homeUserNavigation(
+                            controller.homeUserNavigation(
                               id: user.id.toString(),
                             );
                           },
                           connectButtonTap: () {
                             Get.snackbar(
-                              "Connect",
-                              "Connect with ${user.id.toString()}",
+                              "Divine Marry",
+                              "Connect with ${user.firstName.toString()} ${user.lastName.toString()}",
                               snackPosition: SnackPosition.BOTTOM,
                               backgroundColor: AppColors.lightTheme,
                               colorText: Colors.white,
@@ -132,9 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 16,
               ),
 
               // <--- Find Your Match Section --->
@@ -154,7 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
               // <--- New Matches Section --->
 
               NewMatchesSection(
+                key: ValueKey(controller.latestUsers),
                 title: StringTexts.newMatches,
+                users: controller.latestUsers,
               ),
 
               // <--- Matches in your state Section --->
@@ -162,13 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
               NewMatchesSection(
                 title: StringTexts.matchesInYourState,
                 backgroundColor: AppColors.backgroundGrey,
+                users: controller.myStateUsers,
               ),
               SizedBox(
                 height: 34,
               ),
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }

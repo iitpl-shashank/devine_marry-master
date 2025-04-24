@@ -19,7 +19,7 @@ class AuthRepo {
   Future<bool> isLoggedIn() async {
     final String? isTokenAvailable =
         await sharedPreferences.getString(AppConstants.token);
-    //debugPrint("isTokenAvailable: $isTokenAvailable");
+
     return isTokenAvailable != null && isTokenAvailable.isNotEmpty;
   }
 

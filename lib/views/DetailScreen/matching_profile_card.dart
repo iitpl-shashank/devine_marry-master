@@ -1,12 +1,15 @@
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
-import 'package:devine_marry/utils/images.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/themes/app_colors.dart';
 
 class MatchCard extends StatelessWidget {
-  const MatchCard({super.key});
+  final String userImageUrl;
+  const MatchCard({
+    super.key,
+    required this.userImageUrl,
+  });
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -85,8 +88,8 @@ class MatchCard extends StatelessWidget {
                                   ),
                                 ),
                                 child: CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    Images.matchUser,
+                                  backgroundImage: NetworkImage(
+                                    userImageUrl,
                                   ),
                                   radius: 42,
                                 ),

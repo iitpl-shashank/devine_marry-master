@@ -1,12 +1,16 @@
+import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/helper/date_converter.dart';
+import 'package:devine_marry/models/details/user_details_model.dart'
+    as MatchedUser;
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../utils/string_texts.dart';
-import 'package:devine_marry/models/profile/profile_model.dart' as profile;
 
 class BasicInfoCard extends StatelessWidget {
-  final profile.ProfileModel? userProfile;
-  const BasicInfoCard({
+  final MatchedUser.UserDetailsModel userProfile;
+  final AuthController authController = Get.find<AuthController>();
+  BasicInfoCard({
     super.key,
     required this.userProfile,
   });
@@ -38,11 +42,37 @@ class BasicInfoCard extends StatelessWidget {
               StringTexts.age,
               AgeCalculator.calculateAge(
                   userProfile?.data?.user?.birthDate?.toIso8601String() ?? "")),
-          infoRow(StringTexts.religion,
-              userProfile?.data?.user?.religions.toString() ?? ""),
-          infoRow(StringTexts.currentLocation, "New Delhi"),
-          infoRow(StringTexts.qualification, "CA"),
-          infoRow(StringTexts.profession, "Accountant", hideDivider: true),
+          infoRow(
+              StringTexts.religion,
+              authController.religionResponse.religions
+                  .firstWhere(
+                      (element) =>
+                          element.id == userProfile?.data?.user?.religions,
+                      orElse: () =>
+                          authController.religionResponse.religions.first)
+                  .name),
+          // infoRow(
+          //     StringTexts.currentLocation,
+          //     authController.stateResponse.states
+          //         .firstWhere(
+          //             (element) =>
+          //                 element.id == userProfile.data?.user?.state,
+          //             orElse: () => authController.stateResponse.states.first)
+          //         .name),
+          infoRow(
+              StringTexts.qualification,
+              authController.dataModel.qualifications
+                  .firstWhere(
+                      (element) =>
+                          element.id ==
+                          userProfile.data?.user?.educationInfoData?.first
+                              .highestQualification,
+                      orElse: () =>
+                          authController.dataModel.qualifications.first)
+                  .name),
+          infoRow(StringTexts.profession,
+              userProfile.data?.user?.careerInfo?.first.designation ?? "",
+              hideDivider: true),
         ],
       ),
     );

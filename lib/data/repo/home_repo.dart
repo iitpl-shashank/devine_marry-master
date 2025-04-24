@@ -7,13 +7,29 @@ class HomeRepo {
   final ApiClient apiClient;
   HomeRepo({required this.apiClient});
 
-    Future<Response> getMatchedUsers(String filter) async {
-    return await apiClient.postData(AppConstants.getMatchedUsers, {"filter": filter});
+  Future<Response> getDefaultMatchedUsers({
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.getMatchedUsers,
+      {},
+      headers: headers,
+    );
   }
 
-   Future<Response> getUserDetails(String userId) async {
-    return await apiClient.postData(AppConstants.getUserDetails, {"user_id": userId});
+  Future<Response> getUsersList({
+    required String filter,
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.getMatchedUsers,
+      {"filter": filter},
+      headers: headers,
+    );
   }
 
-
+  Future<Response> getUserDetails(String userId) async {
+    return await apiClient
+        .postData(AppConstants.getUserDetails, {"user_id": userId});
+  }
 }

@@ -1,4 +1,8 @@
+import 'package:devine_marry/controller/AuthController/auth_controller.dart';
+import 'package:devine_marry/helper/date_converter.dart';
+import 'package:devine_marry/models/home/match_preference_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
@@ -7,12 +11,14 @@ import '../../widgets/custom_match_card.dart';
 class NewMatchesSection extends StatelessWidget {
   final String title;
   final Color? backgroundColor;
+  final List<User> users;
+  final AuthController authController = Get.find();
 
-  const NewMatchesSection({
-    super.key,
-    required this.title,
-    this.backgroundColor,
-  });
+  NewMatchesSection(
+      {super.key,
+      required this.title,
+      this.backgroundColor,
+      required this.users});
 
   @override
   Widget build(BuildContext context) {
@@ -53,22 +59,34 @@ class NewMatchesSection extends StatelessWidget {
               height: 16,
             ),
             SizedBox(
-              height: 255, // Height of the CustomMatchCard
+              height: 255,
               child: ListView.builder(
-                scrollDirection: Axis.horizontal, // Horizontal scrolling
-                itemCount: 5, // Number of cards
+                scrollDirection: Axis.horizontal,
+                itemCount: users.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(
-                      right: index == 4 ? 0 : 16, // Add spacing between cards
+                      right: index == 4 ? 0 : 16,
                     ),
-                    child: CustomMatchCard(
-                      imageUrl:
-                          'https://randomuser.me/api/portraits/men/${index + 1}.jpg',
-                      name: 'User ${index + 1}',
-                      age: 20,
-                      height: 170,
-                      religion: 'Hindu',
+                    child: Obx(
+                      () => CustomMatchCard(
+                        imageUrl: users[index].imageUrl ?? "",
+                        name:
+                            "${users[index].firstName ?? 'Unknown'} ${users[index].lastName ?? ''}"
+                                .trim(),
+                        age: int.parse(AgeCalculator.calculateAge(
+                            users[index].birthDate.toString())),
+                        height: HeightConverter.convertCmToFeetAndInches(
+                            users[index].height ?? 180),
+                        religion: authController.religionResponse.religions
+                            .firstWhere(
+                                (element) =>
+                                    element.id == users[index].religion,
+                                orElse: () => authController
+                                    .religionResponse.religions.first)
+                            .name,
+                        userId: users[index].id.toString(),
+                      ),
                     ),
                   );
                 },

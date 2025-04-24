@@ -24,80 +24,82 @@ class DashBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundGrey,
-      appBar: CustomAppBar(
-        startIconPath: Svgs.menuVector,
-        endIconPath: Svgs.notificationVector,
-        centerLogoPath: Svgs.logo,
-        startIconHeight: 18,
-        startIconWidth: 26,
-        endIconHeight: 21,
-        endIconWidth: 16,
-        centerLogoHeight: 51,
-        centerLogoWidth: 104,
-        onStartIconTap: () {
-          dashboardController.navigateToMenu();
-        },
-        onEndIconTap: () {
-          dashboardController.navigateToNotification();
-        },
-      ),
-      body: Obx(() => _screens[dashboardController.currentIndex.value]),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundGrey,
+        appBar: CustomAppBar(
+          startIconPath: Svgs.menuVector,
+          endIconPath: Svgs.notificationVector,
+          centerLogoPath: Svgs.logo,
+          startIconHeight: 18,
+          startIconWidth: 26,
+          endIconHeight: 21,
+          endIconWidth: 16,
+          centerLogoHeight: 51,
+          centerLogoWidth: 104,
+          onStartIconTap: () {
+            dashboardController.navigateToMenu();
+          },
+          onEndIconTap: () {
+            dashboardController.navigateToNotification();
+          },
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 2, 0, 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svgs.homeVector,
-                    label: "HOME",
-                    isActive: dashboardController.currentIndex.value == 0,
-                    onTap: () {
-                      dashboardController.updateIndex(0);
-                    },
-                  )),
-              Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svgs.connectsVector,
-                    label: "CONNECTS",
-                    isActive: dashboardController.currentIndex.value == 1,
-                    onTap: () {
-                      dashboardController.updateIndex(1);
-                    },
-                  )),
-              Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svgs.searchVector,
-                    label: "SEARCH",
-                    isActive: dashboardController.currentIndex.value == 2,
-                    onTap: () {
-                      dashboardController.updateIndex(2);
-                    },
-                  )),
-              Obx(() => CustomBottomNavigationBarItem(
-                    svgIconPath: Svgs.profileVector,
-                    label: "PROFILE",
-                    isActive: dashboardController.currentIndex.value == 3,
-                    onTap: () {
-                      dashboardController.updateIndex(3);
-                    },
-                  )),
+        body: Obx(() => _screens[dashboardController.currentIndex.value]),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+              ),
             ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 2, 0, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Obx(() => CustomBottomNavigationBarItem(
+                      svgIconPath: Svgs.homeVector,
+                      label: "HOME",
+                      isActive: dashboardController.currentIndex.value == 0,
+                      onTap: () {
+                        dashboardController.updateIndex(0);
+                      },
+                    )),
+                Obx(() => CustomBottomNavigationBarItem(
+                      svgIconPath: Svgs.connectsVector,
+                      label: "CONNECTS",
+                      isActive: dashboardController.currentIndex.value == 1,
+                      onTap: () {
+                        dashboardController.updateIndex(1);
+                      },
+                    )),
+                Obx(() => CustomBottomNavigationBarItem(
+                      svgIconPath: Svgs.searchVector,
+                      label: "SEARCH",
+                      isActive: dashboardController.currentIndex.value == 2,
+                      onTap: () {
+                        dashboardController.updateIndex(2);
+                      },
+                    )),
+                Obx(() => CustomBottomNavigationBarItem(
+                      svgIconPath: Svgs.profileVector,
+                      label: "PROFILE",
+                      isActive: dashboardController.currentIndex.value == 3,
+                      onTap: () {
+                        dashboardController.updateIndex(3);
+                      },
+                    )),
+              ],
+            ),
           ),
         ),
       ),

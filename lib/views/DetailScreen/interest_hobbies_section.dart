@@ -1,19 +1,14 @@
+import 'package:devine_marry/helper/common_functions.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:flutter/material.dart';
-
 import '../../utils/themes/app_colors.dart';
 
 class InterestsHobbiesSection extends StatelessWidget {
-  final List<String> hobbies = [
-    "Traveling",
-    "Cricket",
-    "Photography",
-    "Cooking",
-    "Movies",
-    "Swimming",
-    "Singing",
-    "Dog Lover",
-  ];
+  final String interestAndHobbies;
+  InterestsHobbiesSection({
+    super.key,
+    required this.interestAndHobbies,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +27,9 @@ class InterestsHobbiesSection extends StatelessWidget {
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: hobbies.map((hobby) => hobbyTile(hobby)).toList(),
+          children: CommonFunctions.splitStringByComma(interestAndHobbies)
+              .map((hobby) => hobbyTile(hobby))
+              .toList(),
         ),
       ],
     );

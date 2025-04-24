@@ -45,6 +45,7 @@ dependencies:
   numberpicker: ^2.1.2
   flutter_svg: ^2.0.17
   fluttertoast: ^8.2.12
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
