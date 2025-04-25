@@ -185,13 +185,16 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                   .toList(),
                               onChanged: (value) {
                                 profileController.updateReligion(value ?? "");
+                                profileController.updateCaste(null);
                                 controller.getCastes(controller
                                     .religionResponse.religions
                                     .firstWhere(
                                         (element) => element.name == value)
                                     .id
                                     .toString());
-                                profileController.updateCaste(null);
+                                debugPrint("Religion changed to: $value");
+                                debugPrint(
+                                    "Caste reset to: ${profileController.caste}");
                               },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -206,7 +209,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                           ),
                           Flexible(
                             child: CustomDropdownField(
-                              key: ValueKey(profileController.caste),
+                              key: ValueKey(profileController.religion),
                               hintText: 'Caste',
                               selectedValue: profileController.caste,
                               options: controller.casteResponse.castes
@@ -260,7 +263,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                           ),
                           Flexible(
                             child: CustomDropdownField(
-                              key: ValueKey(profileController.state),
+                              key: ValueKey(profileController.country),
                               hintText: 'State',
                               selectedValue: profileController.state,
                               options: controller.stateResponse.states
@@ -303,8 +306,9 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                         DateTime(currentDate.year - 100);
                                     DateTime lastAllowedDate =
                                         DateTime(currentDate.year - 18);
-        
-                                    DateTime? selectedDate = await showDatePicker(
+
+                                    DateTime? selectedDate =
+                                        await showDatePicker(
                                       context: Get.context!,
                                       initialDate: lastAllowedDate,
                                       firstDate: firstAllowedDate,
@@ -313,13 +317,14 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                         return Theme(
                                           data: Theme.of(context).copyWith(
                                             colorScheme: ColorScheme.light(
-                                              primary:
-                                                  Theme.of(context).primaryColor,
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
                                               onPrimary: Colors.white,
                                               onSurface: Colors.black,
                                               secondary: Colors.red,
                                             ),
-                                            textButtonTheme: TextButtonThemeData(
+                                            textButtonTheme:
+                                                TextButtonThemeData(
                                               style: TextButton.styleFrom(
                                                 foregroundColor: Colors.black,
                                               ),
@@ -330,12 +335,12 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                         );
                                       },
                                     );
-        
+
                                     if (selectedDate != null) {
                                       print(
                                           "Selected Date: ${selectedDate.toLocal()}");
-                                      profileController.updateDob(
-                                          selectedDate.toString() ?? "");
+                                      profileController
+                                          .updateDob(selectedDate.toString());
                                     }
                                   },
                                   onChanged: (value) {},

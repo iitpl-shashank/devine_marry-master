@@ -1442,11 +1442,9 @@ class ProfileController extends GetxController {
           .toList(),
     };
 
-
     try {
       showLoading();
-      await profileRepo.updateProfileDetails(
-          data: data, type: "preferences");
+      await profileRepo.updateProfileDetails(data: data, type: "preferences");
       fetchProfile();
       hideLoading();
     } catch (e) {
@@ -1460,6 +1458,5 @@ class ProfileController extends GetxController {
     } finally {
       hideLoading();
     }
-
   }
 }
