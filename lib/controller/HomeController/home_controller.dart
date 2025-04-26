@@ -64,7 +64,16 @@ class HomeController extends GetxController {
 
   Future<void> getUserDetails({required String userId}) async {
     try {
-      Response response = await homeRepo.getUserDetails(userId);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.getUserDetails(
+        userId: userId,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+      );
 
       if (response.statusCode == 200) {
         MatchedUser.UserDetailsModel userModel =

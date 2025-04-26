@@ -36,9 +36,10 @@ class SplashController extends GetxController implements GetxService {
           Get.toNamed(RouteHelper.register);
         }
         //TODO : To bypass the user verification check
-        else if (user.userVerify == "0") {
-          Get.toNamed(RouteHelper.successFullRegisterationScreen);
-        } else {
+        // else if (user.userVerify == "0") {
+        //   Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        // }
+        else {
           Get.toNamed(RouteHelper.dashboard);
         }
       } catch (e) {

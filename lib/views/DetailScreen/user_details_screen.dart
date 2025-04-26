@@ -1,4 +1,5 @@
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
+import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:devine_marry/views/DetailScreen/basic_info_card.dart';
 import 'package:devine_marry/views/DetailScreen/interest_hobbies_section.dart';
@@ -21,6 +22,7 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final HomeController homeController = Get.find<HomeController>();
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   void initState() {
@@ -162,6 +164,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           userImageUrl: homeController
                                   .selectedUser.value.data?.user?.imageUrl ??
                               "",
+                          myPofile: profileController.profile.value?.data?.user,
+                          matchedUser:
+                              homeController.selectedUser.value.data?.user,
                         ),
                         SizedBox(height: 16),
                       ],

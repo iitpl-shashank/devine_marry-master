@@ -186,7 +186,6 @@ class PersonalityScreen extends StatelessWidget {
                                 inputType: TextInputType.number,
                                 suffixText: "Kg",
                                 isAmount: true,
-                                
                                 controller: controller.weightController,
                                 onChanged: (value) {},
                                 validation: (value) {
@@ -305,8 +304,9 @@ class PersonalityScreen extends StatelessWidget {
                           children: [
                             Flexible(
                               child: CustomTextField(
-                                hintText: 'Bio (Max 50 lines)',
+                                hintText: 'Bio (Max 300 Characters)',
                                 maxLines: 50,
+                                maxLength: 300,
                                 controller: controller.bioController,
                                 onChanged: (value) {},
                                 validation: (value) {
@@ -325,6 +325,7 @@ class PersonalityScreen extends StatelessWidget {
                             Flexible(
                               child: CustomTextField(
                                 hintText: 'Interests & Hobbies',
+                                maxLength: 300,
                                 maxLines: 50,
                                 controller: controller.interestController,
                                 onChanged: (value) {},

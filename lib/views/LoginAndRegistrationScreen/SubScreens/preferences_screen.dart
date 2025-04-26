@@ -8,8 +8,21 @@ import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/number_picker_custom.dart';
 
-class PreferencesScreen extends StatelessWidget {
+class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
+
+  @override
+  State<PreferencesScreen> createState() => _PreferencesScreenState();
+}
+
+class _PreferencesScreenState extends State<PreferencesScreen> {
+  final AuthController authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    authController.stateResponse.states.clear();
+  }
 
   @override
   Widget build(BuildContext context) {

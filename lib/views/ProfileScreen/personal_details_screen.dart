@@ -204,29 +204,31 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                               },
                             ),
                           ),
-                          SizedBox(
-                            width: 13,
-                          ),
-                          Flexible(
-                            child: CustomDropdownField(
-                              key: ValueKey(profileController.religion),
-                              hintText: 'Caste',
-                              selectedValue: profileController.caste,
-                              options: controller.casteResponse.castes
-                                  .map((caste) => caste.name)
-                                  .toList(),
-                              onChanged: (value) {
-                                debugPrint("value ==> $value");
-                                profileController.updateCaste(value ?? "");
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select an option';
-                                }
-                                return null;
-                              },
+                          if (controller.casteResponse.castes.isNotEmpty)
+                            SizedBox(
+                              width: 13,
                             ),
-                          ),
+                          if (controller.casteResponse.castes.isNotEmpty)
+                            Flexible(
+                              child: CustomDropdownField(
+                                key: ValueKey(profileController.religion),
+                                hintText: 'Caste',
+                                selectedValue: profileController.caste,
+                                options: controller.casteResponse.castes
+                                    .map((caste) => caste.name)
+                                    .toList(),
+                                onChanged: (value) {
+                                  debugPrint("value ==> $value");
+                                  profileController.updateCaste(value ?? "");
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
                         ],
                       ),
                       SizedBox(height: 25),

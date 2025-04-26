@@ -1,14 +1,24 @@
+import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
+import 'package:devine_marry/helper/date_converter.dart';
+import 'package:devine_marry/models/profile/profile_model.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/themes/app_colors.dart';
+import 'package:devine_marry/models/details/user_details_model.dart'
+    as MatchedUser;
 
 class MatchCard extends StatelessWidget {
   final String userImageUrl;
-  const MatchCard({
+  final User? myPofile;
+  final MatchedUser.User? matchedUser;
+  final AuthController authController = Get.find<AuthController>();
+  MatchCard({
     super.key,
     required this.userImageUrl,
+    this.myPofile,
+    this.matchedUser,
   });
   @override
   Widget build(BuildContext context) {
@@ -131,10 +141,62 @@ class MatchCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            _detailRow("Height:", "5ft 8 in"),
-            _detailRow("Age:", "28"),
-            _detailRow("Religion:", "Hindu"),
-            _detailRow("Profession:", "Accountant", hideDivider: true),
+            if (AgeCalculator.matchAges(
+                myPofile?.birthDate?.toIso8601String() ?? "",
+                matchedUser?.birthDate?.toIso8601String() ?? ""))
+              _detailRow("Age:", "28"),
+            if (myPofile?.physicalAttributes?.height ==
+                matchedUser?.physicalAttributes?.height)
+              _detailRow(
+                  "Height:",
+                  HeightConverter.convertCmToFeetAndInches(
+                      myPofile?.physicalAttributes?.height ?? 180)),
+            if (myPofile?.religions == matchedUser?.religions)
+              _detailRow(
+                  "Religion:",
+                  authController.religionResponse.religions
+                      .firstWhere(
+                          (element) => element.id == myPofile?.religions,
+                          orElse: () =>
+                              authController.religionResponse.religions.first)
+                      .name),
+            if (myPofile?.country == matchedUser?.country)
+              _detailRow(
+                  "Country:",
+                  authController.countryResponse.countries
+                      .firstWhere((element) => element.id == myPofile?.country,
+                          orElse: () =>
+                              authController.countryResponse.countries.first)
+                      .name),
+            if (myPofile?.educationInfoData?.first.highestQualification ==
+                matchedUser?.educationInfoData?.first.highestQualification)
+              _detailRow(
+                  "Qualification:",
+                  authController.dataModel.qualifications
+                      .firstWhere(
+                          (element) =>
+                              element.id ==
+                              myPofile?.educationInfoData?.first
+                                  .highestQualification,
+                          orElse: () =>
+                              authController.dataModel.qualifications.first)
+                      .name),
+            if (myPofile?.careerInfo?.first.designation ==
+                matchedUser?.careerInfo?.first.designation)
+              _detailRow(
+                "Profession:",
+                myPofile?.careerInfo?.first.designation ?? "",
+              ),
+            if (myPofile?.maritalStatus == matchedUser?.maritalStatus)
+              _detailRow(
+                  "Marital Status:",
+                  authController.dataModel.maritalStatuses
+                      .firstWhere(
+                          (element) => element.id == myPofile?.maritalStatus,
+                          orElse: () =>
+                              authController.dataModel.maritalStatuses.first)
+                      .title,
+                  hideDivider: true),
           ],
         ),
       ),
@@ -178,13 +240,13 @@ class MatchCard extends StatelessWidget {
                         color: AppColors.green,
                         size: 18,
                       ),
-                      const SizedBox(width: 4),
-                      Text(StringTexts.matched,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.green,
-                          )),
+                      // const SizedBox(width: 4),
+                      // Text(StringTexts.matched,
+                      //     style: const TextStyle(
+                      //       fontSize: 15,
+                      //       fontWeight: FontWeight.w600,
+                      //       color: AppColors.green,
+                      //     )),
                     ],
                   ),
                 ],

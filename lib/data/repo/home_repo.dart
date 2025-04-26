@@ -27,8 +27,12 @@ class HomeRepo {
     );
   }
 
-  Future<Response> getUserDetails(String userId) async {
-    return await apiClient
-        .postData(AppConstants.getUserDetails, {"user_id": userId});
+  Future<Response> getUserDetails({
+    required String userId,
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+        AppConstants.getUserDetails, {"user_id": userId},
+        headers: headers);
   }
 }

@@ -125,7 +125,8 @@ class ProfileRepo {
           "firstname": data["firstname"] ?? "",
           "lastname": data["lastname"] ?? "",
           "religions": data["religions"] ?? "",
-          "caste": data["caste"] ?? "",
+          if (data["caste"] != 0 || data["caste"] != 'Unknown')
+            "caste": data["caste"] ?? "",
           "state": data["state"] ?? "",
           "birthDate": data["birthDate"] ?? "",
           "gender": data["gender"],
