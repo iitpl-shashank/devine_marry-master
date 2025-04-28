@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:devine_marry/utils/themes/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:devine_marry/data/api/api.dart';
 import 'package:flutter/cupertino.dart';
@@ -1551,5 +1553,49 @@ class AuthController extends GetxController implements GetxService {
         showCustomSnackBar("Please select preferred caste.", isError: true);
       }
     }
+  }
+
+// For logout
+  Future<bool> logOut() async {
+    showLoading();
+    bool isLogOut = await authRepo.clearSharedData();
+    if (isLogOut) {
+      Get.offAllNamed(RouteHelper.getLoginRoute());
+      showCustomSnackBar("Logout Successfully", isError: false);
+    } else {
+      showCustomSnackBar("Something went wrong. Please try again.",
+          isError: true);
+    }
+    hideLoading();
+    return isLogOut;
+  }
+
+  void showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Logout Confirmation"),
+          content: const Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog without logging out
+                Navigator.of(context).pop();
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform logout
+                Navigator.of(context).pop(); // Close the dialog
+                await logOut();
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

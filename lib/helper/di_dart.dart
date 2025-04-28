@@ -16,33 +16,48 @@ import '../utils/app_constants.dart';
 Future<void> init() async {
   /// Repository
   final sharedPreferences = await SharedPreferences.getInstance();
-  Get.lazyPut(() => sharedPreferences);
-  Get.lazyPut(() => ApiClient(
-      appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()));
+  Get.lazyPut(() => sharedPreferences, fenix: true);
+  Get.lazyPut(
+      () => ApiClient(
+          appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()),
+      fenix: true);
 
   Get.lazyPut(
-      () => AuthRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() => ProfileRepo(apiClient: Get.find()));
-  Get.lazyPut(() => HomeRepo(apiClient: Get.find()));
-  Get.lazyPut(() => ProfileRepo(apiClient: Get.find()));
-  Get.lazyPut(() => SearchRepo(apiClient: Get.find()));
+      () => AuthRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => ProfileRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => HomeRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => ProfileRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => SearchRepo(apiClient: Get.find()), fenix: true);
   // Get.lazyPut(() => ProfileRepo(apiClient: Get.find()));
   // Get.lazyPut(() => AppointmentRepo(apiClient: Get.find()));
   // Get.lazyPut(() => ClinicRepo(apiClient: Get.find()));
   // Get.lazyPut(() => DiabeticRepo(apiClient: Get.find()));
 
   /// Controller
-  Get.lazyPut(() =>
-      AuthController(authRepo: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      HomeController(homeRepo: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() =>
-      SplashController(authRepo: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() => ProfileController(
-      profileRepo: Get.find(), sharedPreferences: Get.find()));
-  Get.lazyPut(() => DashboardController());
-  Get.lazyPut(() => SearchUserController(
-      searchRepo: Get.find(), sharedPreferences: Get.find()));
+  Get.lazyPut(
+      () => AuthController(authRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () => HomeController(homeRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () =>
+          SplashController(authRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () => ProfileController(
+          profileRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => DashboardController(), fenix: true);
+  Get.lazyPut(
+      () => SearchUserController(
+          searchRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () => ProfileController(
+          profileRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
   // Get.lazyPut(() => AppointmentController(appointmentRepo:  Get.find(), apiClient: Get.find()));
   // Get.lazyPut(() => ClinicController(clinicRepo:  Get.find(), apiClient: Get.find()));
   // Get.lazyPut(() => ProfileController(profileRepo: Get.find(), apiClient: Get.find()));

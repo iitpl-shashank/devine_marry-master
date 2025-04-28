@@ -1,3 +1,4 @@
+import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/images.dart';
@@ -7,7 +8,8 @@ import '../../widgets/custom_app_bar.dart';
 import '../../widgets/profile_section_button.dart';
 
 class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+  final AuthController authController = Get.find<AuthController>();
+  MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,6 @@ class MenuScreen extends StatelessWidget {
                   }),
               ProfileSectionButton(
                   title: StringTexts.rateUs,
-                  showDivider: false,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -97,6 +98,12 @@ class MenuScreen extends StatelessWidget {
                         duration: Duration(seconds: 2),
                       ),
                     );
+                  }),
+              ProfileSectionButton(
+                  title: StringTexts.logOut,
+                  showDivider: false,
+                  onTap: () {
+                    authController.showLogoutConfirmationDialog(context);
                   }),
             ],
           ),
