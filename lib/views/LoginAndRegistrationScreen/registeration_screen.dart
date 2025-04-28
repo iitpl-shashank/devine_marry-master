@@ -30,87 +30,92 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: const AssetImage(Images.bgPlain),
-            fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: SafeArea(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: const AssetImage(Images.bgPlain),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: GetBuilder<AuthController>(
-            builder: (authController) {
-              return PageView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: authController.pageController,
-                children: [
-                  CreateScreen(),
-                  EducationScreen(),
-                  PersonalityScreen(),
-                  PreferencesScreen(),
-                ],
-              );
-            },
-          ),
-          bottomNavigationBar:
-              GetBuilder<AuthController>(builder: (controller) {
-            debugPrint("Register Screen ${controller.pageController.page}");
-            return Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 18.0, left: 16.0, right: 16.0),
-                child: Row(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: GetBuilder<AuthController>(
+              builder: (authController) {
+                return PageView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: authController.pageController,
                   children: [
-                    Visibility(
-                      visible: Get.find<AuthController>().currentPage != 0,
-                      child: Expanded(
-                          child: CommonButton(
-                        onPressed: () {
-                          if (controller.currentPage != 0) {
-                            controller.previousPage();
-                          }
-                        },
-                        isLightColor: true,
-                        text: Text("< Previous",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16)),
-                        isShowIcon: false,
-                      )),
-                    ),
-                    Visibility(
+                    CreateScreen(),
+                    EducationScreen(),
+                    PersonalityScreen(),
+                    PreferencesScreen(),
+                  ],
+                );
+              },
+            ),
+            bottomNavigationBar:
+                GetBuilder<AuthController>(builder: (controller) {
+              debugPrint("Register Screen ${controller.pageController.page}");
+              return Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 18.0, left: 16.0, right: 16.0),
+                  child: Row(
+                    children: [
+                      Visibility(
                         visible: Get.find<AuthController>().currentPage != 0,
-                        child: SizedBox(width: 10)),
-                    Expanded(
-                        child: CommonButton(
-                      onPressed: () {
-                        if (controller.currentPage == 0) {
-                          controller.checkCreateAccountScreen();
-                          log("Screen 0");
-                        } else if (controller.currentPage == 1) {
-                          controller.checkEducationScreen();
-                          log("Screen 1");
-                        } else if (controller.currentPage == 2) {
-                          controller.checkPersonalityScreen();
-                          log("Screen 2");
-                        } else if (controller.currentPage == 3) {
-                          controller.checkPreferencesScreen();
-                          log("Screen 3");
-                        }
-                      },
-                      isLightColor: false,
-                      text: controller.isLoginLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : Text(StringTexts.next,
+                        child: Expanded(
+                            child: CommonButton(
+                          onPressed: () {
+                            if (controller.currentPage != 0) {
+                              controller.previousPage();
+                            }
+                          },
+                          isLightColor: true,
+                          text: Text("< Previous",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 16)),
-                      isShowIcon: false,
-                    ))
-                  ],
-                ));
-          }),
+                          isShowIcon: false,
+                        )),
+                      ),
+                      Visibility(
+                          visible: Get.find<AuthController>().currentPage != 0,
+                          child: SizedBox(width: 10)),
+                      Expanded(
+                          child: CommonButton(
+                        onPressed: () {
+                          if (controller.currentPage == 0) {
+                            controller.checkCreateAccountScreen();
+                            log("Screen 0");
+                          } else if (controller.currentPage == 1) {
+                            controller.checkEducationScreen();
+                            log("Screen 1");
+                          } else if (controller.currentPage == 2) {
+                            controller.checkPersonalityScreen();
+                            log("Screen 2");
+                          } else if (controller.currentPage == 3) {
+                            controller.checkPreferencesScreen();
+                            log("Screen 3");
+                          }
+                        },
+                        isLightColor: false,
+                        text: controller.isLoginLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : Text(StringTexts.next,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                        isShowIcon: false,
+                      ))
+                    ],
+                  ));
+            }),
+          ),
         ),
       ),
     );

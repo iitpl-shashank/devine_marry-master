@@ -68,7 +68,7 @@ class MatchCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "$age yrs | $height | $religion",
+                  "$age yrs | $height\n$religion",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,

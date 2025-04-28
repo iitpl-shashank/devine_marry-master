@@ -70,34 +70,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
                 ),
-                child: SizedBox(
-                  height: 120,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.matchedUsers.length,
-                    itemBuilder: (context, index) {
-                      final user = controller.matchedUsers[index];
-                      return UserItem(
-                          imageUrl: user.imageUrl ?? "",
-                          name: user.firstName ?? "",
-                          onImageTap: () {
-                            controller.homeUserNavigation(
-                              id: user.id.toString(),
-                            );
+                child: controller.matchedUsers.isNotEmpty
+                    ? SizedBox(
+                        height: 120,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: controller.matchedUsers.length,
+                          itemBuilder: (context, index) {
+                            final user = controller.matchedUsers[index];
+                            return UserItem(
+                                imageUrl: user.imageUrl ?? "",
+                                name: user.firstName ?? "",
+                                onImageTap: () {
+                                  controller.homeUserNavigation(
+                                    id: user.id.toString(),
+                                  );
+                                },
+                                connectButtonTap: () {
+                                  Get.snackbar(
+                                    "Divine Marry",
+                                    "Connect with ${user.firstName.toString()} ${user.lastName.toString()}",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: AppColors.lightTheme,
+                                    colorText: Colors.white,
+                                    duration: Duration(seconds: 2),
+                                  );
+                                });
                           },
-                          connectButtonTap: () {
-                            Get.snackbar(
-                              "Divine Marry",
-                              "Connect with ${user.firstName.toString()} ${user.lastName.toString()}",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: AppColors.lightTheme,
-                              colorText: Colors.white,
-                              duration: Duration(seconds: 2),
-                            );
-                          });
-                    },
-                  ),
-                ),
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          'No Match Found',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.darkTheme,
+                          ),
+                        ),
+                      ),
               ),
 
               // <--- Find Your Match Section --->

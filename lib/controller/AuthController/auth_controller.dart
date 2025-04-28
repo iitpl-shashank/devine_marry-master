@@ -963,8 +963,7 @@ class AuthController extends GetxController implements GetxService {
       }
     } catch (e) {
       closeSnackBar();
-      showCustomSnackBar("Something went wrong. Please try again.",
-          isError: true);
+      showCustomSnackBar("Wrong OTP. Please try again.", isError: true);
     } finally {
       _isLoginLoading = false;
       update();
