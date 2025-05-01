@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:devine_marry/models/component_models/country.dart';
@@ -11,6 +12,7 @@ import '../../data/repo/profile_repo.dart';
 import '../../helper/date_converter.dart';
 import '../../helper/route_helper.dart';
 import '../../models/component_models/user_atributes.dart';
+import '../../models/profile/gallery_model.dart';
 import '../../models/profile/profile_model.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/themes/app_colors.dart';
@@ -33,6 +35,55 @@ class ProfileController extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   RxList<XFile> selectedImages = <XFile>[].obs;
+  RxList<ImageData> galleryImages = <ImageData>[].obs;
+
+  Future<void> fetchGalleryImages() async {
+    try {
+      showLoading();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+      String? responseBody = await profileRepo.fetchGalleryImages(token: token);
+      debugPrint("Response Body for Images: $responseBody");
+      if (responseBody != null) {
+        GalleryModel galleryModel =
+            GalleryModel.fromJson(jsonDecode(responseBody));
+
+        galleryImages.value = galleryModel.data?.images ?? [];
+        update();
+        hideLoading();
+
+        Get.snackbar(
+          "Success",
+          "Gallery images fetched successfully.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.primaryColor,
+          colorText: Get.theme.colorScheme.onPrimary,
+          duration: const Duration(seconds: 3),
+        );
+      } else {
+        hideLoading();
+        Get.snackbar(
+          "Error",
+          "Failed to fetch gallery images.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+          duration: const Duration(seconds: 3),
+        );
+      }
+    } catch (e) {
+      hideLoading();
+      Get.snackbar(
+        "Error",
+        "Error in fetchGalleryImages: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 3),
+      );
+      print("Error in fetchGalleryImages: $e");
+    }
+  }
 
   Future<void> fetchProfile() async {
     try {
@@ -70,7 +121,7 @@ class ProfileController extends GetxController {
         String token = prefs.getString(AppConstants.token) ?? "";
 
         await profileRepo.updateProfileImage(pickedFile.path, token);
-        await fetchProfile();
+        await fetchGalleryImages();
       } else {
         print("No image selected.");
       }
@@ -130,7 +181,6 @@ class ProfileController extends GetxController {
     }
   }
 
-
   Future<void> uploadGalleryImages() async {
     try {
       if (selectedImages.isEmpty) {
@@ -150,7 +200,6 @@ class ProfileController extends GetxController {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString(AppConstants.token) ?? "";
 
-
       isLoading.value = true;
       showLoading();
       await profileRepo.uploadGalleryImages(filePaths: filePaths, token: token);
@@ -163,6 +212,8 @@ class ProfileController extends GetxController {
         backgroundColor: Get.theme.primaryColor,
         colorText: Get.theme.colorScheme.onPrimary,
       );
+
+      Get.offNamed(RouteHelper.dashboard);
     } catch (e) {
       Get.snackbar(
         "Error",

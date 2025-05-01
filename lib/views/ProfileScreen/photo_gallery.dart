@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '../../utils/images.dart';
 import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
@@ -18,27 +16,26 @@ class PhotoGallery extends StatefulWidget {
 }
 
 class _PhotoGalleryState extends State<PhotoGallery> {
-  // final List<File> images = []; // List to store selected image files
   final ProfileController profileController = Get.find<ProfileController>();
 
-  // final ImagePicker _picker = ImagePicker();
-  Future<void> _addPhoto() async {
-    // Open the gallery and allow the user to select multiple images
-    // final List<XFile>? selectedImages = await _picker.pickMultiImage();
-
-    // if (selectedImages != null && selectedImages.isNotEmpty) {
-    //   setState(() {
-    //     // Add the selected images to the list
-    //     images.addAll(selectedImages.map((image) => File(image.path)));
-    //   });
-    // }
+  void _removePhoto(int index) {
+    // Remove the photo from the selectedImages list
+    profileController.selectedImages.removeAt(index);
+    profileController.update(); // Notify listeners about the change
   }
 
-  void _removePhoto(int index) {
-    // Remove the photo at the given index
-    // setState(() {
-    //   images.removeAt(index);
-    // });
+  void _removeServerImage(int index) {
+    // Remove the photo from the galleryImages list
+    profileController.galleryImages.removeAt(index);
+    profileController.update(); // Notify listeners about the change
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      profileController.fetchGalleryImages();
+    });
   }
 
   @override
@@ -100,7 +97,8 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8,
                     ),
-                    itemCount: profileController.selectedImages.length +
+                    itemCount: profileController.galleryImages.length +
+                        profileController.selectedImages.length +
                         1, // Add 1 for the "Add Photo" button
                     itemBuilder: (context, index) {
                       if (index == 0) {
@@ -126,17 +124,19 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                             ),
                           ),
                         );
-                      } else {
-                        // Display Image with Cross Button
-                        final imageIndex = index - 1; // Adjust index for images
+                      } else if (index <=
+                          profileController.galleryImages.length) {
+                        // Display images fetched from the server
+                        final imageIndex =
+                            index - 1; // Adjust index for galleryImages
                         return Stack(
                           children: [
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 image: DecorationImage(
-                                  image: FileImage(File(profileController
-                                      .selectedImages[imageIndex].path)),
+                                  image: NetworkImage(profileController
+                                      .galleryImages[imageIndex].image!),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -145,11 +145,59 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                               top: 4,
                               right: 4,
                               child: GestureDetector(
-                                onTap: () => _removePhoto(imageIndex),
+                                // onTap: () => _removeServerImage(imageIndex),
+                                onTap: () {
+                                  Get.snackbar(
+                                    "Images",
+                                    "Server images removed",
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: Get.theme.primaryColor,
+                                    colorText: Get.theme.colorScheme.onPrimary,
+                                  );
+                                },
                                 child: Container(
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.red,
+                                    color: Colors
+                                        .blue, // Blue color for server images
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        // Display user-selected images
+                        final selectedImageIndex =
+                            index - profileController.galleryImages.length - 1;
+                        return Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  image: FileImage(File(profileController
+                                      .selectedImages[selectedImageIndex]
+                                      .path)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: GestureDetector(
+                                onTap: () => _removePhoto(selectedImageIndex),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors
+                                        .red, // Red color for user-selected images
                                   ),
                                   child: const Icon(
                                     Icons.close,
