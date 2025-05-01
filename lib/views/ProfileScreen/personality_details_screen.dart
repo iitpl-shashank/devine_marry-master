@@ -70,7 +70,7 @@ class _PersonalityDetailsScreenState extends State<PersonalityDetailsScreen> {
               Get.back();
             },
             onEndIconTap: () {
-              profileController.profilenavigation("notification");
+              profileController.profileNavigation("notification");
             },
           ),
           body: Padding(

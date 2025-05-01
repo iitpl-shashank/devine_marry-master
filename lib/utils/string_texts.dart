@@ -71,6 +71,8 @@ class StringTexts {
   static const String familyBackground = 'Family Background';
   static const String educationAndProfessionDetails =
       'Education & Profession Details';
+  static const String addPhoto = 'Add Photo';
+  static const String uploadPhoto = 'Upload Photo';
 
 //Notifications
   static const String notifications = 'Notifications';

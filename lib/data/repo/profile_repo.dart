@@ -182,4 +182,56 @@ class ProfileRepo {
       print("Error in updateProfileDetails: $e");
     }
   }
+
+  Future<void> uploadGalleryImages({
+    required List<String> filePaths,
+    required String token,
+  }) async {
+    try {
+      String url = AppConstants.baseUrl + AppConstants.galleryPhotoUpload;
+
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      for (String filePath in filePaths) {
+        request.files
+            .add(await http.MultipartFile.fromPath('images[]', filePath));
+      }
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+      });
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        Get.snackbar(
+          "Success",
+          "Images uploaded successfully.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.primaryColor,
+          colorText: Get.theme.colorScheme.onPrimary,
+          duration: const Duration(seconds: 3),
+        );
+        print("Upload Response: $responseBody");
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to upload images: ${response.reasonPhrase}",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+          duration: const Duration(seconds: 3),
+        );
+        print("Error Response: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Error in uploadGalleryImages: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+        duration: const Duration(seconds: 3),
+      );
+      print("Error in uploadGalleryImages: $e");
+    }
+  }
 }

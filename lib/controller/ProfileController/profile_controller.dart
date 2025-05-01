@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:devine_marry/models/component_models/country.dart';
 import 'package:devine_marry/models/component_models/religion.dart';
 import 'package:devine_marry/widgets/common_loading.dart';
@@ -29,6 +31,8 @@ class ProfileController extends GetxController {
   });
   Rx<ProfileModel?> profile = Rx<ProfileModel?>(null);
   final ImagePicker _picker = ImagePicker();
+
+  RxList<XFile> selectedImages = <XFile>[].obs;
 
   Future<void> fetchProfile() async {
     try {
@@ -77,7 +81,104 @@ class ProfileController extends GetxController {
     }
   }
 
-  void profilenavigation(String screen) {
+  // Function to select multiple images from the gallery
+  Future<void> selectGalleryImages() async {
+    try {
+      // Open the gallery and allow the user to select multiple images
+      final List<XFile>? pickedImages = await _picker.pickMultiImage();
+
+      if (pickedImages != null && pickedImages.isNotEmpty) {
+        // Filter images that exceed the size limit of 2MB
+        final List<XFile> validImages = pickedImages.where((image) {
+          final fileSize = File(image.path).lengthSync();
+          return fileSize <= 2 * 1024 * 1024; // 2MB in bytes
+        }).toList();
+
+        if (validImages.isEmpty) {
+          Get.snackbar(
+            "Error",
+            "All selected images exceed the size limit of 2MB.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.red,
+            colorText: AppColors.white,
+          );
+          return;
+        }
+
+        // Update the global selectedImages variable
+        selectedImages.value = validImages;
+
+        Get.snackbar(
+          "Success",
+          "Images selected successfully.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Get.theme.primaryColor,
+          colorText: Get.theme.colorScheme.onPrimary,
+        );
+      } else {
+        print("No images selected.");
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Error selecting images: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      print("Error selecting images: $e");
+    }
+  }
+
+
+  Future<void> uploadGalleryImages() async {
+    try {
+      if (selectedImages.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "No images selected to upload.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+        );
+        return;
+      }
+
+      final List<XFile> imagesToUpload = selectedImages.take(5).toList();
+      final List<String> filePaths =
+          imagesToUpload.map((image) => image.path).toList();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+
+      isLoading.value = true;
+      showLoading();
+      await profileRepo.uploadGalleryImages(filePaths: filePaths, token: token);
+      selectedImages.clear();
+
+      Get.snackbar(
+        "Success",
+        "Images uploaded successfully.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.theme.primaryColor,
+        colorText: Get.theme.colorScheme.onPrimary,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Error uploading images: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      print("Error uploading images: $e");
+    } finally {
+      hideLoading();
+      isLoading.value = false;
+    }
+  }
+
+  void profileNavigation(String screen) {
     if (screen == "personal_details") {
       Get.toNamed(
         RouteHelper.personalDetails,

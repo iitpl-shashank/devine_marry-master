@@ -5,6 +5,7 @@ import 'package:devine_marry/views/DetailScreen/basic_info_card.dart';
 import 'package:devine_marry/views/DetailScreen/interest_hobbies_section.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/common_loading.dart';
 import 'matching_profile_card.dart';
@@ -49,7 +50,16 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.snackbar(
+                  "Divine Marry",
+                  "Connect with ${homeController.selectedUser.value.data?.user?.username.toString()}",
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: AppColors.lightTheme,
+                  colorText: Colors.white,
+                  duration: Duration(seconds: 2),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
@@ -82,6 +92,20 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         width: double.infinity,
                         height: 500,
                         fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: double.infinity,
+                              height: 500,
+                              color: Colors.grey[300],
+                            ),
+                          );
+                        },
                         errorBuilder: (context, error, stackTrace) =>
                             Image.network(
                           homeController.defaultUserImage,
@@ -106,7 +130,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       ),
                     ],
                   ),
-
                   // Info Card
                   Container(
                     color: AppColors.white,

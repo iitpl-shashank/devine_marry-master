@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/app_constants.dart';
@@ -19,7 +20,7 @@ class AuthRepo {
   Future<bool> isLoggedIn() async {
     final String? isTokenAvailable =
         await sharedPreferences.getString(AppConstants.token);
-
+    debugPrint("Logged token : ${isTokenAvailable}");
     return isTokenAvailable != null && isTokenAvailable.isNotEmpty;
   }
 

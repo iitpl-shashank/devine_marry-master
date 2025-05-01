@@ -76,7 +76,7 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                 Get.back();
               },
               onEndIconTap: () {
-                profileController.profilenavigation("notification");
+                profileController.profileNavigation("notification");
               },
             ),
             body: Padding(

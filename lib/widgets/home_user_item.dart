@@ -1,5 +1,6 @@
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UserItem extends StatelessWidget {
   final String imageUrl;
@@ -30,7 +31,48 @@ class UserItem extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(0, 8, 8, 0),
                   child: CircleAvatar(
                     radius: 36,
-                    backgroundImage: NetworkImage(imageUrl),
+                    backgroundColor:
+                        Colors.grey[300],
+                    child: ClipOval(
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        width: 72,
+                        height: 72,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: 72,
+                              height: 72,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.broken_image,
+                              color: Colors.grey,
+                              size: 36,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

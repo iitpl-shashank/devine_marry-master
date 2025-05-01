@@ -17,6 +17,7 @@ class AppConstants {
   static const String castesList = "get-caste-list";
   static const String getDegrees = "get-degrees";
   static const String states = "Getstate";
+  static const String galleryPhotoUpload = 'gallery-upload';
   static const String statesList = "get-state-list";
   static const String getMatchedUsers = "get-matched-users";
   static const String searchUsers = "search-users";

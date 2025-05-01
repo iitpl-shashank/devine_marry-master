@@ -8,6 +8,7 @@ import 'package:devine_marry/views/ProfileScreen/education_profession_details_sc
 import 'package:devine_marry/views/ProfileScreen/family_background_screen.dart';
 import 'package:devine_marry/views/ProfileScreen/personal_details_screen.dart';
 import 'package:devine_marry/views/ProfileScreen/personality_details_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/photo_gallery.dart';
 import 'package:devine_marry/views/ProfileScreen/preference_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -60,6 +61,7 @@ class RouteHelper {
   static const String familyBackground = '/family-background';
   static const String personalityDetails = '/personality-details';
   static const String preferenceDetails = '/preference-details';
+  static const String photoGallery = '/photo-gallery';
   static const String userDetailsScreen = '/user-details-screen';
   static const String seeAllScreen = '/see-all-screen';
   static const String educationProfessionDetail =
@@ -218,6 +220,10 @@ class RouteHelper {
     GetPage(
       name: preferenceDetails,
       page: () => PreferenceDetailsScreen(),
+    ),
+    GetPage(
+      name: photoGallery,
+      page: () => PhotoGallery(),
     ),
     GetPage(
       name: userDetailsScreen,

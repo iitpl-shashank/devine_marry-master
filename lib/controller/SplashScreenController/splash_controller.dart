@@ -30,7 +30,7 @@ class SplashController extends GetxController implements GetxService {
     if (value) {
       try {
         Response response = await authRepo.getUserData();
-        debugPrint("Response: ${response.body}");
+        debugPrint("Response isLoggedin: ${response.body}");
         UserModel user = UserModel.fromJson(response.body['user']);
         if (user.profileComplete == 0) {
           Get.toNamed(RouteHelper.register);

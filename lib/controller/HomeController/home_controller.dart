@@ -28,7 +28,7 @@ class HomeController extends GetxController {
   Rx<MatchedUser.UserDetailsModel> selectedUser =
       Rx<MatchedUser.UserDetailsModel>(MatchedUser.UserDetailsModel());
   final String defaultUserImage =
-      'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg';
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Default-Icon.jpg/500px-Default-Icon.jpg';
 
   void homeUserNavigation({required String id}) {
     Get.toNamed(RouteHelper.userDetailsScreen, arguments: id);

@@ -67,7 +67,7 @@ class _FamilyBackgroundScreenState extends State<FamilyBackgroundScreen> {
             Get.back();
           },
           onEndIconTap: () {
-            profileController.profilenavigation("notification");
+            profileController.profileNavigation("notification");
           },
         ),
         body: Padding(

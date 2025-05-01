@@ -75,7 +75,7 @@ class _EducationProfessionDetailsScreenState
               Get.back();
             },
             onEndIconTap: () {
-              profileController.profilenavigation("notification");
+              profileController.profileNavigation("notification");
             },
           ),
           body: Padding(
