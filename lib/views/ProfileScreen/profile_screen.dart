@@ -80,6 +80,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () {
+                        profileController.updateProfileImage();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            Svgs.editImageVector,
+                            height: 18,
+                            width: 18,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            StringTexts.upload_profile_picture,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.lightTheme,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     //TODO : User gallery to be added
                     AddPhotoWidget(
@@ -89,35 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       },
                     ),
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     profileController.updateProfileImage();
-                    //   },
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       SvgPicture.asset(
-                    //         Svgs.editImageVector,
-                    //         height: 18,
-                    //         width: 18,
-                    //       ),
-                    //       const SizedBox(
-                    //         width: 8,
-                    //       ),
-
-                    //       Text(
-                    // StringTexts.upload_profile_picture,
-                    //         style: TextStyle(
-                    //           fontSize: 14,
-                    //           fontWeight: FontWeight.w400,
-                    //           color: AppColors.lightTheme,
-                    //           decoration: TextDecoration.underline,
-                    //         ),
-                    //       ),
-
-                    //     ],
-                    //   ),
-                    // )
                   ],
                 ),
               ),

@@ -121,6 +121,8 @@ class ProfileController extends GetxController {
         String token = prefs.getString(AppConstants.token) ?? "";
 
         await profileRepo.updateProfileImage(pickedFile.path, token);
+        await fetchProfile();
+        // TODO : To check if this fetchGallery is required here
         await fetchGalleryImages();
       } else {
         print("No image selected.");
