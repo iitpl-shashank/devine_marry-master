@@ -1,15 +1,11 @@
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
-import 'package:devine_marry/widgets/custom_snack_bar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../utils/string_texts.dart';
 import '../../../utils/styles.dart';
-import '../../../widgets/common_button.dart';
 import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
-import '../../../widgets/image_picker_widget.dart';
 import '../../../widgets/number_picker_custom.dart';
 
 class PersonalityScreen extends StatelessWidget {
@@ -33,8 +29,8 @@ class PersonalityScreen extends StatelessWidget {
                       StringTexts.Personality_Attributes,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF86413F),
-                        fontSize: 32,
+                        color: AppColors.darkTheme,
+                        fontSize: 30,
                         fontWeight: FontWeight.w800,
                         height: 1.40,
                       ),
@@ -357,117 +353,117 @@ class PersonalityScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 21),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  width: Get.size.width,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 21),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              StringTexts.Preferrences,
-                              style: TextStyle(
-                                color: Color(0xFF86413F),
-                                fontSize: DmSansRegular.copyWith(fontSize: 14)
-                                    .fontSize,
-                                // fontFamily: 'DM Sans',
-                                fontWeight: DmSansBold.fontWeight,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Religion',
-                                options: controller.religionResponse.religions
-                                    .map((religions) => religions.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefReligion,
-                                onChanged: (value) {
-                                  controller.updatePrefReligion(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Qualification',
-                                options: controller.dataModel.qualifications
-                                    .map((qualification) => qualification.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues:
-                                    controller.prefHighestQualification,
-                                onChanged: (value) {
-                                  debugPrint("value===> $value");
-                                  controller
-                                      .updatePrefQualification(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Country',
-                                options: controller.countryResponse.countries
-                                    .map((country) => country.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefCountry,
-                                onChanged: (value) {
-                                  controller.updatePrefCountry(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 25),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // SizedBox(height: 21),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Container(
+              //     width: Get.size.width,
+              //     decoration: ShapeDecoration(
+              //       color: Colors.white,
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(5)),
+              //     ),
+              //     child: Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              //       child: Column(
+              //         children: [
+              //           SizedBox(height: 21),
+              //           Row(
+              //             mainAxisAlignment: MainAxisAlignment.start,
+              //             children: [
+              //               Text(
+              //                 StringTexts.Preferences,
+              //                 style: TextStyle(
+              //                   color: AppColors.darkTheme,
+              //                   fontSize: DmSansRegular.copyWith(fontSize: 14)
+              //                       .fontSize,
+              //                   // fontFamily: 'DM Sans',
+              //                   fontWeight: DmSansBold.fontWeight,
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           SizedBox(height: 17),
+              //           Row(
+              //             children: [
+              //               Flexible(
+              //                 child: CustomDropdownField(
+              //                   hintText: 'Religion',
+              //                   options: controller.religionResponse.religions
+              //                       .map((religions) => religions.name)
+              //                       .toList(),
+              //                   isMultiple: true,
+              //                   selectedValues: controller.prefReligion,
+              //                   onChanged: (value) {
+              //                     controller.updatePrefReligion(value ?? "");
+              //                   },
+              //                   validator: (value) {
+              //                     if (value == null || value.isEmpty) {
+              //                       return 'Please select an option';
+              //                     }
+              //                     return null;
+              //                   },
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           SizedBox(height: 17),
+              //           Row(
+              //             children: [
+              //               Flexible(
+              //                 child: CustomDropdownField(
+              //                   hintText: 'Qualification',
+              //                   options: controller.dataModel.qualifications
+              //                       .map((qualification) => qualification.name)
+              //                       .toList(),
+              //                   isMultiple: true,
+              //                   selectedValues:
+              //                       controller.prefHighestQualification,
+              //                   onChanged: (value) {
+              //                     debugPrint("value===> $value");
+              //                     controller
+              //                         .updatePrefQualification(value ?? "");
+              //                   },
+              //                   validator: (value) {
+              //                     if (value == null || value.isEmpty) {
+              //                       return 'Please select an option';
+              //                     }
+              //                     return null;
+              //                   },
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           SizedBox(height: 17),
+              //           Row(
+              //             children: [
+              //               Flexible(
+              //                 child: CustomDropdownField(
+              //                   hintText: 'Country',
+              //                   options: controller.countryResponse.countries
+              //                       .map((country) => country.name)
+              //                       .toList(),
+              //                   isMultiple: true,
+              //                   selectedValues: controller.prefCountry,
+              //                   onChanged: (value) {
+              //                     controller.updatePrefCountry(value ?? "");
+              //                   },
+              //                   validator: (value) {
+              //                     if (value == null || value.isEmpty) {
+              //                       return 'Please select an option';
+              //                     }
+              //                     return null;
+              //                   },
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           SizedBox(height: 25),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 21),
             ],
           ),

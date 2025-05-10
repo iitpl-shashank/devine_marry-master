@@ -16,7 +16,7 @@ import '../../models/user/user.dart';
 import '../../utils/app_constants.dart';
 import '../../widgets/common_loading.dart';
 import '../../widgets/custom_snack_bar.dart';
-import 'package:path/path.dart';
+
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
@@ -1037,10 +1037,8 @@ class AuthController extends GetxController implements GetxService {
         (drinkingHabit ?? "").isNotEmpty &&
         (bloodGroup ?? "").isNotEmpty &&
         (complexion ?? "").isNotEmpty &&
-        (prefCountry ?? []).isNotEmpty &&
-        (prefHighestQualification ?? []).isNotEmpty &&
-        (prefReligion ?? []).isNotEmpty &&
-        (disability ?? "").isNotEmpty) {
+        (disability ?? "").isNotEmpty
+        ) {
       registerUser("personality");
     } else {
       if ((hairController.text ?? "").isEmpty) {
@@ -1073,15 +1071,6 @@ class AuthController extends GetxController implements GetxService {
       } else if ((complexion ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select complexion", isError: true);
-      } else if ((prefCountry ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred country", isError: true);
-      } else if ((prefHighestQualification ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred highest qualification", isError: true);
-      } else if ((prefReligion ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred religion", isError: true);
       } else if ((disability ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select disability", isError: true);
