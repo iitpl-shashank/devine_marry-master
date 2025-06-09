@@ -13,7 +13,7 @@ class ApiClient extends GetxService {
   final SharedPreferences sharedPreferences;
   static const String noInternetMessage =
       'Connection to API server failed due to internet connection';
-  final int timeoutInSeconds = 60;
+  final int timeoutInSeconds = 120;
   String? token;
   String? email;
   String? image;
@@ -143,6 +143,7 @@ class ApiClient extends GetxService {
       log('====> API Response: [${response.statusCode}] $uri\n${response.body}');
       return handleResponse(response, uri);
     } catch (e) {
+      log('API Exception: $e');
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
@@ -234,6 +235,7 @@ class ApiClient extends GetxService {
       statusText: response.reasonPhrase,
     );
     if (response0.statusCode != 200 &&
+        response0.statusCode != 201 &&
         response0.body != null &&
         response0.body is! String) {
       response0 = Response(

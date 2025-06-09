@@ -185,16 +185,20 @@ class AgeCalculator {
 
   static bool matchAges(String birthDateString1, String birthDateString2) {
     // Parse the birth dates
-    DateTime birthDate1 = DateFormat('yyyy-MM-dd').parse(birthDateString1);
-    DateTime birthDate2 = DateFormat('yyyy-MM-dd').parse(birthDateString2);
+    try {
+      DateTime birthDate1 = DateFormat('yyyy-MM-dd').parse(birthDateString1);
+      DateTime birthDate2 = DateFormat('yyyy-MM-dd').parse(birthDateString2);
 
-    // Calculate ages in years
-    int age1 = _calculateAgeInYears(birthDate1);
-    int age2 = _calculateAgeInYears(birthDate2);
-    debugPrint("Age1: $age1");
-    debugPrint("Age2: $age2");
-    // Compare ages in years
-    return age1 == age2;
+      // Calculate ages in years
+      int age1 = _calculateAgeInYears(birthDate1);
+      int age2 = _calculateAgeInYears(birthDate2);
+      debugPrint("Age1: $age1");
+      debugPrint("Age2: $age2");
+      // Compare ages in years
+      return age1 == age2;
+    } catch (e) {
+      return false;
+    }
   }
 
   static int _calculateAgeInYears(DateTime birthDate) {

@@ -7,6 +7,7 @@ class AppConstants {
   /// Api Url ///
 
   static const String sendOtpUrl = "check-mobile";
+  static const String sendInterest = "send-interests";
   static const String verifyOtpUrl = "verify-otp";
   static const String updateProfileUrl = "update/my-profile";
   static const String countries = "getcountries";

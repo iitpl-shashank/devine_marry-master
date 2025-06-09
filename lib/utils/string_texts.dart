@@ -7,6 +7,8 @@ class StringTexts {
   static const String saveChanges = 'Save Changes';
   static const String connect = 'Connect';
   static const String search = 'Search';
+  static const String requestSent = 'Request Sent';
+  static const String chatNow = 'Chat Now';
 
   // login Screen Text
   static const String login = 'LOGIN';

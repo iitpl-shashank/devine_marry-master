@@ -111,6 +111,7 @@ class User {
   final List<EducationInfoDatum>? educationInfoData;
   final List<CareerInfo>? careerInfo;
   final PartnerExpectation? partnerExpectation;
+  final dynamic userInterestStatus;
 
   User({
     this.id,
@@ -172,6 +173,7 @@ class User {
     this.educationInfoData,
     this.careerInfo,
     this.partnerExpectation,
+    this.userInterestStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -254,6 +256,9 @@ class User {
         partnerExpectation: json["partner_expectation"] == null
             ? null
             : PartnerExpectation.fromJson(json["partner_expectation"]),
+        userInterestStatus: json["user_interest_status"] != null
+            ? json["user_interest_status"].toString()
+            : null,
       );
 
   Map<String, dynamic> toJson() => {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:devine_marry/data/repo/home_repo.dart';
 import 'package:devine_marry/models/details/user_details_model.dart'
@@ -96,6 +97,8 @@ class HomeController extends GetxController {
         MatchedUser.UserDetailsModel userModel =
             MatchedUser.userDetailsModelFromJson(response.bodyString ?? "");
         selectedUser.value = userModel;
+        log("Selected User UserModel Response: ${response.bodyString}");
+        log("Selected User: ${selectedUser.value.data}");
 
         update();
       } else {
@@ -132,6 +135,40 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       print("Exception in getUserList: $e");
+    }
+  }
+
+  Future<void> sendInterestToUser(
+      {required int interestingId, required String myUserId}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      Response response = await homeRepo.sendInterestToUser(
+        interestingId: interestingId,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      log("Response code : ${response.statusCode}");
+      log("Response body : ${response.bodyString}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar("Success", "Request sent successfully.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
+        await getUserDetails(
+          userId: myUserId,
+        );
+        update();
+      } else {
+        print("Error abhay : ${response.statusText}");
+      }
+    } catch (e) {
+      print("Exception in sendInterestToUser: $e");
     }
   }
 

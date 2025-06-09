@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/string_texts.dart';
@@ -42,6 +44,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dynamic userInterest =
+        homeController.selectedUser.value.data?.user?.userInterestStatus;
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: Padding(
@@ -51,14 +55,26 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
-                Get.snackbar(
-                  "Divine Marry",
-                  "Connect with ${homeController.selectedUser.value.data?.user?.username.toString()}",
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: AppColors.lightTheme,
-                  colorText: Colors.white,
-                  duration: Duration(seconds: 2),
-                );
+                log("Button Pressed : $userInterest");
+                if ((userInterest == "0" || userInterest == 0)) {
+                  Get.snackbar(
+                    "Request Sent",
+                    "Request already sent",
+                    snackPosition: SnackPosition.TOP,
+                  );
+                } else if ((userInterest == "1" || userInterest == 1)) {
+                  Get.snackbar(
+                    "Chat Now",
+                    "Start chatting with this user",
+                    snackPosition: SnackPosition.TOP,
+                  );
+                } else {
+                  homeController.sendInterestToUser(
+                    interestingId:
+                        homeController.selectedUser.value.data?.user?.id ?? 0,
+                    myUserId: widget.userId,
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
@@ -67,7 +83,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ),
               ),
               child: Text(
-                StringTexts.connect.toUpperCase(),
+                (userInterest == "0" || userInterest == 0)
+                    ? StringTexts.requestSent.toUpperCase()
+                    : (userInterest == "1" || userInterest == 1)
+                        ? StringTexts.chatNow.toUpperCase()
+                        : StringTexts.connect.toUpperCase(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,

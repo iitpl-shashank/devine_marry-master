@@ -35,4 +35,16 @@ class HomeRepo {
         AppConstants.getUserDetails, {"user_id": userId},
         headers: headers);
   }
+
+  Future<Response> sendInterestToUser({
+    required int interestingId,
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+        AppConstants.sendInterest,
+        {
+          "interesting_id": interestingId,
+        },
+        headers: headers);
+  }
 }
