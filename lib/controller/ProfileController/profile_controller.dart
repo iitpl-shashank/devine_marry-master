@@ -286,10 +286,10 @@ class ProfileController extends GetxController {
     await setCaste(
         casteId: profile.value?.data?.user?.caste ?? 1,
         religionId: profile.value?.data?.user?.religions ?? 1);
-    setCountry(profile.value?.data?.user?.country ?? 1);
+    setCountry(profile.value?.data?.user?.country ?? 2);
     await setState(
         stateId: profile.value?.data?.user?.state ?? 1,
-        countryId: profile.value?.data?.user?.country ?? 1);
+        countryId: profile.value?.data?.user?.country ?? 2);
     setGender(profile.value?.data?.user?.gender ?? 1);
     dob = dobController.text;
     update();

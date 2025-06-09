@@ -132,7 +132,6 @@ class MatchCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
@@ -144,7 +143,6 @@ class MatchCard extends StatelessWidget {
                 ),
               ),
             ),
-          
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
@@ -154,7 +152,7 @@ class MatchCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
-                    return child; 
+                    return child;
                   }
                   return Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,

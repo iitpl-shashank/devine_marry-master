@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:devine_marry/data/repo/home_repo.dart';
 import 'package:devine_marry/models/details/user_details_model.dart'
     as MatchedUser;
 import 'package:devine_marry/widgets/common_loading.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../helper/route_helper.dart';
@@ -54,6 +57,20 @@ class HomeController extends GetxController {
         update();
 
         print("Matched Users: ${matchedUsers.map((user) => user.id).toList()}");
+      } else if (response.statusCode == 404) {
+        final Map<String, dynamic> responseBody =
+            response.body is String ? jsonDecode(response.body) : response.body;
+        String errorMessage = "No users found";
+        if (responseBody['message'] != null &&
+            responseBody['message']['error'] != null &&
+            responseBody['message']['error'] is List &&
+            responseBody['message']['error'].isNotEmpty) {
+          errorMessage = responseBody['message']['error'][0];
+        }
+        Get.snackbar("Error : ", errorMessage,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       } else {
         print("Error: ${response.statusText}");
       }

@@ -82,7 +82,9 @@ class User {
         birthDate: json["birth_date"] == null
             ? null
             : DateTime.parse(json["birth_date"]),
-        height: json["height"],
+        height: (json["height"] is int)
+            ? json["height"]
+            : int.tryParse(json["height"]?.toString() ?? ''),
         religion: json["religion"],
         imageUrl: json["image_url"],
       );
