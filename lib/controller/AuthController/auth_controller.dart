@@ -85,6 +85,7 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void updateCasteList(List<String> value) {
+    log("Caste List: $value");
     prefCaste = value;
     update();
   }
@@ -232,8 +233,9 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void updatePrefReligion(List<String> value) {
-    log("Pref Religion: $value");
     prefReligion = value;
+
+    log("Pref Religion: $prefReligion");
     update();
   }
 
@@ -672,9 +674,9 @@ class AuthController extends GetxController implements GetxService {
         _isLoginLoading = false;
         update();
       } else {
-        print('Failed to fetch the castes');
-        showCustomSnackBar("Something went wrong. Please try again.",
-            isError: true);
+        // print('Failed to fetch the castes');
+        // showCustomSnackBar("Something went wrong. Please try again.",
+        //     isError: true);
         hideLoading();
       }
     } catch (e) {
@@ -718,9 +720,9 @@ class AuthController extends GetxController implements GetxService {
         _isLoginLoading = false;
         update();
       } else {
-        print('Failed to fetch the castes');
-        showCustomSnackBar("Something went wrong. Please try again.",
-            isError: true);
+        // print('Failed to fetch the castes');
+        // showCustomSnackBar("Something went wrong. Please try again.",
+        //     isError: true);
         hideLoading();
       }
     } catch (e) {
@@ -1021,6 +1023,15 @@ class AuthController extends GetxController implements GetxService {
     required List<int> qualificationList,
     required List<int> complexionsList,
   }) async {
+    log("All Preferences : "
+        "smokingStatus: $smokingStatus, "
+        "drinkingStatus: $drinkingStatus, "
+        "religionList: $religionList, "
+        "casteList: $casteList, "
+        "countryList: $countryList, "
+        "stateList: $stateList, "
+        "qualificationList: $qualificationList, "
+        "complexionsList: $complexionsList");
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -1192,50 +1203,77 @@ class AuthController extends GetxController implements GetxService {
       List<int> Caste = [];
       List<int> Complexions = [];
 
-      religionResponse.religions!.forEach((religion) {
-        if (prefReligion!.contains(religion.name)) {
-          Religion.add(religion.id);
+      if (prefReligion != null && prefReligion!.contains('Select All')) {
+        Religion.addAll(
+            religionResponse.religions.map((religion) => religion.id));
+      } else {
+        for (var religion in religionResponse.religions) {
+          if (prefReligion != null && prefReligion!.contains(religion.name)) {
+            Religion.add(religion.id);
+          }
         }
-      });
+      }
 
-      dataModel.qualifications.forEach((qualification) {
-        if (prefHighestQualification!.contains(qualification.name)) {
-          HighestQualification.add(qualification.id.toInt());
+      if (prefHighestQualification != null &&
+          prefHighestQualification!.contains('Select All')) {
+        HighestQualification.addAll(dataModel.qualifications.map((q) => q.id));
+      } else {
+        for (var qualification in dataModel.qualifications) {
+          if (prefHighestQualification != null &&
+              prefHighestQualification!.contains(qualification.name)) {
+            HighestQualification.add(qualification.id.toInt());
+          }
         }
-      });
+      }
 
-      countryResponse.countries.forEach((country) {
-        if (prefCountry!.contains(country.name)) {
-          Country.add(country.id.toInt());
+      if (prefCountry != null && prefCountry!.contains('Select All')) {
+        Country.addAll(countryResponse.countries.map((c) => c.id));
+      } else {
+        for (var country in countryResponse.countries) {
+          if (prefCountry != null && prefCountry!.contains(country.name)) {
+            Country.add(country.id.toInt());
+          }
         }
-      });
+      }
 
-      stateResponse.states.forEach((state) {
-        if (prefState!.contains(state.name)) {
-          State.add(state.id.toInt());
+      if (prefState != null && prefState!.contains('Select All')) {
+        State.addAll(stateResponse.states.map((s) => s.id));
+      } else {
+        for (var state in stateResponse.states) {
+          if (prefState != null && prefState!.contains(state.name)) {
+            State.add(state.id.toInt());
+          }
         }
-      });
+      }
 
-      casteResponse.castes.forEach((caste) {
-        if (prefCaste!.contains(caste.name)) {
-          Caste.add(caste.id.toInt());
+      if (prefCaste != null && prefCaste!.contains('Select All')) {
+        Caste.addAll(casteResponse.castes.map((c) => c.id));
+      } else {
+        for (var caste in casteResponse.castes) {
+          if (prefCaste != null && prefCaste!.contains(caste.name)) {
+            Caste.add(caste.id.toInt());
+          }
         }
-      });
+      }
 
-      dataModel.complexion.forEach((c) {
-        if (prefComplexion!.contains(c.name)) {
-          Complexions.add(c.id.toInt());
+      if (prefComplexion != null && prefComplexion!.contains('Select All')) {
+        Complexions.addAll(dataModel.complexion.map((c) => c.id));
+      } else {
+        for (var c in dataModel.complexion) {
+          if (prefComplexion != null && prefComplexion!.contains(c.name)) {
+            Complexions.add(c.id.toInt());
+          }
         }
-      });
+      }
 
       int smokingStatusPref = dataModel.smoking
-          .firstWhere((element) => (element.name ?? "") == prefSmokingHabit)
+          .firstWhere((element) => (element.name) == prefSmokingHabit)
           .id;
 
       int drinkingStatusPref = dataModel.drinking
-          .firstWhere((element) => (element.name ?? "") == prefDrinkingHabit)
+          .firstWhere((element) => (element.name) == prefDrinkingHabit)
           .id;
-      print("Drinking Status ID: $drinkingStatusPref");
+
       registerUserPreferences(
           token: token,
           url: url,

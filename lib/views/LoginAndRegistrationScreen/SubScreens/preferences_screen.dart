@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controller/AuthController/auth_controller.dart';
@@ -252,6 +254,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 isMultiple: true,
                                 selectedValues: controller.prefReligion,
                                 onChanged: (value) {
+                                  log("Selected value: $value");
                                   if (value != null && value.isNotEmpty) {
                                     if (value.contains('Select All')) {
                                       controller
@@ -292,44 +295,46 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Caste',
-                                options: [
-                                  'Select All',
-                                  ...controller.casteListResponse.castes
-                                      .map((castes) => castes.name)
-                                ].toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefCaste,
-                                onChanged: (value) {
-                                  if (value != null && value.isNotEmpty) {
-                                    if (value.contains('Select All')) {
-                                      controller
-                                          .updateCasteList(['Select All']);
+                        if (controller.casteListResponse.castes.isNotEmpty)
+                          SizedBox(height: 17),
+                        if (controller.casteListResponse.castes.isNotEmpty)
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomDropdownField(
+                                  hintText: 'Caste',
+                                  options: [
+                                    'Select All',
+                                    ...controller.casteListResponse.castes
+                                        .map((castes) => castes.name)
+                                  ].toList(),
+                                  isMultiple: true,
+                                  selectedValues: controller.prefCaste,
+                                  onChanged: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      if (value.contains('Select All')) {
+                                        controller
+                                            .updateCasteList(['Select All']);
+                                      } else {
+                                        List<String> filtered =
+                                            List<String>.from(value)
+                                              ..remove('Select All');
+                                        controller.updateCasteList(filtered);
+                                      }
                                     } else {
-                                      List<String> filtered =
-                                          List<String>.from(value)
-                                            ..remove('Select All');
-                                      controller.updateCasteList(filtered);
+                                      controller.updateCasteList([]);
                                     }
-                                  } else {
-                                    controller.updateCasteList([]);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select an option';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                         SizedBox(height: 17),
                         Row(
                           children: [
@@ -418,6 +423,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                     controller.updateCountryList([]);
                                     controller.getStatesList([]);
                                   }
+                                  controller.updatePrefState([]);
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -429,44 +435,46 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'State',
-                                isMultiple: true,
-                                selectedValues: controller.prefState,
-                                options: [
-                                  'Select All',
-                                  ...controller.stateResponse.states
-                                      .map((states) => states.name)
-                                ].toList(),
-                                onChanged: (value) {
-                                  if (value != null && value.isNotEmpty) {
-                                    if (value.contains('Select All')) {
-                                      controller
-                                          .updatePrefState(['Select All']);
+                        if (controller.stateResponse.states.isNotEmpty)
+                          SizedBox(height: 17),
+                        if (controller.stateResponse.states.isNotEmpty)
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomDropdownField(
+                                  hintText: 'State',
+                                  isMultiple: true,
+                                  selectedValues: controller.prefState,
+                                  options: [
+                                    'Select All',
+                                    ...controller.stateResponse.states
+                                        .map((states) => states.name)
+                                  ].toList(),
+                                  onChanged: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      if (value.contains('Select All')) {
+                                        controller
+                                            .updatePrefState(['Select All']);
+                                      } else {
+                                        List<String> filtered =
+                                            List<String>.from(value)
+                                              ..remove('Select All');
+                                        controller.updatePrefState(filtered);
+                                      }
                                     } else {
-                                      List<String> filtered =
-                                          List<String>.from(value)
-                                            ..remove('Select All');
-                                      controller.updatePrefState(filtered);
+                                      controller.updatePrefState([]);
                                     }
-                                  } else {
-                                    controller.updatePrefState([]);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select an option';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                         SizedBox(height: 17),
                         Row(
                           children: [
@@ -513,14 +521,27 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Complexion',
-                                options: controller.dataModel.complexion
-                                    .map((complexion) => complexion.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.complexion
+                                      .map((complexion) => complexion.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues: controller.prefComplexion,
                                 onChanged: (value) {
-                                  debugPrint("value===> $value");
-                                  controller.updatePrefComplexion(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updatePrefComplexion(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updatePrefComplexion(filtered);
+                                    }
+                                  } else {
+                                    controller.updatePrefComplexion([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
