@@ -1415,8 +1415,8 @@ class AuthController extends GetxController implements GetxService {
         (drinkingHabit ?? "").isNotEmpty &&
         (bloodGroup ?? "").isNotEmpty &&
         (complexion ?? "").isNotEmpty &&
-        (isDisabled && disabilityController.text.isNotEmpty) &&
-        (disability ?? "").isNotEmpty) {
+        (disability ?? "").isNotEmpty &&
+        (isDisabled ? disabilityController.text.isNotEmpty : true)) {
       registerUser("physicalAttributeInfo");
     } else {
       if ((hairController.text).isEmpty) {

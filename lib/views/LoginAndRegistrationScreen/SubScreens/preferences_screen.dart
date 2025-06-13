@@ -254,7 +254,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
                                     if (value.contains('Select All')) {
-                                      // Only "Select All" should be selected, clear others
                                       controller
                                           .updatePrefReligion(['Select All']);
                                       controller.getCasteList(
@@ -264,7 +263,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                             .toList(),
                                       );
                                     } else {
-                                      // Remove "Select All" if present and update with selected values
                                       List<String> filtered =
                                           List<String>.from(value)
                                             ..remove('Select All');
@@ -282,6 +280,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                     controller.updatePrefReligion([]);
                                     controller.getCasteList([]);
                                   }
+                                  controller.updateCasteList([]);
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -299,16 +298,26 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Caste',
-                                options: controller.casteListResponse.castes
-                                    .map((castes) => castes.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.casteListResponse.castes
+                                      .map((castes) => castes.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues: controller.prefCaste,
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
-                                    controller.updateCasteList(value);
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updateCasteList(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updateCasteList(filtered);
+                                    }
                                   } else {
-                                    controller.updatePrefReligion([]);
+                                    controller.updateCasteList([]);
                                   }
                                 },
                                 validator: (value) {
@@ -375,21 +384,39 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 selectedValues: controller.prefCountry,
                                 isMultiple: true,
                                 hintText: 'Country',
-                                options: controller.countryResponse.countries
-                                    .map((country) => country.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.countryResponse.countries
+                                      .map((country) => country.name)
+                                ].toList(),
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
-                                    controller.updateCountryList(value);
-                                    List<String> countryIds = controller
-                                        .countryResponse.countries
-                                        .where((element) =>
-                                            value.contains(element.name))
-                                        .map((element) => element.id.toString())
-                                        .toList();
-                                    controller.getStatesList(countryIds);
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updateCountryList(['Select All']);
+                                      controller.getStatesList(
+                                        controller.countryResponse.countries
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updateCountryList(filtered);
+                                      List<String> countryIds = controller
+                                          .countryResponse.countries
+                                          .where((element) =>
+                                              filtered.contains(element.name))
+                                          .map((element) =>
+                                              element.id.toString())
+                                          .toList();
+                                      controller.getStatesList(countryIds);
+                                    }
                                   } else {
-                                    controller.updateStateList([]);
+                                    controller.updateCountryList([]);
+                                    controller.getStatesList([]);
                                   }
                                 },
                                 validator: (value) {
@@ -410,11 +437,25 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                                 hintText: 'State',
                                 isMultiple: true,
                                 selectedValues: controller.prefState,
-                                options: controller.stateResponse.states
-                                    .map((states) => states.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.stateResponse.states
+                                      .map((states) => states.name)
+                                ].toList(),
                                 onChanged: (value) {
-                                  controller.updatePrefState(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updatePrefState(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updatePrefState(filtered);
+                                    }
+                                  } else {
+                                    controller.updatePrefState([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -432,16 +473,29 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Qualification',
-                                options: controller.dataModel.qualifications
-                                    .map((qualification) => qualification.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.qualifications.map(
+                                      (qualification) => qualification.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues:
                                     controller.prefHighestQualification,
                                 onChanged: (value) {
-                                  debugPrint("value===> $value");
-                                  controller
-                                      .updatePrefQualification(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller.updatePrefQualification(
+                                          ['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller
+                                          .updatePrefQualification(filtered);
+                                    }
+                                  } else {
+                                    controller.updatePrefQualification([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
