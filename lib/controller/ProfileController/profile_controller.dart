@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:devine_marry/helper/common_functions.dart';
 import 'package:devine_marry/models/component_models/country.dart';
 import 'package:devine_marry/models/component_models/religion.dart';
 import 'package:devine_marry/widgets/common_loading.dart';
@@ -279,7 +281,9 @@ class ProfileController extends GetxController {
 
     firstNameController.text = profile.value?.data?.user?.firstname ?? "";
     lastNameController.text = profile.value?.data?.user?.lastname ?? "";
-    dobController.text = profile.value?.data?.user?.birthDate.toString() ?? "";
+    log("DOB: ${profile.value?.data?.user?.birthDate.toString()}");
+    dobController.text = CommonFunctions.formatDateToYMD(
+        profile.value?.data?.user?.birthDate.toString() ?? "");
     setLookingFor(profile.value?.data?.user?.lookingFor ?? 1);
     setMaritalStatus(profile.value?.data?.user?.maritalStatus ?? 1);
     setReligion(profile.value?.data?.user?.religions ?? 1);

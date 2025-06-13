@@ -312,7 +312,8 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                     DateTime? selectedDate =
                                         await showDatePicker(
                                       context: Get.context!,
-                                      initialDate: lastAllowedDate,
+                                      initialDate: DateTime.parse(
+                                          profileController.dobController.text),
                                       firstDate: firstAllowedDate,
                                       lastDate: lastAllowedDate,
                                       builder: (context, child) {
