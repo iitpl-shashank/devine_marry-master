@@ -299,6 +299,28 @@ class PersonalityScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (controller.disability == 'Yes')
+                          SizedBox(height: 20),
+                        if (controller.disability == 'Yes')
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomTextField(
+                                  hintText: 'Disability (Max 100 Characters)',
+                                  maxLines: 50,
+                                  maxLength: 100,
+                                  controller: controller.disabilityController,
+                                  onChanged: (value) {},
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'This field is required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         SizedBox(height: 20),
                         Row(
                           children: [

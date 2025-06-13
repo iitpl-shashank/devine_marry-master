@@ -12,7 +12,16 @@ class CommonFunctions {
       DateTime date = DateTime.parse(input);
       return "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
     } catch (e) {
-      return input; // return original if parsing fails
+      return input;
     }
+  }
+
+  static List<String> getYearListWithPursuing() {
+    List<String> years = ['Pursuing'];
+    int currentYear = DateTime.now().year;
+    for (int year = 1980; year <= currentYear; year++) {
+      years.add(year.toString());
+    }
+    return years;
   }
 }

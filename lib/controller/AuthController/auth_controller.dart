@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:devine_marry/helper/common_functions.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -52,7 +53,7 @@ class AuthController extends GetxController implements GetxService {
   TextEditingController dobController = TextEditingController();
 
   int? siblings = 0;
-  String? numberOfSiblings;
+  String? numberOfSiblings = '0';
   String? lookingFor;
   String? maritalStatus;
   String? religion;
@@ -133,24 +134,24 @@ class AuthController extends GetxController implements GetxService {
   //EducationDetails
 
   TextEditingController schoolUniversityController = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDayController = TextEditingController();
   TextEditingController companyOrganisationController = TextEditingController();
   TextEditingController designationController = TextEditingController();
   TextEditingController monthlyIncomeController = TextEditingController();
 
   int? experience = 0;
-  String? noOfYears;
+  String? noOfYears = '0';
   String? highestQualification;
   String? degree;
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
+  String? yearOfPassing;
 
   //PersonalityDetails
 
   TextEditingController hairController = TextEditingController();
   TextEditingController eyeColorController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController disabilityController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController interestController = TextEditingController();
@@ -164,11 +165,14 @@ class AuthController extends GetxController implements GetxService {
   CasteResponse casteResponse = CasteResponse(castes: []);
   DegreeResponse degreeResponse = DegreeResponse(Degrees: []);
   StateResponse stateResponse = StateResponse(states: []);
+  List<String> yearOptions = CommonFunctions.getYearListWithPursuing();
 
   //PreferencesDetails
 
-  TextEditingController prefAgeController = TextEditingController();
-  TextEditingController prefHeightController = TextEditingController();
+  TextEditingController prefMinAgeController = TextEditingController();
+  TextEditingController prefMinHeightController = TextEditingController();
+  TextEditingController prefMaxAgeController = TextEditingController();
+  TextEditingController prefMaxHeightController = TextEditingController();
   List<String>? prefReligion;
   List<String>? prefCaste;
   List<String>? prefHighestQualification;
@@ -228,6 +232,7 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void updatePrefReligion(List<String> value) {
+    log("Pref Religion: $value");
     prefReligion = value;
     update();
   }
@@ -254,6 +259,11 @@ class AuthController extends GetxController implements GetxService {
 
   void updateDegree(String? value) {
     degree = value;
+    update();
+  }
+
+  void updateYearOfPassing(String? value) {
+    yearOfPassing = value;
     update();
   }
 
@@ -735,6 +745,7 @@ class AuthController extends GetxController implements GetxService {
       _isLoginLoading = true;
       update();
       Response response = await authRepo.getDegree();
+      log("Degree Response: ${response.body}");
       debugPrint(response.body.toString());
       if (response.body == null) {}
       if (response.body['success'] && response.body != null) {
@@ -1022,8 +1033,10 @@ class AuthController extends GetxController implements GetxService {
 
     request.body = json.encode({
       "step": "preferences",
-      "age": prefAgeController.text,
-      "height": prefHeightController.text,
+      "min_age": prefMinAgeController.text,
+      "min_height": prefMinHeightController.text,
+      "max_age": prefMaxAgeController.text,
+      "max_height": prefMaxHeightController.text,
       "religion": religionList,
       "smoking_status": smokingStatus,
       "drinking_status": drinkingStatus,
@@ -1110,7 +1123,7 @@ class AuthController extends GetxController implements GetxService {
         "father_profession": fathersProfessionController.text,
         "mother_name": motherNameController.text,
         "mother_profession": motherProfessionController.text,
-        "number_of_siblings": (numberOfSiblings ?? "").toString(),
+        "number_of_siblings": (numberOfSiblings ?? "0").toString(),
       };
     } else if (updateType == "basicInfo") {
       bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
@@ -1126,14 +1139,15 @@ class AuthController extends GetxController implements GetxService {
         if (isHighSchoolOrIntermediate)
           "degree": degreeResponse.Degrees.firstWhere(
               (element) => (element.name ?? "") == degree).id.toString(),
-        "starting_year": startDateController.text,
-        "ending_year": endDayController.text,
+        "year_of_passing":
+            (yearOfPassing == "Pursuing") ? "pursuing" : yearOfPassing,
         "company": companyOrganisationController.text,
         "designation": designationController.text,
         "monthly_income": monthlyIncomeController.text,
         "experience": noOfYears,
       };
     } else if (updateType == "physicalAttributeInfo") {
+      bool isDisabled = disability == 'Yes';
       var ab = dataModel.drinking
           .firstWhere((element) => (element.name ?? "") == drinkingHabit)
           .id
@@ -1167,6 +1181,7 @@ class AuthController extends GetxController implements GetxService {
         "disabilities": dataModel.disabilities
             .firstWhere((dis) => dis.name == disability)
             .id,
+        if (isDisabled) "disabilitiedata": disabilityController.text,
       };
     } else if (updateType == "preferences") {
       List<int> Religion = [];
@@ -1234,41 +1249,6 @@ class AuthController extends GetxController implements GetxService {
           complexionsList: Complexions);
 
       return true;
-
-      // finalMap = {
-      //   "step": "preferences",
-      // "age": 25,
-      // "height": 25,
-      // "religion[]": 2, 3,
-      // "smoking_status": 1,
-      // "drinking_status": 1,
-      // "caste[]": Caste,
-      //   "country[]": [2],
-      //   "state[]": [8, 9],
-
-      //   "qualifications[]": HighestQualification,
-      //   "complexions[]": Complexions
-      // };
-
-      // finalMap = {
-      //   "step": "preferences",
-      //   "age": prefAgeController.text,
-      //   "height": prefHeightController.text,
-      //   "religion[]": Religion.join(",") ,
-      //   "smoking_status": dataModel.smoking
-      //       .firstWhere((element) => (element.name ?? "") == prefSmokingHabit)
-      //       .id
-      //       .toString(),
-      //   "drinking_status": dataModel.drinking
-      //       .firstWhere((element) => (element.name ?? "") == prefDrinkingHabit)
-      //       .id
-      //       .toString(),
-      //   "caste[]": Caste,
-      //   "country[]": Country,
-      //   "state[]": State.join(","),
-      //   "qualifications[]": HighestQualification.join(","),
-      //   "complexions": "2","3",
-      // };
     }
 
     log("Final Map: $finalMap\n===>");
@@ -1322,8 +1302,7 @@ class AuthController extends GetxController implements GetxService {
         (fathersNameController.text).isNotEmpty &&
         (motherNameController.text).isNotEmpty &&
         (motherProfessionController.text).isNotEmpty &&
-        ((numberOfSiblings ?? "").isNotEmpty &&
-            (numberOfSiblings ?? "") != "0") &&
+        (numberOfSiblings ?? "").isNotEmpty &&
         (dobController.text).isNotEmpty &&
         (gender ?? "").isNotEmpty &&
         (profilePhoto ?? "").isNotEmpty) {
@@ -1332,10 +1311,6 @@ class AuthController extends GetxController implements GetxService {
       if ((lookingFor ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select looking for", isError: true);
-      } else if (numberOfSiblings == "0") {
-        closeSnackBar();
-        showCustomSnackBar("Number of siblings should be greater than 0",
-            isError: true);
       } else if (dobController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select date of birth", isError: true);
@@ -1363,12 +1338,7 @@ class AuthController extends GetxController implements GetxService {
       } else if (firstNameController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your first name", isError: true);
-      }
-      // else if (lastNameController.text.isEmpty) {
-      //   closeSnackBar();
-      //   showCustomSnackBar("Please enter your last name", isError: true);
-      // }
-      else if (fathersNameController.text.isEmpty) {
+      } else if (fathersNameController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your father's name", isError: true);
       } else if (fathersProfessionController.text.isEmpty) {
@@ -1389,16 +1359,14 @@ class AuthController extends GetxController implements GetxService {
   void checkEducationScreen() {
     bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
         highestQualification == "Intermediate";
-
     if ((highestQualification ?? "").isNotEmpty &&
         (!isHighSchoolOrIntermediate || (degree ?? "").isNotEmpty) &&
         (schoolUniversityController.text).isNotEmpty &&
-        (startDateController.text).isNotEmpty &&
-        (endDayController.text).isNotEmpty &&
+        (yearOfPassing != null && yearOfPassing!.isNotEmpty) &&
         (companyOrganisationController.text).isNotEmpty &&
         (designationController.text).isNotEmpty &&
         (monthlyIncomeController.text).isNotEmpty &&
-        ((noOfYears ?? "").isNotEmpty && (noOfYears ?? "") != "0")) {
+        (noOfYears ?? "").isNotEmpty) {
       registerUser("basicInfo");
     } else {
       if ((highestQualification ?? "").isEmpty) {
@@ -1412,12 +1380,9 @@ class AuthController extends GetxController implements GetxService {
         closeSnackBar();
         showCustomSnackBar("Please enter your school/university name",
             isError: true);
-      } else if (startDateController.text.isEmpty) {
+      } else if ((yearOfPassing ?? '').isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select start date", isError: true);
-      } else if (endDayController.text.isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select end date", isError: true);
+        showCustomSnackBar("Please select year of passing.", isError: true);
       } else if (companyOrganisationController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your company/organisation name",
@@ -1428,7 +1393,7 @@ class AuthController extends GetxController implements GetxService {
       } else if (monthlyIncomeController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your monthly income", isError: true);
-      } else if ((noOfYears ?? "").isEmpty || (noOfYears ?? "") == "0") {
+      } else if ((noOfYears ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter experience", isError: true);
       }
@@ -1436,6 +1401,8 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void checkPersonalityScreen() {
+    bool isDisabled = disability == 'Yes';
+
     if ((hairController.text).isNotEmpty &&
         (eyeColorController.text).isNotEmpty &&
         (bioController.text).isNotEmpty &&
@@ -1448,9 +1415,7 @@ class AuthController extends GetxController implements GetxService {
         (drinkingHabit ?? "").isNotEmpty &&
         (bloodGroup ?? "").isNotEmpty &&
         (complexion ?? "").isNotEmpty &&
-        // (prefCountry ?? []).isNotEmpty &&
-        // (prefHighestQualification ?? []).isNotEmpty &&
-        // (prefReligion ?? []).isNotEmpty &&
+        (isDisabled && disabilityController.text.isNotEmpty) &&
         (disability ?? "").isNotEmpty) {
       registerUser("physicalAttributeInfo");
     } else {
@@ -1495,15 +1460,27 @@ class AuthController extends GetxController implements GetxService {
       } else if ((disability ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select disability", isError: true);
+      } else if (isDisabled && disabilityController.text.isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please enter about your disability", isError: true);
       }
     }
   }
 
   void checkPreferencesScreen() {
-    if ((prefAgeController.text).isNotEmpty &&
-        (int.parse(prefAgeController.text) > 18) &&
-        (prefHeightController.text).isNotEmpty &&
-        (int.parse(prefHeightController.text) > 130) &&
+    int minAge = int.tryParse(prefMinAgeController.text) ?? 0;
+    int maxAge = int.tryParse(prefMaxAgeController.text) ?? 0;
+    int minHeight = int.tryParse(prefMinHeightController.text) ?? 0;
+    int maxHeight = int.tryParse(prefMaxHeightController.text) ?? 0;
+
+    if ((prefMinAgeController.text).isNotEmpty &&
+        (minAge > 18) &&
+        (prefMinHeightController.text).isNotEmpty &&
+        (minHeight > 130) &&
+        (prefMaxAgeController.text).isNotEmpty &&
+        (maxAge > 18) &&
+        (prefMaxHeightController.text).isNotEmpty &&
+        (maxHeight > 130) &&
         (prefReligion ?? []).isNotEmpty &&
         (prefCaste ?? []).isNotEmpty &&
         (prefSmokingHabit ?? "").isNotEmpty &&
@@ -1512,18 +1489,43 @@ class AuthController extends GetxController implements GetxService {
         (prefState ?? []).isNotEmpty &&
         (prefHighestQualification ?? []).isNotEmpty &&
         (prefComplexion ?? []).isNotEmpty) {
+      if (maxAge <= minAge) {
+        closeSnackBar();
+        showCustomSnackBar("Maximum age must be greater than minimum age.",
+            isError: true);
+        return;
+      }
+      if (maxHeight <= minHeight) {
+        closeSnackBar();
+        showCustomSnackBar(
+            "Maximum height must be greater than minimum height.",
+            isError: true);
+        return;
+      }
       registerUser("preferences");
     } else {
-      if ((prefAgeController.text).isEmpty) {
+      if ((prefMinAgeController.text).isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select your age.", isError: true);
-      } else if (int.parse(prefAgeController.text) < 18) {
+        showCustomSnackBar("Please select minimum age.", isError: true);
+      } else if (int.parse(prefMinAgeController.text) < 18) {
         closeSnackBar();
         showCustomSnackBar("Age should be greater than 18.", isError: true);
-      } else if (int.parse(prefAgeController.text) > 100) {
+      } else if (int.parse(prefMinAgeController.text) > 100) {
         closeSnackBar();
         showCustomSnackBar("Age should be less than 100.", isError: true);
-      } else if ((prefHeightController.text).isEmpty) {
+      } else if ((prefMinHeightController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select minimum height.", isError: true);
+      } else if ((prefMaxAgeController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select maximum age.", isError: true);
+      } else if (int.parse(prefMaxAgeController.text) < 18) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be greater than 18.", isError: true);
+      } else if (int.parse(prefMaxAgeController.text) > 100) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be less than 100.", isError: true);
+      } else if ((prefMaxHeightController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select your height.", isError: true);
       } else if ((prefSmokingHabit ?? "").isEmpty) {

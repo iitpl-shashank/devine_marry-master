@@ -168,189 +168,27 @@ class EducationScreen extends StatelessWidget {
                           ),
                         ),
                         Visibility(
-                            visible:
-                                controller.degreeResponse.Degrees.isNotEmpty,
-                            child: SizedBox(height: 25)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: IntrinsicHeight(
-                                  child: CustomTextField(
-                                    controller: controller.startDateController,
-                                    readOnly: true,
-                                    suffixIcon: const Icon(
-                                      CupertinoIcons.calendar,
-                                      size: 18,
-                                      color: Colors.grey,
-                                    ),
-                                    hintText: 'Starting Date',
-                                    onTap: () async {
-                                      DateTime currentDate = DateTime.now();
-                                      DateTime firstAllowedDate =
-                                          DateTime(currentDate.year - 100);
-                                      DateTime lastAllowedDate =
-                                          DateTime(currentDate.year);
-
-                                      DateTime? selectedDate =
-                                          await showDatePicker(
-                                        context: Get.context!,
-                                        initialDate: lastAllowedDate,
-                                        firstDate: firstAllowedDate,
-                                        lastDate: lastAllowedDate,
-                                        builder: (context, child) {
-                                          return Theme(
-                                            data: Theme.of(context).copyWith(
-                                              colorScheme: ColorScheme.light(
-                                                primary: Theme.of(context)
-                                                    .primaryColor,
-                                                onPrimary: Colors.white,
-                                                onSurface: Colors.black,
-                                                secondary: Colors.red,
-                                              ),
-                                              textButtonTheme:
-                                                  TextButtonThemeData(
-                                                style: TextButton.styleFrom(
-                                                  foregroundColor: Colors.black,
-                                                ),
-                                              ),
-                                              dialogBackgroundColor:
-                                                  Colors.white,
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                      );
-
-                                      if (selectedDate != null) {
-                                        print(
-                                            "Selected Start Date: ${selectedDate.toLocal()}");
-                                        String value = DateConverter.formatDate(
-                                            selectedDate.toLocal());
-                                        controller.selectedStartDate =
-                                            selectedDate;
-                                        controller.startDateController.text =
-                                            value;
-
-                                        // Reset ending date if it's before the newly selected start date
-                                        if (controller.selectedEndDate !=
-                                                null &&
-                                            controller.selectedEndDate!
-                                                .isBefore(selectedDate)) {
-                                          controller.selectedEndDate = null;
-                                          controller.endDayController.clear();
-                                        }
-                                      } else {
-                                        showCustomSnackBar(
-                                            "Please select a Start Date",
-                                            isError: true);
-                                      }
-                                    },
-                                    onChanged: (value) {},
-                                    validation: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          visible: controller.degreeResponse.Degrees.isNotEmpty,
+                          child: SizedBox(
+                            height: 25,
+                          ),
                         ),
-                        SizedBox(height: 25),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: IntrinsicHeight(
-                                  child: CustomTextField(
-                                    controller: controller.endDayController,
-                                    readOnly: true,
-                                    suffixIcon: const Icon(
-                                      CupertinoIcons.calendar,
-                                      size: 18,
-                                      color: Colors.grey,
-                                    ),
-                                    hintText: 'Ending Date',
-                                    onTap: () async {
-                                      if (controller.startDateController.text ==
-                                          "") {
-                                        showCustomSnackBar(
-                                            "Please select a starting date first",
-                                            isError: true);
-                                        return;
-                                      }
-
-                                      DateTime firstAllowedDate =
-                                          controller.selectedStartDate!;
-                                      DateTime lastAllowedDate =
-                                          DateTime(DateTime.now().year);
-
-                                      DateTime? selectedDate =
-                                          await showDatePicker(
-                                        context: Get.context!,
-                                        initialDate: firstAllowedDate
-                                            .add(Duration(days: 1)),
-                                        firstDate: firstAllowedDate.add(
-                                            Duration(
-                                                days: 1)), // Disable past dates
-                                        lastDate: lastAllowedDate,
-                                        builder: (context, child) {
-                                          return Theme(
-                                            data: Theme.of(context).copyWith(
-                                              colorScheme: ColorScheme.light(
-                                                primary: Theme.of(context)
-                                                    .primaryColor,
-                                                onPrimary: Colors.white,
-                                                onSurface: Colors.black,
-                                                secondary: Colors.red,
-                                              ),
-                                              textButtonTheme:
-                                                  TextButtonThemeData(
-                                                style: TextButton.styleFrom(
-                                                  foregroundColor: Colors.black,
-                                                ),
-                                              ),
-                                              dialogBackgroundColor:
-                                                  Colors.white,
-                                            ),
-                                            child: child!,
-                                          );
-                                        },
-                                      );
-
-                                      if (selectedDate != null) {
-                                        print(
-                                            "Selected End Date: ${selectedDate.toLocal()}");
-                                        controller.selectedEndDate =
-                                            selectedDate;
-                                        String value = DateConverter.formatDate(
-                                            selectedDate.toLocal());
-                                        controller.endDayController.text =
-                                            value;
-                                      } else {
-                                        showCustomSnackBar(
-                                            "Please select a date",
-                                            isError: true);
-                                      }
-                                    },
-                                    onChanged: (value) {},
-                                    validation: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'This field is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
+                              child: CustomDropdownField(
+                                hintText: 'Year of Passing',
+                                options: controller.yearOptions,
+                                selectedValue: controller.yearOfPassing,
+                                onChanged: (value) {
+                                  controller.updateYearOfPassing(value ?? "");
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                           ],

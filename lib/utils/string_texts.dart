@@ -48,6 +48,7 @@ class StringTexts {
   static const String YouCanUpdateTheData =
       'You can update the data from profile settings in app';
   static const String Preferences = 'Preferences';
+  static const String partnerPreferences = 'Partner Preferences';
 
 //Preferences
   static const String set_preferences = 'Set Preferences';
