@@ -155,7 +155,7 @@ class ProfileRepo {
         Get.snackbar(
           "Success",
           "Profile details updated successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
@@ -164,7 +164,7 @@ class ProfileRepo {
         Get.snackbar(
           "Error",
           "Failed to update profile details: ${response.body}",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
@@ -174,7 +174,7 @@ class ProfileRepo {
       Get.snackbar(
         "Error",
         "Error in updateProfileDetails: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),

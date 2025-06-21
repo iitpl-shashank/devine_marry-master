@@ -436,7 +436,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Looking for cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -447,7 +447,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Marital status cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -458,7 +458,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "First name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -469,7 +469,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Last name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -480,7 +480,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Religion cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -491,7 +491,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Country cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -502,7 +502,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "State cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -513,7 +513,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Date of birth cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -524,7 +524,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Gender cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -576,7 +576,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update personal details: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
