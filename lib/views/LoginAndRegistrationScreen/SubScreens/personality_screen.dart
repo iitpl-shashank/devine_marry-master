@@ -346,7 +346,8 @@ class PersonalityScreen extends StatelessWidget {
                           children: [
                             Flexible(
                               child: CustomTextField(
-                                hintText: 'Interests & Hobbies',
+                                hintText:
+                                    'Interests & Hobbies (Separated by commas)',
                                 maxLength: 300,
                                 maxLines: 50,
                                 controller: controller.interestController,

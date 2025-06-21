@@ -1032,6 +1032,8 @@ class AuthController extends GetxController implements GetxService {
         "stateList: $stateList, "
         "qualificationList: $qualificationList, "
         "complexionsList: $complexionsList");
+    log("Preferences URL: $url");
+    log("Preferences Token: $token");
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -1065,13 +1067,26 @@ class AuthController extends GetxController implements GetxService {
 
       if (response.statusCode == 200) {
         String responseBody = await response.stream.bytesToString();
+        hideLoading();
         Get.toNamed(RouteHelper.successFullRegisterationScreen);
         print("✅ Success: $responseBody");
       } else {
+        Get.snackbar(
+          "Error",
+          "Error ${response.statusCode}: ${response.reasonPhrase}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
         print("❌ Error ${response.statusCode}: ${response.reasonPhrase}");
       }
     } catch (e) {
       print("❗ Exception: $e");
+      hideLoading();
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
     }
   }
 

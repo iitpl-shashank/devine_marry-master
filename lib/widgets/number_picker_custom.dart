@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+import '../utils/themes/app_colors.dart';
 import '../utils/themes/light_theme.dart';
 
 void showHeightPickerDialog({
@@ -42,14 +43,24 @@ void showHeightPickerDialog({
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(
+                color: AppColors.lightTheme,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
               onHeightSelected(tempHeight);
               Navigator.pop(context);
             },
-            child: const Text("OK"),
+            child: Text(
+              "OK",
+              style: TextStyle(
+                color: AppColors.darkTheme,
+              ),
+            ),
           ),
         ],
       );
