@@ -98,6 +98,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200 && response.body['status'] == true) {
         profile.value = ProfileModel.fromJson(response.body);
+        log("Profile Data : ${response.body}");
         print("Profile fetched successfully: ${profile.value}");
       } else {
         print("Failed to fetch profile: ${response.body['message']}");
@@ -972,9 +973,14 @@ class ProfileController extends GetxController {
   TextEditingController eyeColorController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController interestController = TextEditingController();
+  TextEditingController disabilityController = TextEditingController();
 
   void setPersonalityDetails() {
     isLoading.value = true;
+    disabilityController.text = profile
+            .value?.data?.user?.physicalAttributes?.disabilitieData
+            .toString() ??
+        "";
     heightController.text =
         profile.value?.data?.user?.physicalAttributes?.height.toString() ?? "0";
     weightController.text =
@@ -1183,6 +1189,30 @@ class ProfileController extends GetxController {
       return;
     }
 
+    if (disability != null && disability!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Disability cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
+    if (disability != null &&
+        disability!.isNotEmpty &&
+        disabilityController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Disability cannot be empty.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.red,
+        colorText: AppColors.white,
+      );
+      return;
+    }
+
     Map<String, dynamic> data = {
       "height": int.parse(heightController.text),
       "weight": int.parse(weightController.text),
@@ -1210,6 +1240,10 @@ class ProfileController extends GetxController {
           .id,
       "bio": bioController.text,
       "interests_hobbies": interestController.text,
+      if (disability != null &&
+          disability!.isNotEmpty &&
+          disabilityController.text.isNotEmpty)
+        "disabilitiedata": disabilityController.text,
     };
 
     try {

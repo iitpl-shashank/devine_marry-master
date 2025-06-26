@@ -116,6 +116,7 @@ class ProfileRepo {
           "drinking_habit": data["drinking_habit"] ?? "",
           "bio": data["bio"] ?? "",
           "interests_hobbies": data["interests_hobbies"] ?? "",
+          "disabilitiedata": data["disabilitiedata"] ?? "",
         };
       } else if (type == "personalDetails") {
         data = {
