@@ -759,6 +759,7 @@ class ProfileController extends GetxController {
   }
 
   Future<void> setDegree(int id) async {
+    await authController.getDegrees();
     log("IsLoading ${authController.degreeResponse.Degrees.length}");
     final matchingDegree = authController.degreeResponse.Degrees.firstWhere(
       (status) => status.id == id,
