@@ -10,7 +10,6 @@ import '../../utils/string_texts.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_drop_down_field.dart';
-import '../../widgets/custom_snack_bar.dart';
 import '../../widgets/custom_text_field.dart';
 
 class EducationProfessionDetailsScreen extends StatefulWidget {
@@ -28,6 +27,7 @@ class _EducationProfessionDetailsScreenState
   @override
   void initState() {
     super.initState();
+    profileController.degree = null;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await profileController.setEducationProfesionDetails();
     });
@@ -154,62 +154,42 @@ class _EducationProfessionDetailsScreenState
                             },
                           ),
                           SizedBox(height: 25),
-                          Visibility(
-                            visible: (((profileController.degree != null &&
-                                        profileController.degree!.isNotEmpty) ||
-                                    profileController.highestQualification !=
-                                            "High School" &&
-                                        profileController
-                                                .highestQualification !=
-                                            "Intermediate") &&
-                                controller.degreeResponse.Degrees.isNotEmpty),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child:
-                                      // CustomDropdownField(
-                                      //   hintText: 'Degree',
-                                      //   options: controller.degreeResponse.Degrees
-                                      //       .map((degrees) => degrees.name)
-                                      //       .toList(),
-                                      //   selectedValue: profileController.degree,
-                                      //   onChanged: (value) {
-                                      //     profileController
-                                      //         .updateDegree(value ?? "");
-                                      //   },
-                                      //   validator: (value) {
-                                      //     if (value == null || value.isEmpty) {
-                                      //       return 'Please select an option';
-                                      //     }
-                                      //     return null;
-                                      //   },
-                                      // ),
-                                      CustomDropdownField(
-                                    hintText: 'Degree',
-                                    options: controller.degreeResponse.Degrees
-                                        .map((degrees) => degrees.name)
-                                        .toList(),
-                                    selectedValue: controller
-                                            .degreeResponse.Degrees
-                                            .map((degrees) => degrees.name)
-                                            .contains(profileController.degree)
-                                        ? profileController.degree
-                                        : null,
-                                    onChanged: (value) {
-                                      profileController
-                                          .updateDegree(value ?? "");
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please select an option';
-                                      }
-                                      return null;
-                                    },
+                          GetBuilder<ProfileController>(builder: (pController) {
+                            return Visibility(
+                              visible: ((pController.highestQualification !=
+                                          "High School" &&
+                                      pController.highestQualification !=
+                                          "Intermediate") &&
+                                  controller.degreeResponse.Degrees.isNotEmpty),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: CustomDropdownField(
+                                      hintText: 'Degree',
+                                      options: controller.degreeResponse.Degrees
+                                          .map((degrees) => degrees.name)
+                                          .toList(),
+                                      selectedValue: controller
+                                              .degreeResponse.Degrees
+                                              .map((degrees) => degrees.name)
+                                              .contains(pController.degree)
+                                          ? pController.degree
+                                          : null,
+                                      onChanged: (value) {
+                                        pController.updateDegree(value ?? "");
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select an option';
+                                        }
+                                        return null;
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                ],
+                              ),
+                            );
+                          }),
                           Visibility(
                             visible:
                                 (controller.degreeResponse.Degrees.isNotEmpty &&
