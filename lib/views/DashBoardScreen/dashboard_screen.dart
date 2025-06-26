@@ -46,6 +46,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         await Get.find<AuthController>().getCountries();
         await Get.find<AuthController>().getReligion();
         await Get.find<AuthController>().getUserAttributes();
+        await Get.find<AuthController>().getDegrees();
         await homeController.getDefaultUsersBasedOnPreference();
         await homeController.getLatestUserList();
         await homeController.getMyStateUserList();

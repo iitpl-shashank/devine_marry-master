@@ -754,6 +754,7 @@ class AuthController extends GetxController implements GetxService {
         var responseData = response.body;
         DegreeResponse degrees = DegreeResponse.fromJson(responseData);
         degreeResponse = degrees;
+        log("Degres : ${degreeResponse.Degrees.length}");
         _isLoginLoading = false;
         update();
       } else {

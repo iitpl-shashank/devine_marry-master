@@ -709,53 +709,25 @@ class ProfileController extends GetxController {
   String? highestQualification;
   String? degree;
   TextEditingController schoolUniversityController = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDayController = TextEditingController();
   TextEditingController companyOrganisationController = TextEditingController();
   TextEditingController designationController = TextEditingController();
   TextEditingController monthlyIncomeController = TextEditingController();
-  DateTime? selectedStartDate;
-  DateTime? selectedEndDate;
+  String? yearOfPassing;
   int? experience = 0;
   String? noOfYears;
 
-  void setEducationProfesionDetails() {
+  Future<void> setEducationProfesionDetails() async {
     isLoading.value = true;
+    update();
 
     setHighestQualification(int.parse(profile
             .value?.data?.user?.educationInfoData?.first.highestQualification ??
         '1'));
-    setDegree(int.parse(
+    await setDegree(int.parse(
         profile.value?.data?.user?.educationInfoData?.first.degree ?? '1'));
+    log("Isloading ${profile.value?.data?.user?.educationInfoData?.first.degree}");
     schoolUniversityController.text =
         profile.value?.data?.user?.educationInfoData?.first.institute ?? "";
-
-    if (profile.value?.data?.user?.educationInfoData?.first.startingYear !=
-        null) {
-      String startingYear = profile
-          .value!.data!.user!.educationInfoData!.first.startingYear!
-          .toString();
-      startDateController.text =
-          DateConverter.formatDate(DateTime.parse(startingYear));
-      selectedStartDate = DateTime.parse(startingYear);
-    } else {
-      startDateController.text = "";
-      selectedStartDate = null;
-    }
-
-    if (profile.value?.data?.user?.educationInfoData?.first.endingYear !=
-        null) {
-      String endingYear = profile
-          .value!.data!.user!.educationInfoData!.first.endingYear!
-          .toString();
-      endDayController.text =
-          DateConverter.formatDate(DateTime.parse(endingYear));
-      selectedEndDate = DateTime.parse(endingYear);
-    } else {
-      endDayController.text = "";
-      selectedEndDate = null;
-    }
-
     companyOrganisationController.text =
         profile.value?.data?.user?.careerInfo?.first.company ?? "";
     designationController.text =
@@ -764,8 +736,12 @@ class ProfileController extends GetxController {
         profile.value?.data?.user?.careerInfo?.first.monthlyIncome ?? "0";
     experience = profile.value?.data?.user?.careerInfo?.first.experience ?? 0;
     noOfYears = experience.toString();
+    yearOfPassing =
+        profile.value?.data?.user?.educationInfoData?.first.yearOfPassing ?? "";
 
     isLoading.value = false;
+    log("Isloading ${isLoading.value}");
+    update();
   }
 
   void setHighestQualification(int id) {
@@ -775,14 +751,27 @@ class ProfileController extends GetxController {
       orElse: () => Qualification(id: 0, name: 'Unknown'),
     );
     highestQualification = matchingQualification.name;
+    if (highestQualification != "High School" &&
+        highestQualification != "Intermediate") {
+      authController.getDegrees();
+    }
+    update();
   }
 
-  void setDegree(int id) {
+  Future<void> setDegree(int id) async {
+    log("IsLoading ${authController.degreeResponse.Degrees.length}");
     final matchingDegree = authController.degreeResponse.Degrees.firstWhere(
       (status) => status.id == id,
       orElse: () => Degree(id: 0, name: 'Unknown'),
     );
     degree = matchingDegree.name;
+    log("IsLoading ${degree}");
+    update();
+  }
+
+  void updateYearOfPassing(String? value) {
+    yearOfPassing = value;
+    update();
   }
 
   void updateHighestQualification(String value) {
@@ -824,21 +813,10 @@ class ProfileController extends GetxController {
       return;
     }
 
-    if (startDateController.text.isEmpty) {
+    if (yearOfPassing == null && yearOfPassing == "") {
       Get.snackbar(
         "Error",
-        "Starting year cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.red,
-        colorText: AppColors.white,
-      );
-      return;
-    }
-
-    if (endDayController.text.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Ending year cannot be empty.",
+        "Year of passing cannot be empty.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
@@ -934,8 +912,7 @@ class ProfileController extends GetxController {
     Map<String, dynamic> data = {
       "highest_qualification": qualificationId,
       "institute": schoolUniversityController.text,
-      "starting_year": startDateController.text,
-      "ending_year": endDayController.text,
+      "year_of_passing": yearOfPassing,
       "company": companyOrganisationController.text,
       "designation": designationController.text,
       "monthly_income": monthlyIncomeController.text,

@@ -396,8 +396,7 @@ class EducationInfoDatum {
   final int? rollNo;
   final String? outOf;
   final String? result;
-  final DateTime? startingYear;
-  final DateTime? endingYear;
+  final String? yearOfPassing;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -412,8 +411,7 @@ class EducationInfoDatum {
     this.rollNo,
     this.outOf,
     this.result,
-    this.startingYear,
-    this.endingYear,
+    this.yearOfPassing,
     this.createdAt,
     this.updatedAt,
   });
@@ -430,12 +428,7 @@ class EducationInfoDatum {
         rollNo: json["roll_no"],
         outOf: json["out_of"],
         result: json["result"],
-        startingYear: json["starting_year"] == null
-            ? null
-            : DateTime.parse(json["starting_year"]),
-        endingYear: json["ending_year"] == null
-            ? null
-            : DateTime.parse(json["ending_year"]),
+        yearOfPassing: json["year_of_passing"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -455,10 +448,7 @@ class EducationInfoDatum {
         "roll_no": rollNo,
         "out_of": outOf,
         "result": result,
-        "starting_year":
-            "${startingYear!.year.toString().padLeft(4, '0')}-${startingYear!.month.toString().padLeft(2, '0')}-${startingYear!.day.toString().padLeft(2, '0')}",
-        "ending_year":
-            "${endingYear!.year.toString().padLeft(4, '0')}-${endingYear!.month.toString().padLeft(2, '0')}-${endingYear!.day.toString().padLeft(2, '0')}",
+        "year_of_passing": yearOfPassing,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
       };
