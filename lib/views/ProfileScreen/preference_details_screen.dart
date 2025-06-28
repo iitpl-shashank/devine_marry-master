@@ -101,26 +101,98 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                           children: [
                             Flexible(
                               child: CustomTextField(
-                                hintText: 'Age',
+                                hintText: 'Min Age',
                                 readOnly: true,
                                 suffixText: "Yrs",
                                 inputType: TextInputType.number,
                                 isAmount: true,
-                                controller: profileController.prefAgeController,
+                                controller:
+                                    profileController.prefMinAgeController,
                                 onChanged: (value) {},
                                 onTap: () {
                                   showHeightPickerDialog(
                                     title: "Select Age (in Yrs)",
                                     context: context,
                                     maxHeight: 254,
-                                    initialHeight: int.parse(
-                                        profileController.prefAgeController.text),
+                                    initialHeight: int.parse(profileController
+                                        .prefMinAgeController.text),
                                     onHeightSelected: (value) {
-                                      profileController.prefAgeController.text =
-                                          value.toString();
+                                      profileController.prefMinAgeController
+                                          .text = value.toString();
                                     },
                                   );
                                 },
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: CustomTextField(
+                                hintText: 'Max Age',
+                                readOnly: true,
+                                suffixText: "Yrs",
+                                inputType: TextInputType.number,
+                                isAmount: true,
+                                controller:
+                                    profileController.prefMaxAgeController,
+                                onChanged: (value) {},
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Age (in Yrs)",
+                                    context: context,
+                                    maxHeight: 254,
+                                    initialHeight: int.parse(profileController
+                                        .prefMaxAgeController.text),
+                                    onHeightSelected: (value) {
+                                      profileController.prefMaxAgeController
+                                          .text = value.toString();
+                                    },
+                                  );
+                                },
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomTextField(
+                                readOnly: true,
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Height (in cm)",
+                                    context: context,
+                                    maxHeight: 200,
+                                    onHeightSelected: (value) {
+                                      profileController.prefMinHeightController
+                                          .text = value.toString();
+                                    },
+                                    initialHeight: int.parse(profileController
+                                        .prefMinHeightController.text
+                                        .toString()),
+                                  );
+                                },
+                                hintText: 'Min Height',
+                                inputType: TextInputType.number,
+                                suffixText: "cm",
+                                isAmount: true,
+                                controller:
+                                    profileController.prefMinHeightController,
+                                onChanged: (value) {},
                                 validation: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'This field is required';
@@ -141,19 +213,20 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                     context: context,
                                     maxHeight: 200,
                                     onHeightSelected: (value) {
-                                      profileController.prefHeightController
+                                      profileController.prefMaxHeightController
                                           .text = value.toString();
                                     },
                                     initialHeight: int.parse(profileController
-                                        .prefHeightController.text),
+                                        .prefMaxHeightController.text
+                                        .toString()),
                                   );
                                 },
-                                hintText: 'Height',
+                                hintText: 'Max Height',
                                 inputType: TextInputType.number,
                                 suffixText: "cm",
                                 isAmount: true,
                                 controller:
-                                    profileController.prefHeightController,
+                                    profileController.prefMaxHeightController,
                                 onChanged: (value) {},
                                 validation: (value) {
                                   if (value == null || value.isEmpty) {
@@ -184,7 +257,8 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                       controller.religionResponse.religions
                                           .where((element) =>
                                               value.contains(element.name))
-                                          .map((element) => element.id.toString())
+                                          .map((element) =>
+                                              element.id.toString())
                                           .toList(),
                                     );
                                   } else {
@@ -216,7 +290,8 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                 selectedValues: profileController.prefCaste,
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
-                                    profileController.updatePrefCasteList(value);
+                                    profileController
+                                        .updatePrefCasteList(value);
                                   } else {
                                     profileController.updatePrefReligion([]);
                                   }
@@ -236,7 +311,8 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                           children: [
                             Flexible(
                               child: CustomDropdownField(
-                                selectedValue: profileController.prefSmokingHabit,
+                                selectedValue:
+                                    profileController.prefSmokingHabit,
                                 hintText: 'Smoking Habit',
                                 options: controller.dataModel.smoking
                                     .map((smoking) => smoking.name)
@@ -289,7 +365,8 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                     .map((complexion) => complexion.name)
                                     .toList(),
                                 isMultiple: true,
-                                selectedValues: profileController.prefComplexion,
+                                selectedValues:
+                                    profileController.prefComplexion,
                                 onChanged: (value) {
                                   debugPrint("value===> $value");
                                   profileController

@@ -454,35 +454,132 @@ class EducationInfoDatum {
       };
 }
 
+// class PartnerExpectation {
+//   final int? id;
+//   final int? userId;
+//   final int? age;
+//   final int? height;
+//   final List<int>? religion;
+//   final int? smokingStatus;
+//   final int? drinkingStatus;
+//   final List<int>? caste;
+//   final List<int>? country;
+//   final List<int>? state;
+//   final List<int>? qualifications;
+//   final List<int>? complexions;
+//   final DateTime? createdAt;
+//   final DateTime? updatedAt;
+
+//   PartnerExpectation({
+//     this.id,
+//     this.userId,
+//     this.age,
+//     this.height,
+//     this.religion,
+//     this.smokingStatus,
+//     this.drinkingStatus,
+//     this.caste,
+//     this.country,
+//     this.state,
+//     this.qualifications,
+//     this.complexions,
+//     this.createdAt,
+//     this.updatedAt,
+//   });
+
+//   factory PartnerExpectation.fromJson(Map<String, dynamic> json) =>
+//       PartnerExpectation(
+//         id: json["id"],
+//         userId: json["user_id"],
+//         age: json["age"],
+//         height: json["height"],
+//         religion: json["religion"] == null
+//             ? []
+//             : List<int>.from(json["religion"]!.map((x) => x)),
+//         smokingStatus: json["smoking_status"],
+//         drinkingStatus: json["drinking_status"],
+//         caste: json["caste"] == null
+//             ? []
+//             : List<int>.from(json["caste"]!.map((x) => x)),
+//         country: json["country"] == null
+//             ? []
+//             : List<int>.from(json["country"]!.map((x) => x)),
+//         state: json["state"] == null
+//             ? []
+//             : List<int>.from(json["state"]!.map((x) => x)),
+//         qualifications: json["qualifications"] == null
+//             ? []
+//             : List<int>.from(json["qualifications"]!.map((x) => x)),
+//         complexions: json["complexions"] == null
+//             ? []
+//             : List<int>.from(json["complexions"]!.map((x) => x)),
+//         createdAt: json["created_at"] == null
+//             ? null
+//             : DateTime.parse(json["created_at"]),
+//         updatedAt: json["updated_at"] == null
+//             ? null
+//             : DateTime.parse(json["updated_at"]),
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "user_id": userId,
+//         "age": age,
+//         "height": height,
+//         "religion":
+//             religion == null ? [] : List<dynamic>.from(religion!.map((x) => x)),
+//         "smoking_status": smokingStatus,
+//         "drinking_status": drinkingStatus,
+//         "caste": caste == null ? [] : List<dynamic>.from(caste!.map((x) => x)),
+//         "country":
+//             country == null ? [] : List<dynamic>.from(country!.map((x) => x)),
+//         "state": state == null ? [] : List<dynamic>.from(state!.map((x) => x)),
+//         "qualifications": qualifications == null
+//             ? []
+//             : List<dynamic>.from(qualifications!.map((x) => x)),
+//         "complexions": complexions == null
+//             ? []
+//             : List<dynamic>.from(complexions!.map((x) => x)),
+//         "created_at": createdAt?.toIso8601String(),
+//         "updated_at": updatedAt?.toIso8601String(),
+//       };
+// }
+
 class PartnerExpectation {
   final int? id;
   final int? userId;
-  final int? age;
-  final int? height;
-  final List<int>? religion;
+  final int? minAge;
+  final int? maxAge;
+  final int? minHeight;
+  final int? maxHeight;
+  final List<int>? religions;
   final int? smokingStatus;
   final int? drinkingStatus;
   final List<int>? caste;
   final List<int>? country;
   final List<int>? state;
-  final List<int>? qualifications;
-  final List<int>? complexions;
+  final List<int>? qualification;
+  final dynamic degree;
+  final List<int>? complexion;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   PartnerExpectation({
     this.id,
     this.userId,
-    this.age,
-    this.height,
-    this.religion,
+    this.minAge,
+    this.maxAge,
+    this.minHeight,
+    this.maxHeight,
+    this.religions,
     this.smokingStatus,
     this.drinkingStatus,
     this.caste,
     this.country,
     this.state,
-    this.qualifications,
-    this.complexions,
+    this.qualification,
+    this.degree,
+    this.complexion,
     this.createdAt,
     this.updatedAt,
   });
@@ -491,28 +588,31 @@ class PartnerExpectation {
       PartnerExpectation(
         id: json["id"],
         userId: json["user_id"],
-        age: json["age"],
-        height: json["height"],
-        religion: json["religion"] == null
+        minAge: json["min_age"],
+        maxAge: json["max_age"],
+        minHeight: json["min_height"],
+        maxHeight: json["max_height"],
+        religions: json["religions"] == null
             ? []
-            : List<int>.from(json["religion"]!.map((x) => x)),
+            : List<int>.from(json["religions"].map((x) => x)),
         smokingStatus: json["smoking_status"],
         drinkingStatus: json["drinking_status"],
         caste: json["caste"] == null
             ? []
-            : List<int>.from(json["caste"]!.map((x) => x)),
+            : List<int>.from(json["caste"].map((x) => x)),
         country: json["country"] == null
             ? []
-            : List<int>.from(json["country"]!.map((x) => x)),
+            : List<int>.from(json["country"].map((x) => x)),
         state: json["state"] == null
             ? []
-            : List<int>.from(json["state"]!.map((x) => x)),
-        qualifications: json["qualifications"] == null
+            : List<int>.from(json["state"].map((x) => x)),
+        qualification: json["qualification"] == null
             ? []
-            : List<int>.from(json["qualifications"]!.map((x) => x)),
-        complexions: json["complexions"] == null
+            : List<int>.from(json["qualification"].map((x) => x)),
+        degree: json["degree"],
+        complexion: json["complexion"] == null
             ? []
-            : List<int>.from(json["complexions"]!.map((x) => x)),
+            : List<int>.from(json["complexion"].map((x) => x)),
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -524,22 +624,26 @@ class PartnerExpectation {
   Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
-        "age": age,
-        "height": height,
-        "religion":
-            religion == null ? [] : List<dynamic>.from(religion!.map((x) => x)),
+        "min_age": minAge,
+        "max_age": maxAge,
+        "min_height": minHeight,
+        "max_height": maxHeight,
+        "religions": religions == null
+            ? []
+            : List<dynamic>.from(religions!.map((x) => x)),
         "smoking_status": smokingStatus,
         "drinking_status": drinkingStatus,
         "caste": caste == null ? [] : List<dynamic>.from(caste!.map((x) => x)),
         "country":
             country == null ? [] : List<dynamic>.from(country!.map((x) => x)),
         "state": state == null ? [] : List<dynamic>.from(state!.map((x) => x)),
-        "qualifications": qualifications == null
+        "qualification": qualification == null
             ? []
-            : List<dynamic>.from(qualifications!.map((x) => x)),
-        "complexions": complexions == null
+            : List<dynamic>.from(qualification!.map((x) => x)),
+        "degree": degree,
+        "complexion": complexion == null
             ? []
-            : List<dynamic>.from(complexions!.map((x) => x)),
+            : List<dynamic>.from(complexion!.map((x) => x)),
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
       };

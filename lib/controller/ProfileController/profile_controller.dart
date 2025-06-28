@@ -1245,8 +1245,10 @@ class ProfileController extends GetxController {
 
   //Preference Details
 
-  TextEditingController prefAgeController = TextEditingController();
-  TextEditingController prefHeightController = TextEditingController();
+  TextEditingController prefMinAgeController = TextEditingController();
+  TextEditingController prefMaxAgeController = TextEditingController();
+  TextEditingController prefMinHeightController = TextEditingController();
+  TextEditingController prefMaxHeightController = TextEditingController();
   List<String>? prefReligion;
   List<String>? prefCaste;
   List<String>? prefHighestQualification;
@@ -1259,22 +1261,28 @@ class ProfileController extends GetxController {
   Future<void> setPreferenceDetails() async {
     isLoading.value = true;
 
-    prefAgeController.text =
-        profile.value?.data?.user?.partnerExpectation?.age.toString() ?? "0";
-    prefHeightController.text =
-        profile.value?.data?.user?.partnerExpectation?.height.toString() ?? "0";
+    prefMinAgeController.text =
+        profile.value?.data?.user?.partnerExpectation?.minAge.toString() ?? "0";
+    prefMaxAgeController.text =
+        profile.value?.data?.user?.partnerExpectation?.maxAge.toString() ?? "0";
+    prefMinHeightController.text =
+        profile.value?.data?.user?.partnerExpectation?.minHeight.toString() ??
+            "0";
+    prefMaxHeightController.text =
+        profile.value?.data?.user?.partnerExpectation?.maxHeight.toString() ??
+            "0";
     setPrefSmokingHabit(
         profile.value?.data?.user?.partnerExpectation?.smokingStatus ?? 1);
     setPrefDrinkingHabit(
         profile.value?.data?.user?.partnerExpectation?.drinkingStatus ?? 1);
     await setPrefReligion(
-        profile.value?.data?.user?.partnerExpectation?.religion);
+        profile.value?.data?.user?.partnerExpectation?.religions);
     await setPrefCountry(
         profile.value?.data?.user?.partnerExpectation?.country);
     setPrefQualification(
-        profile.value?.data?.user?.partnerExpectation?.qualifications);
+        profile.value?.data?.user?.partnerExpectation?.qualification);
     setPrefComplexion(
-        profile.value?.data?.user?.partnerExpectation?.complexions);
+        profile.value?.data?.user?.partnerExpectation?.complexion);
 
     isLoading.value = false;
   }
@@ -1495,29 +1503,67 @@ class ProfileController extends GetxController {
   }
 
   Future<void> updatePreferenceDetails() async {
-    if (prefAgeController.text.isEmpty ||
-        int.tryParse(prefAgeController.text) == null) {
-      Get.snackbar(
-        "Error",
-        "Age must be a valid number.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.red,
-        colorText: AppColors.white,
-      );
-      return;
+    int minAge = int.tryParse(prefMinAgeController.text) ?? 0;
+    int maxAge = int.tryParse(prefMaxAgeController.text) ?? 0;
+    int minHeight = int.tryParse(prefMinHeightController.text) ?? 0;
+    int maxHeight = int.tryParse(prefMaxHeightController.text) ?? 0;
+
+    // Validation for min/max age and height
+    if ((prefMinAgeController.text).isNotEmpty &&
+        (minAge > 18) &&
+        (prefMinHeightController.text).isNotEmpty &&
+        (minHeight > 130) &&
+        (prefMaxAgeController.text).isNotEmpty &&
+        (maxAge > 18) &&
+        (prefMaxHeightController.text).isNotEmpty &&
+        (maxHeight > 130)) {
+      if (maxAge <= minAge) {
+        Get.closeAllSnackbars();
+        Get.snackbar(
+          "Error",
+          "Maximum age must be greater than minimum age.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+        );
+        return;
+      }
+      if (maxHeight <= minHeight) {
+        Get.closeAllSnackbars();
+        Get.snackbar(
+          "Error",
+          "Maximum height must be greater than minimum height.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+        );
+        return;
+      }
     }
 
-    if (prefHeightController.text.isEmpty ||
-        int.tryParse(prefHeightController.text) == null) {
-      Get.snackbar(
-        "Error",
-        "Height must be a valid number.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.red,
-        colorText: AppColors.white,
-      );
-      return;
-    }
+    // if (prefMinAgeController.text.isEmpty ||
+    //     int.tryParse(prefMinAgeController.text) == null) {
+    //   Get.snackbar(
+    //     "Error",
+    //     "Age must be a valid number.",
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: AppColors.red,
+    //     colorText: AppColors.white,
+    //   );
+    //   return;
+    // }
+
+    // if (prefMinHeightController.text.isEmpty ||
+    //     int.tryParse(prefMinHeightController.text) == null) {
+    //   Get.snackbar(
+    //     "Error",
+    //     "Height must be a valid number.",
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: AppColors.red,
+    //     colorText: AppColors.white,
+    //   );
+    //   return;
+    // }
 
     if (prefReligion == null || prefReligion!.isEmpty) {
       Get.snackbar(
@@ -1575,8 +1621,10 @@ class ProfileController extends GetxController {
     }
 
     Map<String, dynamic> data = {
-      "age": int.parse(prefAgeController.text),
-      "height": int.parse(prefHeightController.text),
+      "min_age": int.parse(prefMinAgeController.text),
+      "max_age": int.parse(prefMaxAgeController.text),
+      "max_height": int.parse(prefMaxHeightController.text),
+      "min_height": int.parse(prefMinHeightController.text),
       "religion": authController.religionResponse.religions
           .where((item) => prefReligion?.contains(item.name) ?? false)
           .map((item) => item.id)
