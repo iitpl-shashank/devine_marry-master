@@ -515,6 +515,62 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             ),
                           ],
                         ),
+                        GetBuilder<AuthController>(builder: (prController) {
+                          return Visibility(
+                            visible: (prController.prefHighestQualification!
+                                    .contains("Select All") ||
+                                (prController.prefHighestQualification!.any(
+                                  (q) =>
+                                      q != "High School" && q != "Intermediate",
+                                ))),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 17),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: CustomDropdownField(
+                                        key: ValueKey(prController.prefDegree),
+                                        hintText: 'Degree',
+                                        options: [
+                                          'Select All',
+                                          ...controller.degreeResponse.Degrees
+                                              .map((degree) => degree.name)
+                                        ].toList(),
+                                        isMultiple: true,
+                                        selectedValues: prController.prefDegree,
+                                        onChanged: (value) {
+                                          debugPrint("value===> $value");
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            if (value.contains('Select All')) {
+                                              prController.updatePrefDegree(
+                                                  ['Select All']);
+                                            } else {
+                                              List<String> filtered =
+                                                  List<String>.from(value)
+                                                    ..remove('Select All');
+                                              prController
+                                                  .updatePrefDegree(filtered);
+                                            }
+                                          } else {
+                                            prController.updatePrefDegree([]);
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please select an option';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                         SizedBox(height: 17),
                         Row(
                           children: [

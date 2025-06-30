@@ -177,6 +177,7 @@ class AuthController extends GetxController implements GetxService {
   List<String>? prefReligion;
   List<String>? prefCaste;
   List<String>? prefHighestQualification;
+  List<String>? prefDegree;
   List<String>? prefCountry;
   List<String>? prefState;
   List<String>? prefComplexion;
@@ -241,6 +242,11 @@ class AuthController extends GetxController implements GetxService {
 
   void updatePrefQualification(List<String> value) {
     prefHighestQualification = value;
+    update();
+  }
+
+  void updatePrefDegree(List<String> value) {
+    prefDegree = value;
     update();
   }
 
@@ -309,134 +315,6 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-  //
-  // Future<bool> isLoggedIn() async {
-  //   bool value = await  authRepo.isLoggedIn();
-  //   if(value){
-  //     try {
-  //       Response response = await authRepo.getUserData();
-  //       debugPrint(response.body.toString());
-  //       UserModel user = UserModel.fromJson(response.body['user']);
-  //       debugPrint("User: ${user.toJson()}");
-  //     } catch (e) {
-  //       debugPrint("Error: $e");
-  //     }
-  //   } else {
-  //
-  //   }
-  //
-  //   return false;
-  // }
-  // DateTime? selectedDate;
-  // String? formattedDate;
-  // String? privacyPolicy;
-  //
-  // void updateDate(DateTime newDate) {
-  //   selectedDate = newDate;
-  //   formattedDate = SimpleDateConverter.formatDateToCustomFormat(selectedDate!);
-  //   update();
-  // }
-  //
-  // var selectedGender = 'Male'; // Observable for selected gender
-  // final List<String> genderOptions = ['Male', 'Female',]; // List of options
-  //
-  // void updateGender(String gender) {
-  //   selectedGender = gender; // Update selected gender
-  //   update(); // Call update to refresh listeners (not using Obx)
-  // }
-  //
-  // var selectedDiabetes = 'No';
-  // final List<String> diabetesOptions = ['No','Yes']; // List of options
-  //
-  // void updateDiabetes(String val) {
-  //   selectedDiabetes = val;
-  //   update();
-  // }
-  //
-  // var selectedGlasses = 'No';
-  // final List<String> glassesOptions = ['No','Yes'];
-  // void updateGlasses(String val) {
-  //   selectedGlasses = val;
-  //   update();
-  // }
-  //
-  // var selectedBp= 'No';
-  // final List<String> bpOptions = ['No','Yes'];
-  //
-  // void updateHealth(String val) {
-  //   selectedBp = val;
-  //   update();
-  // }
-  //
-  //
-  // bool _isLoading = false;
-  // bool get isLoading => _isLoading;
-  //
-  // DateTime? lastBackPressTime;
-  // Future<bool> handleOnWillPop() async {
-  //   final now = DateTime.now();
-  //
-  //   if (lastBackPressTime == null || now.difference(lastBackPressTime!) > const Duration(seconds: 2)) {
-  //     updateLastBackPressTime(now);
-  //     ScaffoldMessenger.of(Get.context!).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Press back again to exit'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //     SystemNavigator.pop();
-  //     return Future.value(false);
-  //   }
-  //   return Future.value(true);
-  // }
-  //
-  // Future<void> getPrivacyPolicy(String value) async {
-  //
-  //   _isLoginLoading = true;
-  //   update();
-  //   Response response = await authRepo.getPrivacyPolicy(value);
-  //
-  //   final Map<String, dynamic> data = response.body['data'] as Map<String, dynamic>;
-  //   log(data.toString(),name: "Privacy Policy");
-  //
-  //   privacyPolicy = data['content'].toString();
-  //   if(value == "1") {
-  //     Get.to(() => PrivacyPolicy(
-  //       privacyPolicy: privacyPolicy ?? "",
-  //       title: "Privacy Policy",
-  //     ));
-  //   } else {
-  //     Get.to(() => PrivacyPolicy(
-  //       privacyPolicy: privacyPolicy ?? "",
-  //       title: "Terms & Condition",
-  //     ));
-  //   }
-  //   _isLoginLoading = false;
-  //   update();
-  // }
-  //
-  //
-  //
-  // void updateLastBackPressTime(DateTime time) {
-  //   lastBackPressTime = time;
-  //   update();
-  // }
-  //
-  // ///################ Apis ########################
-  //
-  //
-  // bool _isLoginLoading = false;
-  // bool get isLoginLoading => _isLoginLoading;
-  //
-  // bool _isShowingBottomBar = true;
-  // bool get isShowingBottomBar => _isShowingBottomBar;
-  //
-  //
-  // void updateBottomBarVisibility(bool isVisible) {
-  //   _isShowingBottomBar = isVisible;
-  //   //debugPrint('Bottom bar visibility: $isVisible');
-  //   update();
-  // }
   Future<void> sendOtpApi() async {
     _isLoginLoading = true;
     update();
@@ -1023,6 +901,7 @@ class AuthController extends GetxController implements GetxService {
     required List<int> stateList,
     required List<int> qualificationList,
     required List<int> complexionsList,
+    required List<int> degrees,
   }) async {
     log("All Preferences : "
         "smokingStatus: $smokingStatus, "
@@ -1059,6 +938,7 @@ class AuthController extends GetxController implements GetxService {
       "state": stateList,
       "qualifications": qualificationList,
       "complexions": complexionsList,
+      "degree": degrees,
     });
 
     request.headers.addAll(headers);
@@ -1214,7 +1094,7 @@ class AuthController extends GetxController implements GetxService {
       List<int> Religion = [];
       List<int> HighestQualification = [];
       List<int> Country = [];
-
+      List<int> Degree = [];
       List<int> State = [];
       List<int> Caste = [];
       List<int> Complexions = [];
@@ -1238,6 +1118,20 @@ class AuthController extends GetxController implements GetxService {
           if (prefHighestQualification != null &&
               prefHighestQualification!.contains(qualification.name)) {
             HighestQualification.add(qualification.id.toInt());
+          }
+        }
+      }
+      if (prefHighestQualification!.contains("Select All") ||
+          (prefHighestQualification!.any(
+            (q) => q != "High School" && q != "Intermediate",
+          ))) {
+        if (prefDegree != null && prefDegree!.contains('Select All')) {
+          Degree.addAll(degreeResponse.Degrees.map((d) => d.id));
+        } else {
+          for (var degree in degreeResponse.Degrees) {
+            if (prefDegree != null && prefDegree!.contains(degree.name)) {
+              Degree.add(degree.id.toInt());
+            }
           }
         }
       }
@@ -1291,16 +1185,18 @@ class AuthController extends GetxController implements GetxService {
           .id;
 
       registerUserPreferences(
-          token: token,
-          url: url,
-          smokingStatus: smokingStatusPref,
-          drinkingStatus: drinkingStatusPref,
-          religionList: Religion,
-          casteList: Caste,
-          countryList: Country,
-          stateList: State,
-          qualificationList: HighestQualification,
-          complexionsList: Complexions);
+        token: token,
+        url: url,
+        smokingStatus: smokingStatusPref,
+        drinkingStatus: drinkingStatusPref,
+        religionList: Religion,
+        casteList: Caste,
+        countryList: Country,
+        stateList: State,
+        qualificationList: HighestQualification,
+        complexionsList: Complexions,
+        degrees: Degree,
+      );
 
       return true;
     }
@@ -1556,6 +1452,25 @@ class AuthController extends GetxController implements GetxService {
             isError: true);
         return;
       }
+
+      if (prefHighestQualification != null &&
+          (prefHighestQualification!.contains("Select All") ||
+              prefHighestQualification!.any(
+                (q) => q != "High School" && q != "Intermediate",
+              ))) {
+        if (prefDegree == null ||
+            prefDegree!.isEmpty ||
+            prefDegree!.contains("Select All")) {
+          Get.snackbar(
+            "Error",
+            "Degree cannot be empty.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.red,
+            colorText: AppColors.white,
+          );
+          return;
+        }
+      }
       registerUser("preferences");
     } else {
       if ((prefMinAgeController.text).isEmpty) {
@@ -1639,7 +1554,12 @@ class AuthController extends GetxController implements GetxService {
                 // Close the dialog without logging out
                 Navigator.of(context).pop();
               },
-              child: const Text("No"),
+              child: const Text(
+                "No",
+                style: TextStyle(
+                  color: AppColors.lightTheme,
+                ),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -1647,7 +1567,12 @@ class AuthController extends GetxController implements GetxService {
                 Navigator.of(context).pop(); // Close the dialog
                 await logOut();
               },
-              child: const Text("Yes"),
+              child: const Text(
+                "Yes",
+                style: TextStyle(
+                  color: AppColors.darkTheme,
+                ),
+              ),
             ),
           ],
         );
