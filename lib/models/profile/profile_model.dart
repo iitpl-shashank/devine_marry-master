@@ -559,7 +559,7 @@ class PartnerExpectation {
   final List<int>? country;
   final List<int>? state;
   final List<int>? qualification;
-  final dynamic degree;
+  final List<int>? degree;
   final List<int>? complexion;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -609,7 +609,9 @@ class PartnerExpectation {
         qualification: json["qualification"] == null
             ? []
             : List<int>.from(json["qualification"].map((x) => x)),
-        degree: json["degree"],
+        degree: json["degree"] == null
+            ? []
+            : List<int>.from(json["degree"].map((x) => x)),
         complexion: json["complexion"] == null
             ? []
             : List<int>.from(json["complexion"].map((x) => x)),
@@ -640,7 +642,8 @@ class PartnerExpectation {
         "qualification": qualification == null
             ? []
             : List<dynamic>.from(qualification!.map((x) => x)),
-        "degree": degree,
+        "degree":
+            degree == null ? [] : List<dynamic>.from(degree!.map((x) => x)),
         "complexion": complexion == null
             ? []
             : List<dynamic>.from(complexion!.map((x) => x)),

@@ -23,7 +23,7 @@ class ProfileRepo {
           AppConstants.getProfileDetails,
           method: 'GET',
           headers: {'Authorization': 'Bearer $token'});
-      print("Get Profile Response: ${response.body}");
+      log("Get Profile Response: ${response.body}");
       return response;
     } catch (e) {
       print("Error in getProfile: $e");

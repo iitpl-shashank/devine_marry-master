@@ -57,7 +57,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Success",
           "Gallery images fetched successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
@@ -67,7 +67,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Error",
           "Failed to fetch gallery images.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
@@ -78,7 +78,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Error in fetchGalleryImages: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),
@@ -154,7 +154,7 @@ class ProfileController extends GetxController {
           Get.snackbar(
             "Error",
             "All selected images exceed the size limit of 2MB.",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: AppColors.red,
             colorText: AppColors.white,
           );
@@ -167,7 +167,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Success",
           "Images selected successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
         );
@@ -178,7 +178,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Error selecting images: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -192,7 +192,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Error",
           "No images selected to upload.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
         );
@@ -213,7 +213,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Success",
         "Images uploaded successfully.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Get.theme.primaryColor,
         colorText: Get.theme.colorScheme.onPrimary,
       );
@@ -223,7 +223,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Error uploading images: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -615,7 +615,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Father's name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -626,7 +626,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Father's profession cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -637,7 +637,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Mother's name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -648,7 +648,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Mother's profession cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -659,7 +659,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Number of siblings cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -671,7 +671,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Number of siblings must be a valid non-negative number.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -695,7 +695,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update family details: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -796,7 +796,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Highest qualification cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -807,7 +807,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Institute name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -818,7 +818,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Year of passing cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -829,7 +829,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Company/Organization name cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -840,7 +840,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Designation cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -851,7 +851,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Monthly income cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -864,7 +864,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Experience must be a valid number.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -877,7 +877,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Error",
           "Degree cannot be empty.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
         );
@@ -903,7 +903,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Invalid highest qualification selected.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -930,7 +930,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update educational details: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1060,7 +1060,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Height must be a valid number.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1072,7 +1072,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Weight must be a valid number.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1083,7 +1083,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Blood group cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1094,7 +1094,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Eye color cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1105,7 +1105,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Hair color cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1116,7 +1116,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Complexion cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1127,7 +1127,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Smoking habit cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1138,7 +1138,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Drinking habit cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1149,7 +1149,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Bio cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1160,7 +1160,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Interests and hobbies cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1171,7 +1171,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Disability cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1184,7 +1184,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Disability cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1234,7 +1234,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update physical attributes: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1252,6 +1252,7 @@ class ProfileController extends GetxController {
   List<String>? prefReligion;
   List<String>? prefCaste;
   List<String>? prefHighestQualification;
+  List<String>? prefDegree;
   List<String>? prefCountry;
   List<String>? prefState;
   List<String>? prefComplexion;
@@ -1281,6 +1282,7 @@ class ProfileController extends GetxController {
         profile.value?.data?.user?.partnerExpectation?.country);
     setPrefQualification(
         profile.value?.data?.user?.partnerExpectation?.qualification);
+    setPrefDegree(profile.value?.data?.user?.partnerExpectation?.degree);
     setPrefComplexion(
         profile.value?.data?.user?.partnerExpectation?.complexion);
 
@@ -1358,6 +1360,33 @@ class ProfileController extends GetxController {
     update();
 
     await setPrefState(countryIdsForStates.map((id) => id.toString()).toList());
+  }
+
+  void setPrefDegree(List<int>? value) {
+    if (value == null || value.isEmpty) {
+      prefDegree = [];
+      update();
+      return;
+    }
+    List<String> matchingDegree = value.map((id) {
+      final degree = authController.degreeResponse.Degrees.firstWhere(
+        (status) => status.id == id,
+        orElse: () => Degree(id: 0, name: 'Unknown'),
+      );
+      return degree.name;
+    }).toList();
+
+    final allDegreeIds =
+        authController.degreeResponse.Degrees.map((q) => q.id).toSet();
+    log("Degree value length: ${value.length}");
+    log("Degree allDegreeIds length: ${allDegreeIds.length}");
+    if (value.toSet().containsAll(allDegreeIds) &&
+        value.length == allDegreeIds.length) {
+      prefDegree = ['Select All'];
+    } else {
+      prefDegree = matchingDegree;
+    }
+    update();
   }
 
   void setPrefQualification(List<int>? value) {
@@ -1541,6 +1570,11 @@ class ProfileController extends GetxController {
     update();
   }
 
+  void updatePrefDegree(List<String> value) {
+    prefDegree = value;
+    update();
+  }
+
   Future<void> updatePreferenceDetails() async {
     int minAge = int.tryParse(prefMinAgeController.text) ?? 0;
     int maxAge = int.tryParse(prefMaxAgeController.text) ?? 0;
@@ -1560,7 +1594,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Error",
           "Maximum age must be greater than minimum age.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
         );
@@ -1571,7 +1605,23 @@ class ProfileController extends GetxController {
         Get.snackbar(
           "Error",
           "Maximum height must be greater than minimum height.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.red,
+          colorText: AppColors.white,
+        );
+        return;
+      }
+    }
+
+    if (prefHighestQualification!.contains("Select All") ||
+        (prefHighestQualification!.any(
+          (q) => q != "High School" && q != "Intermediate",
+        ))) {
+      if (prefDegree == null || prefDegree!.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Degree cannot be empty.",
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
         );
@@ -1583,7 +1633,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Religion cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1594,7 +1644,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Caste cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1605,7 +1655,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Country cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1616,7 +1666,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "State cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1627,7 +1677,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Complexion cannot be empty.",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );
@@ -1707,6 +1757,22 @@ class ProfileController extends GetxController {
         }
       }
     }
+    List<int> updatedDegrees = [];
+    if (prefHighestQualification!.contains("Select All") ||
+        (prefHighestQualification!.any(
+          (q) => q != "High School" && q != "Intermediate",
+        ))) {
+      if (prefDegree != null && prefDegree!.contains('Select All')) {
+        updatedDegrees
+            .addAll(authController.degreeResponse.Degrees.map((d) => d.id));
+      } else {
+        for (var degree in authController.degreeResponse.Degrees) {
+          if (prefDegree != null && prefDegree!.contains(degree.name)) {
+            updatedDegrees.add(degree.id);
+          }
+        }
+      }
+    }
 
     Map<String, dynamic> data = {
       "min_age": int.parse(prefMinAgeController.text),
@@ -1727,6 +1793,7 @@ class ProfileController extends GetxController {
               orElse: () => Drinking(id: 0, name: 'Unknown'))
           .id,
       "qualifications": updatedQualifications,
+      "degree": updatedDegrees,
     };
 
     try {
@@ -1738,7 +1805,7 @@ class ProfileController extends GetxController {
       Get.snackbar(
         "Error",
         "Failed to update physical attributes: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
       );

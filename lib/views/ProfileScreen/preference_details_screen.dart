@@ -545,16 +545,19 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                     if (value.contains('Select All')) {
                                       profileController.updatePrefQualification(
                                           ['Select All']);
+                                      profileController.updatePrefDegree([]);
                                     } else {
                                       List<String> filtered =
                                           List<String>.from(value)
                                             ..remove('Select All');
                                       profileController
                                           .updatePrefQualification(filtered);
+                                      profileController.updatePrefDegree([]);
                                     }
                                   } else {
                                     profileController
                                         .updatePrefQualification([]);
+                                    profileController.updatePrefDegree([]);
                                   }
                                 },
                                 validator: (value) {
@@ -564,31 +567,65 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                   return null;
                                 },
                               ),
-                              // CustomDropdownField(
-                              //   key: ValueKey(
-                              //       profileController.prefHighestQualification),
-                              //   hintText: 'Qualification',
-                              //   options: controller.dataModel.qualifications
-                              //       .map((qualification) => qualification.name)
-                              //       .toList(),
-                              //   isMultiple: true,
-                              //   selectedValues:
-                              //       profileController.prefHighestQualification,
-                              //   onChanged: (value) {
-                              //     debugPrint("value===> $value");
-                              //     profileController
-                              //         .updatePrefQualification(value ?? "");
-                              //   },
-                              //   validator: (value) {
-                              //     if (value == null || value.isEmpty) {
-                              //       return 'Please select an option';
-                              //     }
-                              //     return null;
-                              //   },
-                              // ),
                             ),
                           ],
                         ),
+                        GetBuilder<ProfileController>(builder: (prController) {
+                          return Visibility(
+                            visible: (prController.prefHighestQualification!
+                                    .contains("Select All") ||
+                                (prController.prefHighestQualification!.any(
+                                  (q) =>
+                                      q != "High School" && q != "Intermediate",
+                                ))),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 17),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: CustomDropdownField(
+                                        key: ValueKey(prController.prefDegree),
+                                        hintText: 'Degree',
+                                        options: [
+                                          'Select All',
+                                          ...controller.degreeResponse.Degrees
+                                              .map((degree) => degree.name)
+                                        ].toList(),
+                                        isMultiple: true,
+                                        selectedValues: prController.prefDegree,
+                                        onChanged: (value) {
+                                          debugPrint("value===> $value");
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            if (value.contains('Select All')) {
+                                              prController.updatePrefDegree(
+                                                  ['Select All']);
+                                            } else {
+                                              List<String> filtered =
+                                                  List<String>.from(value)
+                                                    ..remove('Select All');
+                                              prController
+                                                  .updatePrefDegree(filtered);
+                                            }
+                                          } else {
+                                            prController.updatePrefDegree([]);
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please select an option';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                       ]),
                 )),
           ),
