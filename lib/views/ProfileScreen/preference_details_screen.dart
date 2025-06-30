@@ -435,22 +435,41 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                 selectedValues: profileController.prefCountry,
                                 isMultiple: true,
                                 hintText: 'Country',
-                                options: controller.countryResponse.countries
-                                    .map((country) => country.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.countryResponse.countries
+                                      .map((country) => country.name)
+                                ].toList(),
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
-                                    profileController
-                                        .updatePrefCountryList(value);
-                                    profileController.updatePrefStateList([]);
-                                    List<String> countryIds = controller
-                                        .countryResponse.countries
-                                        .where((element) =>
-                                            value.contains(element.name))
-                                        .map((element) => element.id.toString())
-                                        .toList();
-                                    controller.getStatesList(countryIds);
+                                    if (value.contains('Select All')) {
+                                      profileController.updatePrefCountryList(
+                                          ['Select All']);
+                                      profileController.updatePrefStateList([]);
+                                      List<String> countryIds = controller
+                                          .countryResponse.countries
+                                          .map((element) =>
+                                              element.id.toString())
+                                          .toList();
+                                      controller.getStatesList(countryIds);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefCountryList(filtered);
+                                      profileController.updatePrefStateList([]);
+                                      List<String> countryIds = controller
+                                          .countryResponse.countries
+                                          .where((element) =>
+                                              filtered.contains(element.name))
+                                          .map((element) =>
+                                              element.id.toString())
+                                          .toList();
+                                      controller.getStatesList(countryIds);
+                                    }
                                   } else {
+                                    profileController.updatePrefCountryList([]);
                                     profileController.updatePrefStateList([]);
                                   }
                                 },
@@ -461,6 +480,37 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                   return null;
                                 },
                               ),
+                              // CustomDropdownField(
+                              //   key: ValueKey(profileController.prefCountry),
+                              //   selectedValues: profileController.prefCountry,
+                              //   isMultiple: true,
+                              //   hintText: 'Country',
+                              //   options: controller.countryResponse.countries
+                              //       .map((country) => country.name)
+                              //       .toList(),
+                              //   onChanged: (value) {
+                              //     if (value != null && value.isNotEmpty) {
+                              //       profileController
+                              //           .updatePrefCountryList(value);
+                              //       profileController.updatePrefStateList([]);
+                              //       List<String> countryIds = controller
+                              //           .countryResponse.countries
+                              //           .where((element) =>
+                              //               value.contains(element.name))
+                              //           .map((element) => element.id.toString())
+                              //           .toList();
+                              //       controller.getStatesList(countryIds);
+                              //     } else {
+                              //       profileController.updatePrefStateList([]);
+                              //     }
+                              //   },
+                              //   validator: (value) {
+                              //     if (value == null || value.isEmpty) {
+                              //       return 'Please select an option';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
                             ),
                           ],
                         ),

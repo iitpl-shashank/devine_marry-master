@@ -1340,8 +1340,14 @@ class ProfileController extends GetxController {
         countryIdsForStates.add(country.id);
       }
     });
-
-    prefCountry = matchingCountries;
+    final allCountryIds =
+        authController.countryResponse.countries.map((c) => c.id).toSet();
+    if (value.toSet().containsAll(allCountryIds) &&
+        value.length == allCountryIds.length) {
+      prefCountry = ['Select All'];
+    } else {
+      prefCountry = matchingCountries;
+    }
     update();
 
     await setPrefState(countryIdsForStates.map((id) => id.toString()).toList());
@@ -1614,37 +1620,51 @@ class ProfileController extends GetxController {
       return;
     }
 
-    List<int> Religion = [];
+    List<int> updatedReligion = [];
     if (prefReligion != null && prefReligion!.contains('Select All')) {
-      Religion.addAll(
-          authController.religionResponse.religions.map((r) => r.id));
+      updatedReligion
+          .addAll(authController.religionResponse.religions.map((r) => r.id));
     } else {
       for (var religion in authController.religionResponse.religions) {
         if (prefReligion != null && prefReligion!.contains(religion.name)) {
-          Religion.add(religion.id);
+          updatedReligion.add(religion.id);
         }
       }
     }
 
-    List<int> Caste = [];
+    List<int> updatedCaste = [];
     if (prefCaste != null && prefCaste!.contains('Select All')) {
-      Caste.addAll(authController.casteListResponse.castes.map((c) => c.id));
+      updatedCaste
+          .addAll(authController.casteListResponse.castes.map((c) => c.id));
     } else {
       for (var caste in authController.casteListResponse.castes) {
         if (prefCaste != null && prefCaste!.contains(caste.name)) {
-          Caste.add(caste.id);
+          updatedCaste.add(caste.id);
         }
       }
     }
 
-    List<int> Complexions = [];
+    List<int> updatedComplexions = [];
     if (prefComplexion != null && prefComplexion!.contains('Select All')) {
-      Complexions.addAll(authController.dataModel.complexion.map((c) => c.id));
+      updatedComplexions
+          .addAll(authController.dataModel.complexion.map((c) => c.id));
     } else {
       for (var complexion in authController.dataModel.complexion) {
         if (prefComplexion != null &&
             prefComplexion!.contains(complexion.name)) {
-          Complexions.add(complexion.id);
+          updatedComplexions.add(complexion.id);
+        }
+      }
+    }
+
+    List<int> updatedCountry = [];
+    if (prefCountry != null && prefCountry!.contains('Select All')) {
+      updatedCountry
+          .addAll(authController.countryResponse.countries.map((c) => c.id));
+    } else {
+      for (var country in authController.countryResponse.countries) {
+        if (prefCountry != null && prefCountry!.contains(country.name)) {
+          updatedCountry.add(country.id);
         }
       }
     }
@@ -1654,13 +1674,10 @@ class ProfileController extends GetxController {
       "max_age": int.parse(prefMaxAgeController.text),
       "max_height": int.parse(prefMaxHeightController.text),
       "min_height": int.parse(prefMinHeightController.text),
-      "religion": Religion,
-      "caste": Caste,
-      "complexions": Complexions,
-      "country": authController.countryResponse.countries
-          .where((item) => prefCountry?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
+      "religion": updatedReligion,
+      "caste": updatedCaste,
+      "complexions": updatedComplexions,
+      "country": updatedCountry,
       "state": authController.stateResponse.states
           .where((item) => prefState?.contains(item.name) ?? false)
           .map((item) => item.id)
