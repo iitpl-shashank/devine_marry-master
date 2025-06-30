@@ -1458,9 +1458,7 @@ class AuthController extends GetxController implements GetxService {
               prefHighestQualification!.any(
                 (q) => q != "High School" && q != "Intermediate",
               ))) {
-        if (prefDegree == null ||
-            prefDegree!.isEmpty ||
-            prefDegree!.contains("Select All")) {
+        if (prefDegree == null || prefDegree!.isEmpty) {
           Get.snackbar(
             "Error",
             "Degree cannot be empty.",
