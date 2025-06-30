@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/app_constants.dart';
@@ -134,8 +136,10 @@ class ProfileRepo {
       } else if (type == "preferences") {
         data = {
           "step": "preferences",
-          "age": data["age"] ?? 0,
-          "height": data["height"] ?? 0,
+          "min_age": data["min_age"] ?? 0,
+          "max_age": data["max_age"] ?? 0,
+          "min_height": data["min_height"] ?? 0,
+          "max_height": data["max_height"] ?? 0,
           "religion": data["religion"] ?? [],
           "smoking_status": data["smoking_status"] ?? 0,
           "drinking_status": data["drinking_status"] ?? 0,
@@ -144,6 +148,7 @@ class ProfileRepo {
           "state": data["state"] ?? [],
           "qualifications": data["qualifications"] ?? [],
           "complexions": data["complexions"] ?? [],
+          if (data["degree"] != null) "degree": data["degree"] ?? [],
         };
       }
 
@@ -161,6 +166,9 @@ class ProfileRepo {
           duration: const Duration(seconds: 3),
         );
       } else {
+        log("Update Profile Response: ${response.body}");
+        log("Update Profile Response: ${response.bodyString}");
+        log("Update Profile Response: ${response.statusCode}");
         Get.snackbar(
           "Error",
           "Failed to update profile details: ${response.body}",

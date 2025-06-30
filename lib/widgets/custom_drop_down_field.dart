@@ -71,33 +71,7 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
             return AlertDialog(
               title: Text("Select Options"),
               content: SingleChildScrollView(
-                child:
-                    // Column(
-                    //   children: widget.options.map((option) {
-                    //     final isSelected = tempSelected.contains(option);
-                    //     return CheckboxListTile(
-                    //       value: isSelected,
-                    //       title: Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           Flexible(child: Text(option)),
-                    //           if (isSelected)
-                    //             Icon(Icons.check, color: Colors.green),
-                    //         ],
-                    //       ),
-                    //       onChanged: (bool? isChecked) {
-                    //         setDialogState(() {
-                    //           if (isChecked == true) {
-                    //             tempSelected.add(option);
-                    //           } else {
-                    //             tempSelected.remove(option);
-                    //           }
-                    //         });
-                    //       },
-                    //     );
-                    //   }).toList(),
-                    // ),
-                    Column(
+                child: Column(
                   children: widget.options.map((option) {
                     final isSelected = tempSelected.contains(option);
                     final isSelectAll = tempSelected.contains('Select All');

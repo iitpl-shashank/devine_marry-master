@@ -245,22 +245,42 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                               child: CustomDropdownField(
                                 key: ValueKey(profileController.prefReligion),
                                 hintText: 'Religion',
-                                options: controller.religionResponse.religions
-                                    .map((religions) => religions.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.religionResponse.religions
+                                      .map((religions) => religions.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues: profileController.prefReligion,
                                 onChanged: (value) {
+                                  debugPrint("Selected value: $value");
                                   if (value != null && value.isNotEmpty) {
-                                    profileController.updatePrefReligion(value);
-                                    controller.getCasteList(
-                                      controller.religionResponse.religions
-                                          .where((element) =>
-                                              value.contains(element.name))
-                                          .map((element) =>
-                                              element.id.toString())
-                                          .toList(),
-                                    );
+                                    if (value.contains('Select All')) {
+                                      profileController
+                                          .updatePrefReligion(['Select All']);
+                                      profileController.updatePrefCasteList([]);
+                                      controller.getCasteList(
+                                        controller.religionResponse.religions
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefReligion(filtered);
+                                      profileController.updatePrefCasteList([]);
+                                      controller.getCasteList(
+                                        controller.religionResponse.religions
+                                            .where((element) =>
+                                                filtered.contains(element.name))
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    }
                                   } else {
                                     profileController.updatePrefReligion([]);
                                     controller.getCasteList([]);
@@ -283,17 +303,27 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                               child: CustomDropdownField(
                                 key: ValueKey(profileController.prefCaste),
                                 hintText: 'Caste',
-                                options: controller.casteListResponse.castes
-                                    .map((castes) => castes.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.casteListResponse.castes
+                                      .map((castes) => castes.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues: profileController.prefCaste,
                                 onChanged: (value) {
                                   if (value != null && value.isNotEmpty) {
-                                    profileController
-                                        .updatePrefCasteList(value);
+                                    if (value.contains('Select All')) {
+                                      profileController
+                                          .updatePrefCasteList(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefCasteList(filtered);
+                                    }
                                   } else {
-                                    profileController.updatePrefReligion([]);
+                                    profileController.updatePrefCasteList([]);
                                   }
                                 },
                                 validator: (value) {
@@ -398,6 +428,7 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                   if (value != null && value.isNotEmpty) {
                                     profileController
                                         .updatePrefCountryList(value);
+                                    profileController.updatePrefStateList([]);
                                     List<String> countryIds = controller
                                         .countryResponse.countries
                                         .where((element) =>

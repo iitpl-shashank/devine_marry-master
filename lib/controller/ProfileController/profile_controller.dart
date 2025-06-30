@@ -1415,8 +1415,14 @@ class ProfileController extends GetxController {
       );
       return religion.name;
     }).toList();
-
-    prefReligion = matchingReligions;
+    final allReligionIds =
+        authController.religionResponse.religions.map((r) => r.id).toSet();
+    if (value.toSet().containsAll(allReligionIds) &&
+        value.length == allReligionIds.length) {
+      prefReligion = ['Select All'];
+    } else {
+      prefReligion = matchingReligions;
+    }
     update();
     await setPrefCaste(value);
     debugPrint("Pref Religion: $prefReligion");
@@ -1457,7 +1463,14 @@ class ProfileController extends GetxController {
       return caste.name;
     }).toList();
 
-    prefCaste = matchingCaste;
+    final allCasteIds =
+        authController.casteListResponse.castes.map((c) => c.id).toSet();
+    if (selectedCasteIds.toSet().containsAll(allCasteIds) &&
+        selectedCasteIds.length == allCasteIds.length) {
+      prefCaste = ['Select All'];
+    } else {
+      prefCaste = matchingCaste;
+    }
     update();
     debugPrint("Pref Castes: $prefCaste");
   }
@@ -1508,7 +1521,6 @@ class ProfileController extends GetxController {
     int minHeight = int.tryParse(prefMinHeightController.text) ?? 0;
     int maxHeight = int.tryParse(prefMaxHeightController.text) ?? 0;
 
-    // Validation for min/max age and height
     if ((prefMinAgeController.text).isNotEmpty &&
         (minAge > 18) &&
         (prefMinHeightController.text).isNotEmpty &&
@@ -1540,30 +1552,6 @@ class ProfileController extends GetxController {
         return;
       }
     }
-
-    // if (prefMinAgeController.text.isEmpty ||
-    //     int.tryParse(prefMinAgeController.text) == null) {
-    //   Get.snackbar(
-    //     "Error",
-    //     "Age must be a valid number.",
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: AppColors.red,
-    //     colorText: AppColors.white,
-    //   );
-    //   return;
-    // }
-
-    // if (prefMinHeightController.text.isEmpty ||
-    //     int.tryParse(prefMinHeightController.text) == null) {
-    //   Get.snackbar(
-    //     "Error",
-    //     "Height must be a valid number.",
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: AppColors.red,
-    //     colorText: AppColors.white,
-    //   );
-    //   return;
-    // }
 
     if (prefReligion == null || prefReligion!.isEmpty) {
       Get.snackbar(
@@ -1620,19 +1608,36 @@ class ProfileController extends GetxController {
       return;
     }
 
+    List<int> Religion = [];
+    if (prefReligion != null && prefReligion!.contains('Select All')) {
+      Religion.addAll(
+          authController.religionResponse.religions.map((r) => r.id));
+    } else {
+      for (var religion in authController.religionResponse.religions) {
+        if (prefReligion != null && prefReligion!.contains(religion.name)) {
+          Religion.add(religion.id);
+        }
+      }
+    }
+
+    List<int> Caste = [];
+    if (prefCaste != null && prefCaste!.contains('Select All')) {
+      Caste.addAll(authController.casteListResponse.castes.map((c) => c.id));
+    } else {
+      for (var caste in authController.casteListResponse.castes) {
+        if (prefCaste != null && prefCaste!.contains(caste.name)) {
+          Caste.add(caste.id);
+        }
+      }
+    }
+
     Map<String, dynamic> data = {
       "min_age": int.parse(prefMinAgeController.text),
       "max_age": int.parse(prefMaxAgeController.text),
       "max_height": int.parse(prefMaxHeightController.text),
       "min_height": int.parse(prefMinHeightController.text),
-      "religion": authController.religionResponse.religions
-          .where((item) => prefReligion?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
-      "caste": authController.casteListResponse.castes
-          .where((item) => prefCaste?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
+      "religion": Religion,
+      "caste": Caste,
       "complexions": authController.dataModel.complexion
           .where((item) => prefComplexion?.contains(item.name) ?? false)
           .map((item) => item.id)
