@@ -1157,9 +1157,9 @@ class AuthController extends GetxController implements GetxService {
       }
 
       if (prefCaste != null && prefCaste!.contains('Select All')) {
-        Caste.addAll(casteResponse.castes.map((c) => c.id));
+        Caste.addAll(casteListResponse.castes.map((c) => c.id));
       } else {
-        for (var caste in casteResponse.castes) {
+        for (var caste in casteListResponse.castes) {
           if (prefCaste != null && prefCaste!.contains(caste.name)) {
             Caste.add(caste.id.toInt());
           }

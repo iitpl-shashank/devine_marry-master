@@ -517,12 +517,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         ),
                         GetBuilder<AuthController>(builder: (prController) {
                           return Visibility(
-                            visible: (prController.prefHighestQualification!
-                                    .contains("Select All") ||
-                                (prController.prefHighestQualification!.any(
-                                  (q) =>
-                                      q != "High School" && q != "Intermediate",
-                                ))),
+                            visible: (prController.prefHighestQualification !=
+                                    null &&
+                                (prController.prefHighestQualification!
+                                        .contains("Select All") ||
+                                    (prController.prefHighestQualification!.any(
+                                      (q) =>
+                                          q != "High School" &&
+                                          q != "Intermediate",
+                                    )))),
                             child: Column(
                               children: [
                                 SizedBox(height: 17),
