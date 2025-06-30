@@ -391,16 +391,30 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                               child: CustomDropdownField(
                                 key: ValueKey(profileController.prefComplexion),
                                 hintText: 'Complexion',
-                                options: controller.dataModel.complexion
-                                    .map((complexion) => complexion.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.complexion
+                                      .map((complexion) => complexion.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues:
                                     profileController.prefComplexion,
                                 onChanged: (value) {
                                   debugPrint("value===> $value");
-                                  profileController
-                                      .updatePrefComplexion(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      profileController
+                                          .updatePrefComplexion(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefComplexion(filtered);
+                                    }
+                                  } else {
+                                    profileController.updatePrefComplexion([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {

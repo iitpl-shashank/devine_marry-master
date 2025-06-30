@@ -1378,8 +1378,14 @@ class ProfileController extends GetxController {
       );
       return complexion.name;
     }).toList();
-
-    prefComplexion = matchingComplexion;
+    final allComplexionIds =
+        authController.dataModel.complexion.map((c) => c.id).toSet();
+    if (value.toSet().containsAll(allComplexionIds) &&
+        value.length == allComplexionIds.length) {
+      prefComplexion = ['Select All'];
+    } else {
+      prefComplexion = matchingComplexion;
+    }
     update();
   }
 
@@ -1631,6 +1637,18 @@ class ProfileController extends GetxController {
       }
     }
 
+    List<int> Complexions = [];
+    if (prefComplexion != null && prefComplexion!.contains('Select All')) {
+      Complexions.addAll(authController.dataModel.complexion.map((c) => c.id));
+    } else {
+      for (var complexion in authController.dataModel.complexion) {
+        if (prefComplexion != null &&
+            prefComplexion!.contains(complexion.name)) {
+          Complexions.add(complexion.id);
+        }
+      }
+    }
+
     Map<String, dynamic> data = {
       "min_age": int.parse(prefMinAgeController.text),
       "max_age": int.parse(prefMaxAgeController.text),
@@ -1638,10 +1656,7 @@ class ProfileController extends GetxController {
       "min_height": int.parse(prefMinHeightController.text),
       "religion": Religion,
       "caste": Caste,
-      "complexions": authController.dataModel.complexion
-          .where((item) => prefComplexion?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
+      "complexions": Complexions,
       "country": authController.countryResponse.countries
           .where((item) => prefCountry?.contains(item.name) ?? false)
           .map((item) => item.id)
