@@ -33,11 +33,9 @@ class AuthRepo {
     return true;
   }
 
-  Future<Response> sendOtpRepo(
-    String? phoneNo,
-  ) async {
-    return await apiClient
-        .postData(AppConstants.sendOtpUrl, {"mobile": "$phoneNo"});
+  Future<Response> sendOtpRepo(String? phoneNo, String? countryCode) async {
+    return await apiClient.postData(AppConstants.sendOtpUrl,
+        {"mobile": "$phoneNo", "country_code": "$countryCode"});
   }
 
   Future<Response> getCountries() async {
