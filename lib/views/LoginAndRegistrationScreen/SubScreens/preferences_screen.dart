@@ -29,6 +29,32 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (controller) {
+      final smokingOptions = controller.dataModel.smoking.map((smoking) {
+        switch (smoking.id) {
+          case 1:
+            return {'label': "Occasional Smoker", 'value': smoking.name};
+          case 3:
+            return {'label': "Non Smoker", 'value': smoking.name};
+          case 4:
+            return {'label': "Regular Smoker", 'value': smoking.name};
+          default:
+            return {'label': smoking.name, 'value': smoking.name};
+        }
+      }).toList();
+
+      final drinkingOptions = controller.dataModel.drinking.map((drinking) {
+        switch (drinking.id) {
+          case 1:
+            return {'label': "Occasional Drinker", 'value': drinking.name};
+          case 3:
+            return {'label': "Non Drinker", 'value': drinking.name};
+          case 4:
+            return {'label': "Regular Drinker", 'value': drinking.name};
+          default:
+            return {'label': drinking.name, 'value': drinking.name};
+        }
+      }).toList();
+
       return Scaffold(
         backgroundColor: AppColors.transparent,
         body: SingleChildScrollView(
@@ -340,14 +366,24 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                           children: [
                             Flexible(
                               child: CustomDropdownField(
-                                selectedValue: controller.prefSmokingHabit,
+                                selectedValue: smokingOptions.firstWhere(
+                                  (option) =>
+                                      option['value'] ==
+                                      controller.prefSmokingHabit,
+                                  orElse: () => smokingOptions.first,
+                                )['label'],
                                 hintText: 'Smoking Habit',
-                                options: controller.dataModel.smoking
-                                    .map((smoking) => smoking.name)
+                                options: smokingOptions
+                                    .map((option) => option['label'] as String)
                                     .toList(),
                                 onChanged: (value) {
-                                  controller
-                                      .updatePrefSmokingHabit(value ?? "");
+                                  final selectedOption =
+                                      smokingOptions.firstWhere(
+                                    (option) => option['label'] == value,
+                                    orElse: () => smokingOptions.first,
+                                  );
+                                  controller.updatePrefSmokingHabit(
+                                      selectedOption['value'] ?? "");
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -363,13 +399,23 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                             Flexible(
                               child: CustomDropdownField(
                                 hintText: 'Drinking Habit',
-                                selectedValue: controller.prefDrinkingHabit,
-                                options: controller.dataModel.drinking
-                                    .map((drinking) => drinking.name)
+                                selectedValue: drinkingOptions.firstWhere(
+                                  (option) =>
+                                      option['value'] ==
+                                      controller.prefDrinkingHabit,
+                                  orElse: () => drinkingOptions.first,
+                                )['label'],
+                                options: drinkingOptions
+                                    .map((option) => option['label'] as String)
                                     .toList(),
                                 onChanged: (value) {
-                                  controller
-                                      .updatePrefDrinkingHabit(value ?? "");
+                                  final selectedOption =
+                                      drinkingOptions.firstWhere(
+                                    (option) => option['label'] == value,
+                                    orElse: () => drinkingOptions.first,
+                                  );
+                                  controller.updatePrefDrinkingHabit(
+                                      selectedOption['value'] ?? "");
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
