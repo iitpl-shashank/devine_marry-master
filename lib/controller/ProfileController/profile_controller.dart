@@ -1316,7 +1316,14 @@ class ProfileController extends GetxController {
       return state.name;
     }).toList();
 
-    prefState = matchingStates;
+    final allStateIds =
+        authController.stateResponse.states.map((s) => s.id).toSet();
+    if (selectedStateIds.toSet().containsAll(allStateIds) &&
+        selectedStateIds.length == allStateIds.length) {
+      prefState = ['Select All'];
+    } else {
+      prefState = matchingStates;
+    }
     update();
   }
 
@@ -1367,7 +1374,14 @@ class ProfileController extends GetxController {
       return qualification.name;
     }).toList();
 
-    prefHighestQualification = matchingQualifications;
+    final allQualificationIds =
+        authController.dataModel.qualifications.map((q) => q.id).toSet();
+    if (value.toSet().containsAll(allQualificationIds) &&
+        value.length == allQualificationIds.length) {
+      prefHighestQualification = ['Select All'];
+    } else {
+      prefHighestQualification = matchingQualifications;
+    }
     update();
   }
 
@@ -1669,6 +1683,31 @@ class ProfileController extends GetxController {
       }
     }
 
+    List<int> updatedState = [];
+    if (prefState != null && prefState!.contains('Select All')) {
+      updatedState.addAll(authController.stateResponse.states.map((s) => s.id));
+    } else {
+      for (var state in authController.stateResponse.states) {
+        if (prefState != null && prefState!.contains(state.name)) {
+          updatedState.add(state.id);
+        }
+      }
+    }
+
+    List<int> updatedQualifications = [];
+    if (prefHighestQualification != null &&
+        prefHighestQualification!.contains('Select All')) {
+      updatedQualifications
+          .addAll(authController.dataModel.qualifications.map((q) => q.id));
+    } else {
+      for (var qualification in authController.dataModel.qualifications) {
+        if (prefHighestQualification != null &&
+            prefHighestQualification!.contains(qualification.name)) {
+          updatedQualifications.add(qualification.id);
+        }
+      }
+    }
+
     Map<String, dynamic> data = {
       "min_age": int.parse(prefMinAgeController.text),
       "max_age": int.parse(prefMaxAgeController.text),
@@ -1678,10 +1717,7 @@ class ProfileController extends GetxController {
       "caste": updatedCaste,
       "complexions": updatedComplexions,
       "country": updatedCountry,
-      "state": authController.stateResponse.states
-          .where((item) => prefState?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
+      "state": updatedState,
       "smoking_status": authController.dataModel.smoking
           .firstWhere((item) => item.name == prefSmokingHabit,
               orElse: () => Smoking(id: 0, name: 'Unknown'))
@@ -1690,11 +1726,7 @@ class ProfileController extends GetxController {
           .firstWhere((item) => item.name == prefDrinkingHabit,
               orElse: () => Drinking(id: 0, name: 'Unknown'))
           .id,
-      "qualifications": authController.dataModel.qualifications
-          .where(
-              (item) => prefHighestQualification?.contains(item.name) ?? false)
-          .map((item) => item.id)
-          .toList(),
+      "qualifications": updatedQualifications,
     };
 
     try {

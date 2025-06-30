@@ -1,4 +1,5 @@
 import 'package:devine_marry/utils/images.dart';
+import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../utils/dimensions.dart';
@@ -115,11 +116,21 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: AppColors.lightTheme,
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, tempSelected),
-                  child: Text("OK"),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                      color: AppColors.darkTheme,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -141,7 +152,6 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hint text above the dropdown
         (_isFocused ||
                 widget.selectedValue != null ||
                 _selectedValues.isNotEmpty)

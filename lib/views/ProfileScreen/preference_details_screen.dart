@@ -480,37 +480,6 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                   return null;
                                 },
                               ),
-                              // CustomDropdownField(
-                              //   key: ValueKey(profileController.prefCountry),
-                              //   selectedValues: profileController.prefCountry,
-                              //   isMultiple: true,
-                              //   hintText: 'Country',
-                              //   options: controller.countryResponse.countries
-                              //       .map((country) => country.name)
-                              //       .toList(),
-                              //   onChanged: (value) {
-                              //     if (value != null && value.isNotEmpty) {
-                              //       profileController
-                              //           .updatePrefCountryList(value);
-                              //       profileController.updatePrefStateList([]);
-                              //       List<String> countryIds = controller
-                              //           .countryResponse.countries
-                              //           .where((element) =>
-                              //               value.contains(element.name))
-                              //           .map((element) => element.id.toString())
-                              //           .toList();
-                              //       controller.getStatesList(countryIds);
-                              //     } else {
-                              //       profileController.updatePrefStateList([]);
-                              //     }
-                              //   },
-                              //   validator: (value) {
-                              //     if (value == null || value.isEmpty) {
-                              //       return 'Please select an option';
-                              //     }
-                              //     return null;
-                              //   },
-                              // ),
                             ),
                           ],
                         ),
@@ -523,12 +492,26 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                 hintText: 'State',
                                 isMultiple: true,
                                 selectedValues: profileController.prefState,
-                                options: controller.stateResponse.states
-                                    .map((states) => states.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.stateResponse.states
+                                      .map((states) => states.name)
+                                ].toList(),
                                 onChanged: (value) {
-                                  profileController
-                                      .updatePrefStateList(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      profileController
+                                          .updatePrefStateList(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefStateList(filtered);
+                                    }
+                                  } else {
+                                    profileController.updatePrefStateList([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -548,16 +531,31 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                 key: ValueKey(
                                     profileController.prefHighestQualification),
                                 hintText: 'Qualification',
-                                options: controller.dataModel.qualifications
-                                    .map((qualification) => qualification.name)
-                                    .toList(),
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.qualifications.map(
+                                      (qualification) => qualification.name)
+                                ].toList(),
                                 isMultiple: true,
                                 selectedValues:
                                     profileController.prefHighestQualification,
                                 onChanged: (value) {
                                   debugPrint("value===> $value");
-                                  profileController
-                                      .updatePrefQualification(value ?? "");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      profileController.updatePrefQualification(
+                                          ['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      profileController
+                                          .updatePrefQualification(filtered);
+                                    }
+                                  } else {
+                                    profileController
+                                        .updatePrefQualification([]);
+                                  }
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -566,6 +564,28 @@ class _PreferenceDetailsScreenState extends State<PreferenceDetailsScreen> {
                                   return null;
                                 },
                               ),
+                              // CustomDropdownField(
+                              //   key: ValueKey(
+                              //       profileController.prefHighestQualification),
+                              //   hintText: 'Qualification',
+                              //   options: controller.dataModel.qualifications
+                              //       .map((qualification) => qualification.name)
+                              //       .toList(),
+                              //   isMultiple: true,
+                              //   selectedValues:
+                              //       profileController.prefHighestQualification,
+                              //   onChanged: (value) {
+                              //     debugPrint("value===> $value");
+                              //     profileController
+                              //         .updatePrefQualification(value ?? "");
+                              //   },
+                              //   validator: (value) {
+                              //     if (value == null || value.isEmpty) {
+                              //       return 'Please select an option';
+                              //     }
+                              //     return null;
+                              //   },
+                              // ),
                             ),
                           ],
                         ),
