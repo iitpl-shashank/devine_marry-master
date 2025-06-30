@@ -46,6 +46,7 @@ dependencies:
   flutter_svg: ^2.0.17
   fluttertoast: ^8.2.12
   shimmer: ^3.0.0
+  country_code_picker: ^3.3.0
 
 dev_dependencies:
   flutter_test:

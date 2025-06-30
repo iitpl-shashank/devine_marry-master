@@ -38,7 +38,7 @@ class AuthController extends GetxController implements GetxService {
   bool get isLoginLoading => _isLoginLoading;
   final loginFormKey = GlobalKey<FormState>();
   final FocusNode phoneFocus = FocusNode();
-
+  String selectedCountryCode = '+91';
   PageController pageController = PageController();
   int currentPage = 0;
 
@@ -319,8 +319,8 @@ class AuthController extends GetxController implements GetxService {
     _isLoginLoading = true;
     update();
     try {
-      Response response =
-          await authRepo.sendOtpRepo(phoneController.text.trim());
+      Response response = await authRepo
+          .sendOtpRepo('$selectedCountryCode${phoneController.text.trim()}');
       debugPrint("Response: ${response.body}");
       // var responseData = response.body;
       if (response.body['status']) {
