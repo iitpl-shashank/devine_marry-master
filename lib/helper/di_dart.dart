@@ -1,8 +1,10 @@
 import 'package:devine_marry/controller/DashboardController/dashboard_controller.dart';
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
+import 'package:devine_marry/controller/NotificationController/notification_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/controller/SplashScreenController/splash_controller.dart';
 import 'package:devine_marry/data/repo/home_repo.dart';
+import 'package:devine_marry/data/repo/notification_repo.dart';
 import 'package:devine_marry/data/repo/search_repo.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,6 +31,7 @@ Future<void> init() async {
   Get.lazyPut(() => HomeRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ProfileRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => SearchRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => NotificationRepo(apiClient: Get.find()), fenix: true);
   // Get.lazyPut(() => ProfileRepo(apiClient: Get.find()));
   // Get.lazyPut(() => AppointmentRepo(apiClient: Get.find()));
   // Get.lazyPut(() => ClinicRepo(apiClient: Get.find()));
@@ -44,6 +47,10 @@ Future<void> init() async {
   Get.lazyPut(
       () =>
           SplashController(authRepo: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () => NotificationController(
+          notificationRepo: Get.find(), sharedPreferences: Get.find()),
       fenix: true);
   Get.lazyPut(
       () => ProfileController(

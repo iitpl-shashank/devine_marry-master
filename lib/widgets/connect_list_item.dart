@@ -24,12 +24,16 @@ class ConnectListItem extends StatelessWidget {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             hideNotificationIcon
                 ? CircleAvatar(
                     radius: 26,
                     backgroundColor: Colors.grey.shade200,
-                    backgroundImage: NetworkImage(imageUrl ?? ""),
+                    backgroundImage: NetworkImage(
+                      imageUrl ?? "",
+                      scale: 1.0,
+                    ),
                     onBackgroundImageError: (error, stackTrace) {
                       debugPrint("Error loading image: $error");
                     },
@@ -78,9 +82,7 @@ class ConnectListItem extends StatelessWidget {
                   SizedBox(height: 5),
                   Text(
                     description,
-                    maxLines: 1,
                     style: TextStyle(
-                        overflow: TextOverflow.ellipsis,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: AppColors.textBlack.withOpacity(0.70)),

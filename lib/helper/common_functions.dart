@@ -24,4 +24,21 @@ class CommonFunctions {
     }
     return years;
   }
+
+  String formatDateTime(String dateTimeStr) {
+    try {
+      final dateTime = DateTime.parse(dateTimeStr).toLocal();
+      final day = dateTime.day.toString().padLeft(2, '0');
+      final month = dateTime.month.toString().padLeft(2, '0');
+      final year = dateTime.year.toString();
+      int hour = dateTime.hour;
+      final minute = dateTime.minute.toString().padLeft(2, '0');
+      final amPm = hour >= 12 ? 'PM' : 'AM';
+      hour = hour % 12 == 0 ? 12 : hour % 12;
+      final hourStr = hour.toString().padLeft(2, '0');
+      return '$day-$month-$year $hourStr:$minute $amPm';
+    } catch (e) {
+      return dateTimeStr;
+    }
+  }
 }

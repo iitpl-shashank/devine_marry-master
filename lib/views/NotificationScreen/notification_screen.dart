@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:devine_marry/controller/NotificationController/notification_controller.dart';
+import 'package:devine_marry/helper/common_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/images.dart';
@@ -6,31 +10,23 @@ import '../../utils/themes/app_colors.dart';
 import '../../widgets/connect_list_item.dart';
 import '../../widgets/custom_app_bar.dart';
 
-class NotificationScreen extends StatelessWidget {
-  final List<Map<String, String>> connectList = [
-    {
-      "userName": "New match found",
-      "time": "11:20 PM",
-    },
-    {
-      "userName": "Message from Ritu",
-      "time": "11:20 PM",
-    },
-    {
-      "userName": "New match found",
-      "time": "11:20 PM",
-    },
-    {
-      "userName": "New match found",
-      "time": "11:20 PM",
-    },
-    {
-      "userName": "Message from Ritu",
-      "time": "11:20 PM",
-    },
-  ];
-
+class NotificationScreen extends StatefulWidget {
   NotificationScreen({super.key});
+
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  final NotificationController notificationController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await notificationController.getNotification();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,19 +67,27 @@ class NotificationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 28),
               // Display the connect list items
-              Column(
-                children: connectList.map((item) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: ConnectListItem(
-                      userName: item["userName"]!,
-                      time: item["time"]!,
-                      description: StringTexts.tempDescription,
-                      hideNotificationIcon: false,
-                    ),
-                  );
-                }).toList(),
-              ),
+              Obx(() {
+                final notifications = notificationController
+                        .notificationData.value?.data?.notifications ??
+                    [];
+                return Column(
+                  children: notifications.map((item) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: ConnectListItem(
+                        userName: item.senderName ?? "",
+                        time: CommonFunctions()
+                            .formatDateTime(item.createdAt.toString()),
+                        description: item.title ?? StringTexts.tempDescription,
+                        hideNotificationIcon: true,
+                        imageUrl: item.senderImageUrl ??
+                            'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
             ],
           ),
         ),
