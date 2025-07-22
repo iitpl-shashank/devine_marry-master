@@ -44,59 +44,61 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    dynamic userInterest =
-        homeController.selectedUser.value.data?.user?.userInterestStatus;
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
-          child: SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {
-                log("Button Pressed : $userInterest");
-                if ((userInterest == "0" || userInterest == 0)) {
-                  Get.snackbar(
-                    "Request Sent",
-                    "Request already sent",
-                    snackPosition: SnackPosition.TOP,
-                  );
-                } else if ((userInterest == "1" || userInterest == 1)) {
-                  Get.snackbar(
-                    "Chat Now",
-                    "Start chatting with this user",
-                    snackPosition: SnackPosition.TOP,
-                  );
-                } else {
-                  homeController.sendInterestToUser(
-                    interestingId:
-                        homeController.selectedUser.value.data?.user?.id ?? 0,
-                    myUserId: widget.userId,
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+        bottomNavigationBar: Obx(() {
+          dynamic userInterest =
+              homeController.selectedUser.value.data?.user?.userInterestStatus;
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  log("Button Pressed : $userInterest");
+                  if ((userInterest == "0" || userInterest == 0)) {
+                    Get.snackbar(
+                      "Request Sent",
+                      "Request already sent",
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  } else if ((userInterest == "1" || userInterest == 1)) {
+                    Get.snackbar(
+                      "Chat Now",
+                      "Start chatting with this user",
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  } else {
+                    homeController.sendInterestToUser(
+                      interestingId:
+                          homeController.selectedUser.value.data?.user?.id ?? 0,
+                      myUserId: widget.userId,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
                 ),
-              ),
-              child: Text(
-                (userInterest == "0" || userInterest == 0)
-                    ? StringTexts.requestSent.toUpperCase()
-                    : (userInterest == "1" || userInterest == 1)
-                        ? StringTexts.chatNow.toUpperCase()
-                        : StringTexts.connect.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.white,
+                child: Text(
+                  (userInterest == "0" || userInterest == 0)
+                      ? StringTexts.requestSent.toUpperCase()
+                      : (userInterest == "1" || userInterest == 1)
+                          ? StringTexts.chatNow.toUpperCase()
+                          : StringTexts.connect.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
         backgroundColor: AppColors.white,
         body: SafeArea(
           child: SingleChildScrollView(
