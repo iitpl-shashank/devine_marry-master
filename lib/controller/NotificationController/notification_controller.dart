@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:devine_marry/data/repo/notification_repo.dart';
+import 'package:devine_marry/helper/route_helper.dart';
 import 'package:devine_marry/models/notification/notification_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,6 +44,57 @@ class NotificationController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       print("Exception in getNotification: $e");
+    }
+  }
+
+  Future<void> updateNotificationStatus({
+    required String notificationId,
+    required String senderId,
+  }) async {
+    try {
+      String token = sharedPreferences.getString('token') ?? "";
+
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+
+      Response response = await notificationRepo.updateNotificationStatus(
+        headers: headers,
+        notificationId: notificationId,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody =
+            response.body is String ? jsonDecode(response.body) : response.body;
+        if (responseBody['success'] == true) {
+          Get.toNamed(RouteHelper.userDetailsScreen, arguments: senderId);
+        } else {
+          Get.snackbar(
+            "Error",
+            responseBody['message'] ?? "Failed to update notification status.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to update notification status. ${response.statusText}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Exception: $e",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 }

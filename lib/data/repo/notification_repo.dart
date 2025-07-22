@@ -17,4 +17,18 @@ class NotificationRepo {
       headers: headers,
     );
   }
+
+  Future<Response> updateNotificationStatus({
+    required Map<String, String>? headers,
+    required String notificationId,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.updateNotificationRead,
+      headers: headers,
+      {
+        'notification_id': notificationId,
+        'is_read': '1',
+      },
+    );
+  }
 }

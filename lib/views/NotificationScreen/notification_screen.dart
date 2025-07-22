@@ -77,8 +77,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: InkWell(
                         onTap: () {
-                          Get.toNamed(RouteHelper.userDetailsScreen,
-                              arguments: item.senderId.toString());
+                          notificationController.updateNotificationStatus(
+                            notificationId: item.id.toString(),
+                            senderId: item.senderId.toString(),
+                          );
                         },
                         child: ConnectListItem(
                           userName: item.senderName ?? "",
