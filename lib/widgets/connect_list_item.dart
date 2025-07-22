@@ -9,88 +9,97 @@ class ConnectListItem extends StatelessWidget {
   final String description;
   final String? imageUrl;
   final bool hideNotificationIcon;
+  final bool isRead;
 
-  ConnectListItem({
+  const ConnectListItem({
     super.key,
     required this.userName,
     required this.time,
     required this.description,
     this.imageUrl,
     required this.hideNotificationIcon,
+    required this.isRead,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            hideNotificationIcon
-                ? CircleAvatar(
-                    radius: 26,
-                    backgroundColor: Colors.grey.shade200,
-                    backgroundImage: NetworkImage(
-                      imageUrl ?? "",
-                      scale: 1.0,
-                    ),
-                    onBackgroundImageError: (error, stackTrace) {
-                      debugPrint("Error loading image: $error");
-                    },
-                  )
-                : Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.grey.withOpacity(0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: flutter_svg.SvgPicture.asset(
-                        Svgs.notificationVector,
-                        width: 24,
-                        height: 24,
+        Container(
+          padding: isRead ? const EdgeInsets.all(8) : null,
+          decoration: BoxDecoration(
+            color: isRead ? AppColors.lightThemeWith15Opacity : Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              hideNotificationIcon
+                  ? CircleAvatar(
+                      radius: 26,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: NetworkImage(
+                        imageUrl ?? "",
+                        scale: 1.0,
                       ),
-                    ),
-                  ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        userName,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textBlack,
+                      onBackgroundImageError: (error, stackTrace) {
+                        debugPrint("Error loading image: $error");
+                      },
+                    )
+                  : Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withOpacity(0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: flutter_svg.SvgPicture.asset(
+                          Svgs.notificationVector,
+                          width: 24,
+                          height: 24,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Text(
-                        time,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    description,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textBlack.withOpacity(0.70)),
-                  ),
-                ],
+                    ),
+              const SizedBox(
+                width: 10,
               ),
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          userName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textBlack,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          time,
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      description,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.textBlack.withOpacity(0.70)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 12,

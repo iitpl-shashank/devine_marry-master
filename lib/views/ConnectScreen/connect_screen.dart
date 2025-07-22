@@ -15,6 +15,7 @@ class ConnectScreen extends StatelessWidget {
         "description": "Looking for a match.",
         "imageUrl":
             "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg",
+        "isRead": "0",
       },
       {
         "userName": "Jane Smith",
@@ -22,6 +23,7 @@ class ConnectScreen extends StatelessWidget {
         "description": "Excited to connect!",
         "imageUrl":
             "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-55958-614810.jpg&fm=jpg",
+        "isRead": "0",
       },
       {
         "userName": "Alice Johnson",
@@ -29,6 +31,7 @@ class ConnectScreen extends StatelessWidget {
         "description": "Open to conversations.",
         "imageUrl":
             "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
+        "isRead": "0",
       },
     ];
 
@@ -55,6 +58,7 @@ class ConnectScreen extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: ConnectListItem(
+                      isRead: item["isRead"] == '0' ? false : true,
                       userName: item["userName"]!,
                       time: item["time"]!,
                       description: StringTexts.tempDescription,
