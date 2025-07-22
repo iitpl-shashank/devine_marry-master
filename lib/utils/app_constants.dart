@@ -8,6 +8,8 @@ class AppConstants {
 
   static const String sendOtpUrl = "check-mobile";
   static const String sendInterest = "send-interests";
+  static const String acceptInterest = "interests/accept";
+  static const String rejectInterest = "interests/reject";
   static const String verifyOtpUrl = "verify-otp";
   static const String notificationsUrl = "notifications";
   static const String updateProfileUrl = "update/my-profile";

@@ -329,4 +329,132 @@ class HomeController extends GetxController {
       print("Exception in getUserList: $e");
     }
   }
+
+  Future<void> rejectInterestRequest({
+    required int id,
+    required String myUserId,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      Response response = await homeRepo.rejectRequest(
+        id: id.toString(),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody =
+            response.body is String ? jsonDecode(response.body) : response.body;
+        if (responseBody['success'] == true) {
+          Get.snackbar(
+            "Success",
+            responseBody['message'] ?? "Interest rejected successfully.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          Get.snackbar(
+            "Error",
+            responseBody['message'] ?? "Failed to reject interest.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to reject interest. ${response.statusText}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Exception: $e",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      hideLoading();
+      await getUserDetails(
+        userId: myUserId,
+      );
+      update();
+    }
+  }
+
+  Future<void> acceptInterestRequest({
+    required int id,
+    required String myUserId,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString(AppConstants.token) ?? "";
+
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      Response response = await homeRepo.acceptRequest(
+        id: id.toString(),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody =
+            response.body is String ? jsonDecode(response.body) : response.body;
+        if (responseBody['success'] == true) {
+          Get.snackbar(
+            "Success",
+            responseBody['message'] ?? "Interest accepted successfully.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          Get.snackbar(
+            "Error",
+            responseBody['message'] ?? "Failed to accept interest.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        Get.snackbar(
+          "Error",
+          "Failed to accept interest. ${response.statusText}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Exception: $e",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      hideLoading();
+      await getUserDetails(
+        userId: myUserId,
+      );
+      update();
+    }
+  }
 }

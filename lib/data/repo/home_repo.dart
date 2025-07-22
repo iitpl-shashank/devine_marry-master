@@ -47,4 +47,26 @@ class HomeRepo {
         },
         headers: headers);
   }
+
+  Future<Response> acceptRequest({
+    required String id,
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.acceptInterest,
+      {"id": id},
+      headers: headers,
+    );
+  }
+
+  Future<Response> rejectRequest({
+    required String id,
+    required Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.rejectInterest,
+      {"id": id},
+      headers: headers,
+    );
+  }
 }

@@ -112,6 +112,8 @@ class User {
   final List<CareerInfo>? careerInfo;
   final PartnerExpectation? partnerExpectation;
   final dynamic userInterestStatus;
+  final int? userSenderId;
+  final int? userReceiverId;
 
   User({
     this.id,
@@ -174,6 +176,8 @@ class User {
     this.careerInfo,
     this.partnerExpectation,
     this.userInterestStatus,
+    this.userSenderId,
+    this.userReceiverId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -259,6 +263,8 @@ class User {
         userInterestStatus: json["user_interest_status"] != null
             ? json["user_interest_status"].toString()
             : null,
+        userSenderId: json["user_sender_id"],
+        userReceiverId: json["user_receiver_id"],
       );
 
   Map<String, dynamic> toJson() => {

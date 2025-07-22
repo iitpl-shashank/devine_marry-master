@@ -47,56 +47,141 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: Obx(() {
-          dynamic userInterest =
-              homeController.selectedUser.value.data?.user?.userInterestStatus;
+          int userInterest = int.parse(homeController
+                  .selectedUser.value.data?.user?.userInterestStatus
+                  .toString() ??
+              '0');
+          int senderId =
+              homeController.selectedUser.value.data?.user?.userSenderId ?? 0;
+          int receiverId =
+              homeController.selectedUser.value.data?.user?.userReceiverId ?? 0;
+          int myId = profileController.profile.value?.data?.user?.id ?? 0;
+
+          log("User Interest: $userInterest, Sender ID: $senderId, Receiver ID: $receiverId, My ID: $myId");
           return Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  log("Button Pressed : $userInterest");
-                  if ((userInterest == "0" || userInterest == 0)) {
-                    Get.snackbar(
-                      "Request Sent",
-                      "Request already sent",
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  } else if ((userInterest == "1" || userInterest == 1)) {
-                    Get.snackbar(
-                      "Chat Now",
-                      "Start chatting with this user",
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  } else {
-                    homeController.sendInterestToUser(
-                      interestingId:
-                          homeController.selectedUser.value.data?.user?.id ?? 0,
-                      myUserId: widget.userId,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
+            child: (receiverId == myId && userInterest == 0)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              homeController.rejectInterestRequest(
+                                id: senderId,
+                                myUserId: widget.userId,
+                              );
+                            },
+                            child: Text("Reject"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              homeController.acceptInterestRequest(
+                                id: senderId,
+                                myUserId: widget.userId,
+                              );
+                            },
+                            child: Text("Accept"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (senderId == myId) {
+                          log("Button Pressed : $userInterest");
+                          if ((userInterest == "0" || userInterest == 0)) {
+                            Get.snackbar(
+                              "Request Sent",
+                              "Request already sent",
+                              snackPosition: SnackPosition.TOP,
+                            );
+                          } else if ((userInterest == "1" ||
+                              userInterest == 1)) {
+                            Get.snackbar(
+                              "Chat Now",
+                              "Start chatting with this user",
+                              snackPosition: SnackPosition.TOP,
+                            );
+                          } else {
+                            homeController.sendInterestToUser(
+                              interestingId: homeController
+                                      .selectedUser.value.data?.user?.id ??
+                                  0,
+                              myUserId: widget.userId,
+                            );
+                          }
+                        } else if (receiverId == myId) {
+                          log("Button Pressed : $userInterest");
+                          if ((userInterest == "1" || userInterest == 1)) {
+                            Get.snackbar(
+                              "Chat Now",
+                              "Start chatting with this user",
+                              snackPosition: SnackPosition.TOP,
+                            );
+                          } else {
+                            homeController.sendInterestToUser(
+                              interestingId: homeController
+                                      .selectedUser.value.data?.user?.id ??
+                                  0,
+                              myUserId: widget.userId,
+                            );
+                          }
+                        } else {
+                          homeController.sendInterestToUser(
+                            interestingId: homeController
+                                    .selectedUser.value.data?.user?.id ??
+                                0,
+                            myUserId: widget.userId,
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      child: Text(
+                        (userInterest == "0" || userInterest == 0)
+                            ? StringTexts.requestSent.toUpperCase()
+                            : (userInterest == "1" || userInterest == 1)
+                                ? StringTexts.chatNow.toUpperCase()
+                                : StringTexts.connect.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                child: Text(
-                  (userInterest == "0" || userInterest == 0)
-                      ? StringTexts.requestSent.toUpperCase()
-                      : (userInterest == "1" || userInterest == 1)
-                          ? StringTexts.chatNow.toUpperCase()
-                          : StringTexts.connect.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-            ),
           );
         }),
         backgroundColor: AppColors.white,
