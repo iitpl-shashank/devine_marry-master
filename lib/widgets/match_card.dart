@@ -227,7 +227,7 @@ class MatchCard extends StatelessWidget {
                         Get.snackbar(
                           "Divine Marry",
                           "Connect with $name",
-                          snackPosition: SnackPosition.BOTTOM,
+                          snackPosition: SnackPosition.TOP,
                           backgroundColor: AppColors.lightTheme,
                           colorText: Colors.white,
                           duration: const Duration(seconds: 2),

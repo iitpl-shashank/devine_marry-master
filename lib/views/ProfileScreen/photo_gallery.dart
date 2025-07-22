@@ -150,7 +150,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                                   Get.snackbar(
                                     "Images",
                                     "Server images removed",
-                                    snackPosition: SnackPosition.BOTTOM,
+                                    snackPosition: SnackPosition.TOP,
                                     backgroundColor: Get.theme.primaryColor,
                                     colorText: Get.theme.colorScheme.onPrimary,
                                   );

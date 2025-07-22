@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Get.snackbar(
                                     "Divine Marry",
                                     "Connect with ${user.firstName.toString()} ${user.lastName.toString()}",
-                                    snackPosition: SnackPosition.BOTTOM,
+                                    snackPosition: SnackPosition.TOP,
                                     backgroundColor: AppColors.lightTheme,
                                     colorText: Colors.white,
                                     duration: Duration(seconds: 2),

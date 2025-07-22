@@ -70,7 +70,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           Get.snackbar(
             "Exit App",
             "Press back again to exit",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.black.withOpacity(0.8),
             colorText: Colors.white,
             duration: const Duration(seconds: 2),

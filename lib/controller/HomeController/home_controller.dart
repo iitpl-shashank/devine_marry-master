@@ -69,7 +69,7 @@ class HomeController extends GetxController {
           errorMessage = responseBody['message']['error'][0];
         }
         Get.snackbar("Error : ", errorMessage,
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.red,
             colorText: Colors.white);
       } else {
@@ -157,7 +157,7 @@ class HomeController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.snackbar("Success", "Request sent successfully.",
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.green,
             colorText: Colors.white);
         await getUserDetails(
@@ -184,7 +184,7 @@ class HomeController extends GetxController {
           'Authorization': 'Bearer $token',
         },
       );
-
+      log("Response fffff : ${response.bodyString}");
       if (response.statusCode == 200) {
         MatchPreferenceModel matchPreferenceModel =
             matchPreferenceModelFromJson(response.bodyString ?? "");
@@ -195,7 +195,7 @@ class HomeController extends GetxController {
         print(
             "Filtered Users: ${myStateUsers.map((user) => user.id).toList()}");
       } else {
-        print("Error: ${response.statusText}");
+        print("Error: EEE ${response.statusText}");
       }
     } catch (e) {
       print("Exception in getUserList: $e");

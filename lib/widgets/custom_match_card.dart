@@ -90,7 +90,7 @@ class CustomMatchCard extends StatelessWidget {
                         Get.snackbar(
                           "Divine Marry",
                           "Connect with $name",
-                          snackPosition: SnackPosition.BOTTOM,
+                          snackPosition: SnackPosition.TOP,
                           backgroundColor: AppColors.lightTheme,
                           colorText: Colors.white,
                           duration: Duration(seconds: 2),

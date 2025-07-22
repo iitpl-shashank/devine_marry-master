@@ -50,7 +50,7 @@ class ProfileRepo {
         Get.snackbar(
           "Success",
           "Profile image updated successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
@@ -59,7 +59,7 @@ class ProfileRepo {
         Get.snackbar(
           "Error",
           "Failed to update profile image: ${response.reasonPhrase}",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
@@ -69,7 +69,7 @@ class ProfileRepo {
       Get.snackbar(
         "Error",
         "Error in updateProfileImage: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),
@@ -235,7 +235,7 @@ class ProfileRepo {
         Get.snackbar(
           "Success",
           "Images deleted successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
@@ -245,7 +245,7 @@ class ProfileRepo {
         Get.snackbar(
           "Error",
           "Failed to delete images: ${response.reasonPhrase}",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
@@ -256,7 +256,7 @@ class ProfileRepo {
       Get.snackbar(
         "Error",
         "Error in deleteGalleryImages: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),
@@ -287,7 +287,7 @@ class ProfileRepo {
         Get.snackbar(
           "Success",
           "Images uploaded successfully.",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Get.theme.primaryColor,
           colorText: Get.theme.colorScheme.onPrimary,
           duration: const Duration(seconds: 3),
@@ -296,7 +296,7 @@ class ProfileRepo {
         Get.snackbar(
           "Error",
           "Failed to upload images: ${response.reasonPhrase}",
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.red,
           colorText: AppColors.white,
           duration: const Duration(seconds: 3),
@@ -306,7 +306,7 @@ class ProfileRepo {
       Get.snackbar(
         "Error",
         "Error in uploadGalleryImages: $e",
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.red,
         colorText: AppColors.white,
         duration: const Duration(seconds: 3),
