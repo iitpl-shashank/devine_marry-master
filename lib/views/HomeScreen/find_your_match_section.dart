@@ -44,6 +44,7 @@ class FindYourMatchSection extends StatelessWidget {
             CustomAnimatedMatchCard(
               cards: allMatchedUsers.map((user) {
                 return MatchCard(
+                  connectionStatus: user.userInterestStatus ?? 100,
                   name: user.firstName ?? "Unknown",
                   age: int.parse(
                       AgeCalculator.calculateAge(user.birthDate.toString())),

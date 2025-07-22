@@ -11,6 +11,7 @@ class MatchCard extends StatelessWidget {
   final String religion;
   final String imageUrl;
   final String userId;
+  final int connectionStatus;
   final HomeController homeController = Get.find<HomeController>();
 
   MatchCard({
@@ -21,6 +22,7 @@ class MatchCard extends StatelessWidget {
     required this.religion,
     required this.imageUrl,
     required this.userId,
+    required this.connectionStatus,
   });
 
 //   @override
@@ -233,22 +235,40 @@ class MatchCard extends StatelessWidget {
                           duration: const Duration(seconds: 2),
                         );
                       },
-                      child: Container(
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.lightTheme,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: AppColors.white,
-                        ),
-                      ),
+                      child: connectionStatus == 1
+                          ? Container(
+                              height: 36,
+                              width: 36,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.lightTheme,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.chat,
+                                color: AppColors.white,
+                                size: 16,
+                              ),
+                            )
+                          : Container(
+                              height: 36,
+                              width: 36,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.lightTheme,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: AppColors.white,
+                              ),
+                            ),
                     ),
                   ],
                 ),
