@@ -8,7 +8,6 @@ import 'package:devine_marry/views/HomeScreen/new_matches_section.dart';
 import 'package:devine_marry/widgets/tappable_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../helper/route_helper.dart';
 import '../../utils/string_texts.dart';
 import '../../widgets/home_user_item.dart';
 

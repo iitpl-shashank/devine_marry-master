@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:devine_marry/controller/NotificationController/notification_controller.dart';
 import 'package:devine_marry/helper/common_functions.dart';
+import 'package:devine_marry/helper/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/images.dart';
@@ -66,7 +67,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ),
               const SizedBox(height: 28),
-              // Display the connect list items
               Obx(() {
                 final notifications = notificationController
                         .notificationData.value?.data?.notifications ??
@@ -75,14 +75,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   children: notifications.map((item) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
-                      child: ConnectListItem(
-                        userName: item.senderName ?? "",
-                        time: CommonFunctions()
-                            .formatDateTime(item.createdAt.toString()),
-                        description: item.title ?? StringTexts.tempDescription,
-                        hideNotificationIcon: true,
-                        imageUrl: item.senderImageUrl ??
-                            'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed(RouteHelper.userDetailsScreen,
+                              arguments: item.senderId.toString());
+                        },
+                        child: ConnectListItem(
+                          userName: item.senderName ?? "",
+                          time: CommonFunctions()
+                              .formatDateTime(item.createdAt.toString()),
+                          description:
+                              item.title ?? StringTexts.tempDescription,
+                          hideNotificationIcon: true,
+                          imageUrl: item.senderImageUrl ??
+                              'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg',
+                        ),
                       ),
                     );
                   }).toList(),
