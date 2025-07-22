@@ -12,6 +12,7 @@ class CustomMatchCard extends StatelessWidget {
   final String religion;
   final String userId;
   final HomeController homeController = Get.find();
+  final int connectionStatus;
 
   CustomMatchCard({
     super.key,
@@ -21,6 +22,7 @@ class CustomMatchCard extends StatelessWidget {
     required this.religion,
     required this.height,
     required this.userId,
+    required this.connectionStatus,
   });
 
   @override
@@ -85,34 +87,50 @@ class CustomMatchCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        Get.snackbar(
-                          "Divine Marry",
-                          "Connect with $name",
-                          snackPosition: SnackPosition.TOP,
-                          backgroundColor: AppColors.lightTheme,
-                          colorText: Colors.white,
-                          duration: Duration(seconds: 2),
-                        );
-                      },
-                      child: Container(
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.lightTheme,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 1,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ),
+                    if (connectionStatus != 0)
+                      InkWell(
+                          onTap: () {
+                            Get.snackbar(
+                              "Divine Marry",
+                              "Connect with $name",
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: AppColors.lightTheme,
+                              colorText: Colors.white,
+                              duration: Duration(seconds: 2),
+                            );
+                          },
+                          child: connectionStatus == 1
+                              ? Container(
+                                  height: 36,
+                                  width: 36,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.lightTheme,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.chat,
+                                    color: AppColors.white,
+                                    size: 16,
+                                  ))
+                              : Container(
+                                  height: 36,
+                                  width: 36,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.lightTheme,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: AppColors.white,
+                                  ))),
                   ],
                 ),
               ),

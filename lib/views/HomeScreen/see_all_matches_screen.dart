@@ -75,6 +75,7 @@ class SeeAllMatchesScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final user = users[index];
                           return CustomMatchCard(
+                            connectionStatus: user.userInterestStatus ?? 100,
                             imageUrl: user.imageUrl ?? '',
                             name: user.firstName ?? '',
                             age: int.parse(AgeCalculator.calculateAge(

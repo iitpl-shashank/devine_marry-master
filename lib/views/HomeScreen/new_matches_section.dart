@@ -89,6 +89,8 @@ class NewMatchesSection extends StatelessWidget {
                           ),
                           child: Obx(
                             () => CustomMatchCard(
+                              connectionStatus:
+                                  users[index].userInterestStatus ?? 100,
                               imageUrl: users[index].imageUrl ?? "",
                               name:
                                   "${users[index].firstName ?? 'Unknown'} ${users[index].lastName ?? ''}"

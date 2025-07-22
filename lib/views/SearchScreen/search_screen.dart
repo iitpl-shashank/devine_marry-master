@@ -72,6 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           final user =
                               searchController.searchResultUsers[index];
                           return CustomMatchCard(
+                            connectionStatus: user.userInterestStatus ?? 100,
                             imageUrl: user.imageUrl ?? '',
                             name: user.firstName ?? '',
                             age: int.parse(AgeCalculator.calculateAge(

@@ -7,6 +7,7 @@ class UserItem extends StatelessWidget {
   final String name;
   final VoidCallback onImageTap;
   final VoidCallback connectButtonTap;
+  final bool showAddbutton;
 
   const UserItem({
     super.key,
@@ -14,6 +15,7 @@ class UserItem extends StatelessWidget {
     required this.name,
     required this.onImageTap,
     required this.connectButtonTap,
+    required this.showAddbutton,
   });
 
   @override
@@ -31,8 +33,7 @@ class UserItem extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(0, 8, 8, 0),
                   child: CircleAvatar(
                     radius: 36,
-                    backgroundColor:
-                        Colors.grey[300],
+                    backgroundColor: Colors.grey[300],
                     child: ClipOval(
                       child: Image.network(
                         imageUrl,
@@ -76,29 +77,30 @@ class UserItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: InkWell(
-                  onTap: connectButtonTap,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.lightTheme,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1,
+              if (showAddbutton)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: InkWell(
+                    onTap: connectButtonTap,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.lightTheme,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.all(3),
-                    child: Icon(
-                      Icons.add,
-                      size: 24,
-                      color: Colors.white,
+                      padding: EdgeInsets.all(3),
+                      child: Icon(
+                        Icons.add,
+                        size: 24,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           SizedBox(height: 8),

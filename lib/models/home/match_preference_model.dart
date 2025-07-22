@@ -64,6 +64,9 @@ class User {
   final int? height;
   final int? religion;
   final String? imageUrl;
+  final int? userSenderId;
+  final int? userReceiverId;
+  final int? userInterestStatus;
 
   User({
     this.id,
@@ -73,6 +76,9 @@ class User {
     this.height,
     this.religion,
     this.imageUrl,
+    this.userSenderId,
+    this.userReceiverId,
+    this.userInterestStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -87,6 +93,11 @@ class User {
             : int.tryParse(json["height"]?.toString() ?? ''),
         religion: json["religion"],
         imageUrl: json["image_url"],
+        userSenderId: json["user_sender_id"],
+        userReceiverId: json["user_receiver_id"],
+        userInterestStatus: json["user_interest_status"] != null
+            ? json["user_interest_status"]
+            : 100,
       );
 
   Map<String, dynamic> toJson() => {
