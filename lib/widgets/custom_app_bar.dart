@@ -1,6 +1,8 @@
+import 'package:devine_marry/controller/NotificationController/notification_controller.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String startIconPath;
@@ -37,6 +39,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NotificationController notificationController =
+        Get.find<NotificationController>();
     return Container(
       padding: const EdgeInsets.only(
         top: 40,
@@ -62,23 +66,51 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 width: centerLogoWidth ?? 100,
                 height: centerLogoHeight ?? 40,
               ),
-              GestureDetector(
-                onTap: onEndIconTap,
-                child: Container(
-                  width: endIconBackgroundRadius ?? 40,
-                  height: endIconBackgroundRadius ?? 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.grey.withOpacity(0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      endIconPath,
-                      width: endIconWidth ?? 24,
-                      height: endIconHeight ?? 24,
+              Stack(
+                children: [
+                  GestureDetector(
+                    onTap: onEndIconTap,
+                    child: Container(
+                      width: endIconBackgroundRadius ?? 40,
+                      height: endIconBackgroundRadius ?? 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withOpacity(0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          endIconPath,
+                          width: endIconWidth ?? 24,
+                          height: endIconHeight ?? 24,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Obx(() {
+                      int count = notificationController.unreadCount.value;
+                      return count > 0
+                          ? Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                '$count',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink();
+                    }),
+                  ),
+                ],
               ),
             ],
           ),

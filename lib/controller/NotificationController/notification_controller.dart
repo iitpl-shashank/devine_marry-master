@@ -12,6 +12,7 @@ class NotificationController extends GetxController {
   final SharedPreferences sharedPreferences;
   RxBool isLoading = false.obs;
   Rx<NotificationModel?> notificationData = Rx<NotificationModel?>(null);
+  RxInt unreadCount = 0.obs;
 
   NotificationController({
     required this.notificationRepo,
@@ -35,6 +36,7 @@ class NotificationController extends GetxController {
             notificationModelFromJson(response.bodyString ?? "");
         update();
         isLoading.value = false;
+        updateUnreadCount();
         print(
             "Notifications: ${notificationData.value?.data?.notifications?.length ?? 0}");
       } else {
@@ -68,6 +70,7 @@ class NotificationController extends GetxController {
         final Map<String, dynamic> responseBody =
             response.body is String ? jsonDecode(response.body) : response.body;
         if (responseBody['success'] == true) {
+          await getNotification();
           Get.toNamed(RouteHelper.userDetailsScreen, arguments: senderId);
         } else {
           Get.snackbar(
@@ -96,5 +99,10 @@ class NotificationController extends GetxController {
         colorText: Colors.white,
       );
     }
+  }
+
+  void updateUnreadCount() {
+    final notifications = notificationData.value?.data?.notifications ?? [];
+    unreadCount.value = notifications.where((n) => n.isRead == 0).length;
   }
 }

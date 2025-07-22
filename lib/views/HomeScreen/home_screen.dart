@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:devine_marry/controller/DashboardController/dashboard_controller.dart';
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
+import 'package:devine_marry/controller/NotificationController/notification_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:devine_marry/views/HomeScreen/discover_matches_section.dart';
@@ -23,6 +26,23 @@ class _HomeScreenState extends State<HomeScreen> {
   final HomeController homeController = Get.find<HomeController>();
   final DashboardController dashboardController =
       Get.find<DashboardController>();
+  final NotificationController notificationController =
+      Get.find<NotificationController>();
+  Timer? _notificationTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      notificationController.getNotification();
+    });
+  }
+
+  @override
+  void dispose() {
+    _notificationTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 5,
               ),
-
-              // <--- Matches Based on your Preferences Section --->
 
               Padding(
                 padding: const EdgeInsets.symmetric(

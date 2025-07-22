@@ -44,9 +44,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onStartIconTap: () {
             Get.back();
           },
-          onEndIconTap: () {
-            // Handle end icon tap
-          },
+          onEndIconTap: () {},
         ),
         body: Padding(
           padding: const EdgeInsets.all(
