@@ -87,13 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 connectButtonTap: () {
-                                  Get.snackbar(
-                                    "Divine Marry",
-                                    "Connect with ${user.firstName.toString()} ${user.lastName.toString()}",
-                                    snackPosition: SnackPosition.TOP,
-                                    backgroundColor: AppColors.lightTheme,
-                                    colorText: Colors.white,
-                                    duration: Duration(seconds: 2),
+                                  controller.homeUserNavigation(
+                                    id: user.id.toString(),
                                   );
                                 });
                           },

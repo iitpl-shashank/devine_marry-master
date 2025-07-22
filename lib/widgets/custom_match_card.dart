@@ -88,19 +88,19 @@ class CustomMatchCard extends StatelessWidget {
                       ),
                     ),
                     if (connectionStatus != 0)
-                      InkWell(
-                          onTap: () {
-                            Get.snackbar(
-                              "Divine Marry",
-                              "Connect with $name",
-                              snackPosition: SnackPosition.TOP,
-                              backgroundColor: AppColors.lightTheme,
-                              colorText: Colors.white,
-                              duration: Duration(seconds: 2),
-                            );
-                          },
-                          child: connectionStatus == 1
-                              ? Container(
+                      connectionStatus == 1
+                          ? InkWell(
+                              onTap: () {
+                                Get.snackbar(
+                                  "Divine Marry",
+                                  "CHAT SCREEN",
+                                  snackPosition: SnackPosition.TOP,
+                                  backgroundColor: AppColors.lightTheme,
+                                  colorText: Colors.white,
+                                  duration: Duration(seconds: 2),
+                                );
+                              },
+                              child: Container(
                                   height: 36,
                                   width: 36,
                                   decoration: BoxDecoration(
@@ -115,8 +115,15 @@ class CustomMatchCard extends StatelessWidget {
                                     Icons.chat,
                                     color: AppColors.white,
                                     size: 16,
-                                  ))
-                              : Container(
+                                  )),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                homeController.homeUserNavigation(
+                                  id: userId,
+                                );
+                              },
+                              child: Container(
                                   height: 36,
                                   width: 36,
                                   decoration: BoxDecoration(
@@ -130,7 +137,8 @@ class CustomMatchCard extends StatelessWidget {
                                   child: const Icon(
                                     Icons.add,
                                     color: AppColors.white,
-                                  ))),
+                                  )),
+                            ),
                   ],
                 ),
               ),
