@@ -262,7 +262,7 @@ class User {
             : PartnerExpectation.fromJson(json["partner_expectation"]),
         userInterestStatus: json["user_interest_status"] != null
             ? json["user_interest_status"].toString()
-            : null,
+            : '4',
         userSenderId: json["user_sender_id"],
         userReceiverId: json["user_receiver_id"],
       );
