@@ -1541,6 +1541,35 @@ class AuthController extends GetxController implements GetxService {
     return isLogOut;
   }
 
+  Future<void> deleteAccount() async {
+    showLoading();
+    try {
+      Response isDeleted = await authRepo.deleteAccount();
+      if (isDeleted.body != null && isDeleted.body['status'] == true) {
+        bool isLogOut = await authRepo.clearSharedData();
+        if (isLogOut) {
+          Get.offAllNamed(RouteHelper.getLoginRoute());
+          showCustomSnackBar(
+            "Account deleted successfully",
+            isError: false,
+            isSuccess: true,
+          );
+        } else {
+          showCustomSnackBar("Something went wrong. Please try again.",
+              isError: true);
+        }
+      } else {
+        showCustomSnackBar("Something went wrong. Please try again.",
+            isError: true);
+      }
+    } catch (e) {
+      showCustomSnackBar("Something went wrong. Please try again.",
+          isError: true);
+    } finally {
+      hideLoading();
+    }
+  }
+
   void showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -1604,7 +1633,7 @@ class AuthController extends GetxController implements GetxService {
               onPressed: () async {
                 // Perform delete account
                 Navigator.of(context).pop(); // Close the dialog
-                await logOut();
+                await deleteAccount();
               },
               child: const Text(
                 "Yes",

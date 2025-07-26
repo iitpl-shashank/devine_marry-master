@@ -54,6 +54,10 @@ class AuthRepo {
     return await apiClient.postData(AppConstants.gender, {});
   }
 
+  Future<Response> deleteAccount() async {
+    return await apiClient.postData(AppConstants.deleteAccount, {});
+  }
+
   Future<Response> getCastes(String id) async {
     return await apiClient.postData(AppConstants.castes, {"religion_id": id});
   }

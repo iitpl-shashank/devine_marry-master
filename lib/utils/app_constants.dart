@@ -65,6 +65,7 @@ class AppConstants {
   static const String subscribedPatientDetails = "subscribed-patient-details";
   static const String storeHealthGoal = "store/health-goal";
   static const String fetchHealthGoal = "get/health-goal";
+  static const String deleteAccount = "account/delete";
 
   /// image url ///
   static const String serviceImageUrl =

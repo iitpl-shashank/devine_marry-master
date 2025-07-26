@@ -268,43 +268,82 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         SizedBox(
                           width: double.infinity,
                           height: 500,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: _getSliderImages().length,
-                            onPageChanged: (index) {
-                              homeController.currentPage.value = index;
-                            },
-                            itemBuilder: (context, index) {
-                              final imageUrl = _getSliderImages()[index];
-                              return Image.network(
-                                imageUrl,
-                                width: double.infinity,
-                                height: 500,
-                                fit: BoxFit.cover,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              PageView.builder(
+                                controller: _pageController,
+                                itemCount: _getSliderImages().length,
+                                onPageChanged: (index) {
+                                  homeController.currentPage.value = index;
+                                },
+                                itemBuilder: (context, index) {
+                                  final imageUrl = _getSliderImages()[index];
+                                  return Image.network(
+                                    imageUrl,
+                                    width: double.infinity,
+                                    height: 500,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 500,
+                                          color: Colors.grey[300],
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.network(
+                                      homeController.defaultUserImage,
                                       width: double.infinity,
                                       height: 500,
-                                      color: Colors.grey[300],
+                                      fit: BoxFit.cover,
                                     ),
                                   );
                                 },
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.network(
-                                  homeController.defaultUserImage,
-                                  width: double.infinity,
-                                  height: 500,
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            },
+                              ),
+                              Positioned(
+                                bottom: 16,
+                                left: 0,
+                                right: 0,
+                                child: Obx(() {
+                                  final total = _getSliderImages().length;
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      total,
+                                      (index) => Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 3),
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: homeController
+                                                      .currentPage.value ==
+                                                  index
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.white.withOpacity(0.7),
+                                          border: Border.all(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ],
                           ),
                         ),
                       Positioned(
