@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:devine_marry/controller/HomeController/home_controller.dart';
@@ -26,6 +27,8 @@ class UserDetailsScreen extends StatefulWidget {
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final HomeController homeController = Get.find<HomeController>();
   final ProfileController profileController = Get.find<ProfileController>();
+  final PageController _pageController = PageController();
+  Timer? _sliderTimer;
 
   @override
   void initState() {
@@ -40,6 +43,43 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         hideLoading();
       }
     });
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    _sliderTimer?.cancel();
+    _sliderTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (!mounted) return;
+      final images = _getSliderImages();
+      if (images.length <= 1) return;
+
+      homeController.currentPage.value =
+          (homeController.currentPage.value + 1) % images.length;
+      _pageController.animateToPage(
+        homeController.currentPage.value,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  List<String> _getSliderImages() {
+    final user = homeController.selectedUser.value.data?.user;
+    final List<String> images = [];
+    if ((user?.imageUrl ?? '').isNotEmpty) {
+      images.add(user!.imageUrl!);
+    }
+    if (user?.galleryImages != null && user!.galleryImages!.isNotEmpty) {
+      images.addAll(user.galleryImages!);
+    }
+    return images;
+  }
+
+  @override
+  void dispose() {
+    _sliderTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -192,35 +232,81 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 children: [
                   Stack(
                     children: [
-                      Image.network(
-                        homeController
-                                .selectedUser.value.data?.user?.imageUrl ??
-                            homeController.defaultUserImage,
-                        width: double.infinity,
-                        height: 500,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              width: double.infinity,
-                              height: 500,
-                              color: Colors.grey[300],
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.network(
-                          homeController.defaultUserImage,
+                      if (homeController.selectedUser.value.data?.user
+                              ?.galleryImages?.isEmpty ??
+                          true)
+                        Image.network(
+                          homeController
+                                  .selectedUser.value.data?.user?.imageUrl ??
+                              homeController.defaultUserImage,
                           width: double.infinity,
                           height: 500,
                           fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: double.infinity,
+                                height: 500,
+                                color: Colors.grey[300],
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.network(
+                            homeController.defaultUserImage,
+                            width: double.infinity,
+                            height: 500,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      else
+                        SizedBox(
+                          width: double.infinity,
+                          height: 500,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: _getSliderImages().length,
+                            onPageChanged: (index) {
+                              homeController.currentPage.value = index;
+                            },
+                            itemBuilder: (context, index) {
+                              final imageUrl = _getSliderImages()[index];
+                              return Image.network(
+                                imageUrl,
+                                width: double.infinity,
+                                height: 500,
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 500,
+                                      color: Colors.grey[300],
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.network(
+                                  homeController.defaultUserImage,
+                                  width: double.infinity,
+                                  height: 500,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
                       Positioned(
                         top: 10,
                         left: 10,

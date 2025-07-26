@@ -163,29 +163,31 @@ class MatchCard extends StatelessWidget {
                               ),
                             ),
                           )
-                        : InkWell(
-                            onTap: () {
-                              homeController.homeUserNavigation(
-                                id: userId,
-                              );
-                            },
-                            child: Container(
-                              height: 36,
-                              width: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.lightTheme,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 1,
+                        : connectionStatus == 0
+                            ? SizedBox.shrink()
+                            : InkWell(
+                                onTap: () {
+                                  homeController.homeUserNavigation(
+                                    id: userId,
+                                  );
+                                },
+                                child: Container(
+                                  height: 36,
+                                  width: 36,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.lightTheme,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
-                              child: const Icon(
-                                Icons.add,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ),
                   ],
                 ),
               ),

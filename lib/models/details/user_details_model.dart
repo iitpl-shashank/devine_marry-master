@@ -107,6 +107,7 @@ class User {
   final String? userVerify;
   final String? fcmToken;
   final String? imageUrl;
+  final List<String>? galleryImages;
   final PhysicalAttributes? physicalAttributes;
   final List<EducationInfoDatum>? educationInfoData;
   final List<CareerInfo>? careerInfo;
@@ -178,6 +179,7 @@ class User {
     this.userInterestStatus,
     this.userSenderId,
     this.userReceiverId,
+    this.galleryImages,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -265,6 +267,9 @@ class User {
             : '100',
         userSenderId: json["user_sender_id"],
         userReceiverId: json["user_receiver_id"],
+        galleryImages: json["gallery_images"] == null
+            ? []
+            : List<String>.from(json["gallery_images"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -284,6 +289,9 @@ class User {
         "kyc_data": kycData,
         "kv": kv,
         "ev": ev,
+        "gallery_images": galleryImages == null
+            ? []
+            : List<dynamic>.from(galleryImages!.map((x) => x)),
         "sv": sv,
         "profile_complete": profileComplete,
         "skipped_step": skippedStep == null

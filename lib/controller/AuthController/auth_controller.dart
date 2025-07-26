@@ -1579,4 +1579,43 @@ class AuthController extends GetxController implements GetxService {
       },
     );
   }
+
+  void showDeleteAccountConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Account Confirmation"),
+          content: const Text("Are you sure you want to delete your account?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog without logging out
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "No",
+                style: TextStyle(
+                  color: AppColors.lightTheme,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform delete account
+                Navigator.of(context).pop(); // Close the dialog
+                await logOut();
+              },
+              child: const Text(
+                "Yes",
+                style: TextStyle(
+                  color: AppColors.darkTheme,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

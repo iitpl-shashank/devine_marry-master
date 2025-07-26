@@ -89,6 +89,7 @@ class StringTexts {
   static const String helpCenter = 'Help Center';
   static const String rateUs = 'Rate Us';
   static const String logOut = 'Log out';
+  static const String deleteAccount = 'Delete Account';
 
 //User Details Screen
   static const String about = 'About';

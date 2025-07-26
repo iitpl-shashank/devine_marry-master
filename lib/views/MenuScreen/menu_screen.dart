@@ -100,11 +100,19 @@ class MenuScreen extends StatelessWidget {
                     );
                   }),
               ProfileSectionButton(
-                  title: StringTexts.logOut,
-                  showDivider: false,
-                  onTap: () {
-                    authController.showLogoutConfirmationDialog(context);
-                  }),
+                title: StringTexts.deleteAccount,
+                showDivider: true,
+                onTap: () {
+                  authController.showDeleteAccountConfirmationDialog(context);
+                },
+              ),
+              ProfileSectionButton(
+                title: StringTexts.logOut,
+                showDivider: false,
+                onTap: () {
+                  authController.showLogoutConfirmationDialog(context);
+                },
+              ),
             ],
           ),
         ),

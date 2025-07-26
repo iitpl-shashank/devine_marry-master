@@ -28,6 +28,7 @@ class HomeController extends GetxController {
   RxList<User> qualificationUsers = <User>[].obs;
   RxList<User> stateUsers = <User>[].obs;
   RxList<User> allMatchedUsers = <User>[].obs;
+  RxInt currentPage = 0.obs;
 
   Rx<MatchedUser.UserDetailsModel> selectedUser =
       Rx<MatchedUser.UserDetailsModel>(MatchedUser.UserDetailsModel());
