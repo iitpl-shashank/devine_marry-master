@@ -80,7 +80,6 @@ class _AnimatedMatchCardCarouselState extends State<CustomAnimatedMatchCard> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
-                margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(),
                 child: widget.cards[actualIndex],
               ),

@@ -24,18 +24,20 @@ class FindYourMatchSection extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 25,
-          horizontal: 16,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              StringTexts.find_your_match,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkTheme,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                StringTexts.find_your_match,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkTheme,
+                ),
               ),
             ),
             const SizedBox(
@@ -60,6 +62,31 @@ class FindYourMatchSection extends StatelessWidget {
                 );
               }).toList(),
             ),
+            // SizedBox(
+            //   height: 500,
+            //   child: CardSwiper(
+            //     cardsCount: allMatchedUsers.length,
+            //     cardBuilder:
+            //         (context, index, percentThresholdX, percentThresholdY) {
+            //       final user = allMatchedUsers[index];
+            //       return MatchCard(
+            //         connectionStatus: user.userInterestStatus ?? 100,
+            //         name: user.firstName ?? "Unknown",
+            //         age: int.parse(
+            //             AgeCalculator.calculateAge(user.birthDate.toString())),
+            //         height: HeightConverter.convertCmToFeetAndInches(
+            //             user.height ?? 180),
+            //         religion: authController.religionResponse.religions
+            //             .firstWhere((element) => element.id == user.religion,
+            //                 orElse: () =>
+            //                     authController.religionResponse.religions.first)
+            //             .name,
+            //         imageUrl: user.imageUrl ?? "",
+            //         userId: user.id.toString(),
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
