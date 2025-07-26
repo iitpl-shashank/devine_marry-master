@@ -96,8 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             final user = controller.matchedUsers[index];
                             return UserItem(
-                                showAddbutton: (user.userInterestStatus == 1 ||
-                                    user.userInterestStatus != 0),
+                                showAddbutton: (user.userInterestStatus == 100),
                                 imageUrl: user.imageUrl ?? "",
                                 name: user.firstName ?? "",
                                 onImageTap: () {
