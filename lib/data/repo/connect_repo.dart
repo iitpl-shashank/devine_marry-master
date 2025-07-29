@@ -12,4 +12,15 @@ class ConnectRepo {
       method: 'GET',
     );
   }
+
+  Future<Response> getMessagesChat({
+    required int id,
+    Map<String, String>? headers,
+  }) async {
+    return await apiClient.postData(
+      AppConstants.getMessages,
+      {"conversation_id": id},
+      headers: headers,
+    );
+  }
 }

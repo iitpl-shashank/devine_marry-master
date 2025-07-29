@@ -30,6 +30,7 @@ class AppConstants {
   static const String getMatchedUsers = "get-matched-users";
   static const String searchUsers = "search-users";
   static const String conversationsList = "conversations";
+  static const String getMessages = "get-messages";
   static const String getUserDetails = "get-user-details";
   static const String getProfileDetails = "get-profile-details";
   static const String profileUpdate = "profile-update";

@@ -69,22 +69,42 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       itemBuilder: (context, index) {
                         final conversation =
                             connectController.conversationResponse[index];
-                        return ConnectListItem(
-                          isRead: false,
-                          userName: myId == conversation.senderId
-                              ? (conversation.receiverDetails?.firstName ?? "")
-                              : (conversation.senderDetails?.firstName ?? ""),
-                          time: CommonFunctions().formatDateTime(
-                              conversation.createdAt.toString()),
-                          description: conversation.messages?.isNotEmpty == true
-                              ? (conversation.messages!.last.message ?? "")
-                              : "No messages yet",
-                          imageUrl: myId == conversation.receiverId
-                              ? (conversation.senderDetails?.imageUrl ?? "")
-                              : (conversation.receiverDetails?.imageUrl ?? ""),
-                          hideNotificationIcon: true,
-                          isLast: index ==
-                              connectController.conversationResponse.length - 1,
+                        return InkWell(
+                          onTap: () {
+                            connectController.getChatMessages(
+                              conversationId: conversation.id ?? 0,
+                            );
+                            // Get.toNamed(
+                            //   '/chat',
+                            //   arguments: {
+                            //     'conversationId': conversation.id,
+                            //     'receiverId': myId == conversation.senderId
+                            //         ? conversation.receiverId
+                            //         : conversation.senderId,
+                            //   },
+                            // );
+                          },
+                          child: ConnectListItem(
+                            isRead: false,
+                            userName: myId == conversation.senderId
+                                ? (conversation.receiverDetails?.firstName ??
+                                    "")
+                                : (conversation.senderDetails?.firstName ?? ""),
+                            time: CommonFunctions().formatDateTime(
+                                conversation.createdAt.toString()),
+                            description: conversation.messages?.isNotEmpty ==
+                                    true
+                                ? (conversation.messages!.last.message ?? "")
+                                : "No messages yet",
+                            imageUrl: myId == conversation.receiverId
+                                ? (conversation.senderDetails?.imageUrl ?? "")
+                                : (conversation.receiverDetails?.imageUrl ??
+                                    ""),
+                            hideNotificationIcon: true,
+                            isLast: index ==
+                                connectController.conversationResponse.length -
+                                    1,
+                          ),
                         );
                       },
                     );
