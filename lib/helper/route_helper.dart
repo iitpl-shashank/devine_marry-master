@@ -1,4 +1,5 @@
 import 'package:devine_marry/models/home/match_preference_model.dart';
+import 'package:devine_marry/views/ConnectScreen/chat_screen.dart';
 import 'package:devine_marry/views/DetailScreen/user_details_screen.dart';
 import 'package:devine_marry/views/HomeScreen/see_all_matches_screen.dart';
 import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
@@ -64,6 +65,7 @@ class RouteHelper {
   static const String photoGallery = '/photo-gallery';
   static const String userDetailsScreen = '/user-details-screen';
   static const String seeAllScreen = '/see-all-screen';
+  static const String chatScreen = '/chat-screen';
   static const String educationProfessionDetail =
       '/education-profession-details';
   static const String successFullRegisterationScreen =
@@ -243,6 +245,10 @@ class RouteHelper {
           users: users,
         );
       },
+    ),
+    GetPage(
+      name: chatScreen,
+      page: () => ChatScreen(),
     ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(

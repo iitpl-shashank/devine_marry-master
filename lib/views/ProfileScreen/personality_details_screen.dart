@@ -19,7 +19,7 @@ class PersonalityDetailsScreen extends StatefulWidget {
 }
 
 class _PersonalityDetailsScreenState extends State<PersonalityDetailsScreen> {
-  final ProfileController profileController = Get.find<ProfileController>();
+  final profileController = Get.find<ProfileController>();
 
   @override
   void initState() {

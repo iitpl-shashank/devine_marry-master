@@ -1,6 +1,7 @@
 import 'package:devine_marry/controller/ConnectController/connect_controller.dart';
 import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
 import 'package:devine_marry/helper/common_functions.dart';
+import 'package:devine_marry/helper/route_helper.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,15 +75,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                             connectController.getChatMessages(
                               conversationId: conversation.id ?? 0,
                             );
-                            // Get.toNamed(
-                            //   '/chat',
-                            //   arguments: {
-                            //     'conversationId': conversation.id,
-                            //     'receiverId': myId == conversation.senderId
-                            //         ? conversation.receiverId
-                            //         : conversation.senderId,
-                            //   },
-                            // );
+                            Get.toNamed(RouteHelper.chatScreen);
                           },
                           child: ConnectListItem(
                             isRead: false,
