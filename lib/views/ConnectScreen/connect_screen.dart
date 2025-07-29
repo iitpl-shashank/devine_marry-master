@@ -1,40 +1,33 @@
+import 'package:devine_marry/controller/ConnectController/connect_controller.dart';
+import 'package:devine_marry/controller/ProfileController/profile_controller.dart';
+import 'package:devine_marry/helper/common_functions.dart';
 import 'package:devine_marry/utils/string_texts.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../utils/themes/app_colors.dart';
 import '../../widgets/connect_list_item.dart';
 
-class ConnectScreen extends StatelessWidget {
+class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, String>> connectList = [
-      {
-        "userName": "John Doe",
-        "time": "2 hours ago",
-        "description": "Looking for a match.",
-        "imageUrl":
-            "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?cs=srgb&dl=pexels-justin-shaifer-501272-1222271.jpg&fm=jpg",
-        "isRead": "0",
-      },
-      {
-        "userName": "Jane Smith",
-        "time": "5 hours ago",
-        "description": "Excited to connect!",
-        "imageUrl":
-            "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-55958-614810.jpg&fm=jpg",
-        "isRead": "0",
-      },
-      {
-        "userName": "Alice Johnson",
-        "time": "1 day ago",
-        "description": "Open to conversations.",
-        "imageUrl":
-            "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
-        "isRead": "0",
-      },
-    ];
+  State<ConnectScreen> createState() => _ConnectScreenState();
+}
 
+class _ConnectScreenState extends State<ConnectScreen> {
+  final connectController = Get.find<ConnectController>();
+  final profileController = Get.find<ProfileController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      connectController.getConversationList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -52,21 +45,51 @@ class ConnectScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 28),
-              // Display the connect list items
-              Column(
-                children: connectList.map((item) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: ConnectListItem(
-                      isRead: item["isRead"] == '0' ? false : true,
-                      userName: item["userName"]!,
-                      time: item["time"]!,
-                      description: StringTexts.tempDescription,
-                      imageUrl: item["imageUrl"]!,
-                      hideNotificationIcon: true,
-                    ),
-                  );
-                }).toList(),
+              Obx(
+                () {
+                  if (connectController.conversationResponse.isEmpty) {
+                    return Center(
+                      child: connectController.isLoading.value
+                          ? SizedBox.shrink()
+                          : Text(
+                              "No conversations found.",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.grey,
+                              ),
+                            ),
+                    );
+                  } else {
+                    int myId =
+                        profileController.profile.value?.data?.user?.id ?? 0;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: connectController.conversationResponse.length,
+                      itemBuilder: (context, index) {
+                        final conversation =
+                            connectController.conversationResponse[index];
+                        return ConnectListItem(
+                          isRead: false,
+                          userName: myId == conversation.senderId
+                              ? (conversation.receiverDetails?.firstName ?? "")
+                              : (conversation.senderDetails?.firstName ?? ""),
+                          time: CommonFunctions().formatDateTime(
+                              conversation.createdAt.toString()),
+                          description: conversation.messages?.isNotEmpty == true
+                              ? (conversation.messages!.last.message ?? "")
+                              : "No messages yet",
+                          imageUrl: myId == conversation.receiverId
+                              ? (conversation.senderDetails?.imageUrl ?? "")
+                              : (conversation.receiverDetails?.imageUrl ?? ""),
+                          hideNotificationIcon: true,
+                          isLast: index ==
+                              connectController.conversationResponse.length - 1,
+                        );
+                      },
+                    );
+                  }
+                },
               ),
             ],
           ),

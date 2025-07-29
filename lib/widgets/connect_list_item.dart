@@ -10,6 +10,7 @@ class ConnectListItem extends StatelessWidget {
   final String? imageUrl;
   final bool hideNotificationIcon;
   final bool isRead;
+  final bool isLast;
 
   const ConnectListItem({
     super.key,
@@ -19,6 +20,7 @@ class ConnectListItem extends StatelessWidget {
     this.imageUrl,
     required this.hideNotificationIcon,
     required this.isRead,
+    this.isLast = false,
   });
 
   @override
@@ -71,12 +73,14 @@ class ConnectListItem extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          userName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textBlack,
+                        Expanded(
+                          child: Text(
+                            userName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textBlack,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -104,12 +108,13 @@ class ConnectListItem extends StatelessWidget {
         SizedBox(
           height: 12,
         ),
-        Divider(
-          thickness: 1,
-          color: AppColors.divider.withOpacity(
-            0.12,
+        if (!isLast)
+          Divider(
+            thickness: 1,
+            color: AppColors.divider.withOpacity(
+              0.12,
+            ),
           ),
-        ),
       ],
     );
   }

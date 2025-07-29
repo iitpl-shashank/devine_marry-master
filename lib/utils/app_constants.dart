@@ -29,6 +29,7 @@ class AppConstants {
   static const String statesList = "get-state-list";
   static const String getMatchedUsers = "get-matched-users";
   static const String searchUsers = "search-users";
+  static const String conversationsList = "conversations";
   static const String getUserDetails = "get-user-details";
   static const String getProfileDetails = "get-profile-details";
   static const String profileUpdate = "profile-update";

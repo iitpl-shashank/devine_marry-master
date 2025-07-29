@@ -81,6 +81,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           );
                         },
                         child: ConnectListItem(
+                          isLast: item == notifications.last,
                           isRead: item.isRead == 0 ? true : false,
                           userName: item.senderName ?? "",
                           time: CommonFunctions()
