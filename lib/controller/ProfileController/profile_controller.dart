@@ -571,7 +571,7 @@ class ProfileController extends GetxController {
       showLoading();
       await profileRepo.updateProfileDetails(
           data: data, type: "personalDetails");
-      fetchProfile();
+      await fetchProfile();
       hideLoading();
     } catch (e) {
       Get.snackbar(
@@ -688,7 +688,7 @@ class ProfileController extends GetxController {
     try {
       showLoading();
       await profileRepo.updateProfileDetails(data: data, type: "family");
-      fetchProfile();
+      await fetchProfile();
       hideLoading();
     } catch (e) {
       hideLoading();
@@ -924,7 +924,7 @@ class ProfileController extends GetxController {
     try {
       showLoading();
       await profileRepo.updateProfileDetails(data: data, type: "educational");
-      fetchProfile();
+      await fetchProfile();
       hideLoading();
     } catch (e) {
       Get.snackbar(
@@ -1228,7 +1228,7 @@ class ProfileController extends GetxController {
       showLoading();
       await profileRepo.updateProfileDetails(
           data: data, type: "physicalAttributeInfo");
-      fetchProfile();
+      await fetchProfile();
       hideLoading();
     } catch (e) {
       Get.snackbar(
@@ -1799,7 +1799,7 @@ class ProfileController extends GetxController {
     try {
       showLoading();
       await profileRepo.updateProfileDetails(data: data, type: "preferences");
-      fetchProfile();
+      await fetchProfile();
       hideLoading();
     } catch (e) {
       Get.snackbar(

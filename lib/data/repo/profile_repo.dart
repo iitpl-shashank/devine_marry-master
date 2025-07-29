@@ -122,6 +122,7 @@ class ProfileRepo {
       } else if (type == "personalDetails") {
         data = {
           "step": "personalDetails",
+          "country": data["country"],
           "looking_for": data["looking_for"],
           "marital_status": data["marital_status"],
           "firstname": data["firstname"] ?? "",
