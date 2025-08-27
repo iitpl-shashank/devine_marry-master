@@ -1,15 +1,10 @@
 import 'package:devine_marry/controller/AuthController/auth_controller.dart';
-import 'package:devine_marry/widgets/custom_snack_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../utils/string_texts.dart';
 import '../../../utils/styles.dart';
-import '../../../widgets/common_button.dart';
 import '../../../widgets/custom_drop_down_field.dart';
 import '../../../widgets/custom_text_field.dart';
-import '../../../widgets/image_picker_widget.dart';
 import '../../../widgets/number_picker_custom.dart';
 
 class PersonalityScreen extends StatelessWidget {
@@ -34,7 +29,7 @@ class PersonalityScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFF86413F),
-                        fontSize: 32,
+                        fontSize: 30,
                         fontWeight: FontWeight.w800,
                         height: 1.40,
                       ),
@@ -177,28 +172,19 @@ class PersonalityScreen extends StatelessWidget {
                                 readOnly: true,
                                 onTap: () {
                                   showHeightPickerDialog(
+                                    title: "Select Weight (in kg)",
                                     context: context,
                                     maxHeight: 150,
                                     onHeightSelected: (value) {
                                       controller.weightController.text =
                                           value.toString();
                                     },
-                                    initialHeight: 25,
+                                    initialHeight: 60,
                                   );
                                 },
                                 hintText: 'Weight',
                                 inputType: TextInputType.number,
                                 suffixText: "Kg",
-
-                                // suffixIcon: Text(
-                                //   "Kg",
-                                //   style: TextStyle(
-                                //     color: Color(0xFFBA7270),
-                                //     fontSize: 16,
-                                //     fontFamily: 'DM Sans',
-                                //     fontWeight: FontWeight.w500,
-                                //   ),
-                                // ),
                                 isAmount: true,
                                 controller: controller.weightController,
                                 onChanged: (value) {},
@@ -274,7 +260,7 @@ class PersonalityScreen extends StatelessWidget {
                               child: CustomDropdownField(
                                 hintText: 'Drinking Habit',
                                 selectedValue: controller.drinkingHabit,
-                                options: controller.dataModel.smoking
+                                options: controller.dataModel.drinking
                                     .map((drinking) => drinking.name)
                                     .toList(),
                                 onChanged: (value) {
@@ -313,13 +299,36 @@ class PersonalityScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (controller.disability == 'Yes')
+                          SizedBox(height: 20),
+                        if (controller.disability == 'Yes')
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomTextField(
+                                  hintText: 'Disability (Max 100 Characters)',
+                                  maxLines: 50,
+                                  maxLength: 100,
+                                  controller: controller.disabilityController,
+                                  onChanged: (value) {},
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'This field is required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         SizedBox(height: 20),
                         Row(
                           children: [
                             Flexible(
                               child: CustomTextField(
-                                hintText: 'Bio (Max 50 lines)',
+                                hintText: 'Bio (Max 300 Characters)',
                                 maxLines: 50,
+                                maxLength: 300,
                                 controller: controller.bioController,
                                 onChanged: (value) {},
                                 validation: (value) {
@@ -337,7 +346,9 @@ class PersonalityScreen extends StatelessWidget {
                           children: [
                             Flexible(
                               child: CustomTextField(
-                                hintText: 'Interests & Hobbies',
+                                hintText:
+                                    'Interests & Hobbies (Separated by commas)',
+                                maxLength: 300,
                                 maxLines: 50,
                                 controller: controller.interestController,
                                 onChanged: (value) {},
@@ -352,117 +363,6 @@ class PersonalityScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 21),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  width: Get.size.width,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 21),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              StringTexts.Preferrences,
-                              style: TextStyle(
-                                color: Color(0xFF86413F),
-                                fontSize: DmSansRegular.copyWith(fontSize: 14)
-                                    .fontSize,
-                                // fontFamily: 'DM Sans',
-                                fontWeight: DmSansBold.fontWeight,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Religion',
-                                options: controller.religionResponse.religions
-                                    .map((religions) => religions.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefReligion,
-                                onChanged: (value) {
-                                  controller.updatePrefReligion(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Qualification',
-                                options: controller.dataModel.qualifications
-                                    .map((qualification) => qualification.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues:
-                                    controller.prefHighestQualification,
-                                onChanged: (value) {
-                                  debugPrint("value===> $value");
-                                  controller
-                                      .updatePrefQualification(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 17),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: CustomDropdownField(
-                                hintText: 'Country',
-                                options: controller.countryResponse.countries
-                                    .map((country) => country.name)
-                                    .toList(),
-                                isMultiple: true,
-                                selectedValues: controller.prefCountry,
-                                onChanged: (value) {
-                                  controller.updatePrefCountry(value ?? "");
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select an option';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 25),
                       ],
                     ),
                   ),

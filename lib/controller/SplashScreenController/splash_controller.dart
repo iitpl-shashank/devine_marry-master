@@ -1,16 +1,7 @@
-import 'dart:developer';
-
-import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/response/response.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../data/repo/auth_repo.dart';
-import '../../helper/date_converter.dart';
 import '../../helper/route_helper.dart';
 import '../../models/user/user.dart';
 
@@ -39,11 +30,16 @@ class SplashController extends GetxController implements GetxService {
     if (value) {
       try {
         Response response = await authRepo.getUserData();
-        debugPrint("Response: ${response.body}");
+        debugPrint("Response isLoggedin: ${response.body}");
         UserModel user = UserModel.fromJson(response.body['user']);
         if (user.profileComplete == 0) {
           Get.toNamed(RouteHelper.register);
-        } else {
+        }
+        //TODO : To bypass the user verification check
+        // else if (user.userVerify == "0") {
+        //   Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        // }
+        else {
           Get.toNamed(RouteHelper.dashboard);
         }
       } catch (e) {

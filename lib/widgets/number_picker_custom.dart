@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+import '../utils/themes/app_colors.dart';
 import '../utils/themes/light_theme.dart';
 
 void showHeightPickerDialog({
@@ -8,6 +9,7 @@ void showHeightPickerDialog({
   required int maxHeight,
   required Function(int) onHeightSelected,
   int initialHeight = 170,
+  String? title,
 }) {
   int tempHeight = initialHeight;
 
@@ -15,7 +17,7 @@ void showHeightPickerDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text("Select Height (in cm)"),
+        title: Text(title ?? "Select Height (in cm)"),
         content: StatefulBuilder(
           builder: (context, setState) {
             return Column(
@@ -41,14 +43,24 @@ void showHeightPickerDialog({
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(
+                color: AppColors.lightTheme,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
               onHeightSelected(tempHeight);
               Navigator.pop(context);
             },
-            child: const Text("OK"),
+            child: Text(
+              "OK",
+              style: TextStyle(
+                color: AppColors.darkTheme,
+              ),
+            ),
           ),
         ],
       );

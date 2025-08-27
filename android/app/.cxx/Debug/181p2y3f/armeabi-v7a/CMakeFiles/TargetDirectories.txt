@@ -1,0 +1,2 @@
+/Users/iitpl/Documents/Flutter/projects/Divine Marry/devine_marry-master/android/app/.cxx/Debug/181p2y3f/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/iitpl/Documents/Flutter/projects/Divine Marry/devine_marry-master/android/app/.cxx/Debug/181p2y3f/armeabi-v7a/CMakeFiles/rebuild_cache.dir

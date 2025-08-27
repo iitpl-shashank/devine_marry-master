@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ReligionResponse {
   final List<Religion> religions;
 
@@ -73,23 +71,23 @@ class CasteResponse {
 class Caste {
   final int id;
   final String name;
+  final int religionId;
 
-  Caste({
-    required this.id,
-    required this.name,
-  });
+    Caste({
+        required this.id,
+        required this.name,
+        required this.religionId,
+    });
 
-  factory Caste.fromJson(Map<String, dynamic> json) {
-    return Caste(
-      id: json['id'],
-      name: json['name'],
+    factory Caste.fromJson(Map<String, dynamic> json) => Caste(
+        id: json["id"],
+        name: json["name"],
+        religionId: json["religion_id"],
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "religion_id": religionId,
     };
-  }
 }

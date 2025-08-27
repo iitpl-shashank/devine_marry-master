@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:devine_marry/utils/images.dart';
+import 'package:devine_marry/utils/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_svg/svg.dart';
 import '../utils/dimensions.dart';
 import '../utils/styles.dart';
 
@@ -17,7 +18,7 @@ class CustomDropdownField extends StatefulWidget {
   final bool isMultiple;
 
   const CustomDropdownField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.selectedValue,
     this.selectedValues,
@@ -28,7 +29,7 @@ class CustomDropdownField extends StatefulWidget {
     this.required = false,
     this.validator,
     this.isMultiple = false,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDropdownField> createState() => _CustomDropdownFieldState();
@@ -36,12 +37,27 @@ class CustomDropdownField extends StatefulWidget {
 
 class _CustomDropdownFieldState extends State<CustomDropdownField> {
   List<String> _selectedValues = [];
+  bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.isMultiple && widget.selectedValues != null) {
       _selectedValues = List.from(widget.selectedValues!);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomDropdownField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isMultiple && widget.selectedValues != null) {
+      if (_selectedValues.length != widget.selectedValues!.length ||
+          !_selectedValues
+              .every((element) => widget.selectedValues!.contains(element))) {
+        setState(() {
+          _selectedValues = List.from(widget.selectedValues!);
+        });
+      }
     }
   }
 
@@ -59,24 +75,40 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                 child: Column(
                   children: widget.options.map((option) {
                     final isSelected = tempSelected.contains(option);
+                    final isSelectAll = tempSelected.contains('Select All');
+                    final isOptionSelectAll = option == 'Select All';
+
+                    // Disable all except "Select All" if "Select All" is selected
+                    final isDisabled = isSelectAll && !isOptionSelectAll;
+
                     return CheckboxListTile(
                       value: isSelected,
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Flexible(child: Text(option)),
-                          if (isSelected) Icon(Icons.check, color: Colors.green),
+                          if (isSelected)
+                            Icon(Icons.check, color: Colors.green),
                         ],
                       ),
-                      onChanged: (bool? isChecked) {
-                        setDialogState(() {
-                          if (isChecked == true) {
-                            tempSelected.add(option);
-                          } else {
-                            tempSelected.remove(option);
-                          }
-                        });
-                      },
+                      onChanged: isDisabled
+                          ? null
+                          : (bool? isChecked) {
+                              setDialogState(() {
+                                if (isChecked == true) {
+                                  if (isOptionSelectAll) {
+                                    tempSelected
+                                      ..clear()
+                                      ..add('Select All');
+                                  } else {
+                                    tempSelected.remove('Select All');
+                                    tempSelected.add(option);
+                                  }
+                                } else {
+                                  tempSelected.remove(option);
+                                }
+                              });
+                            },
                     );
                   }).toList(),
                 ),
@@ -84,11 +116,21 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Cancel"),
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: AppColors.lightTheme,
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(context, tempSelected),
-                  child: Text("OK"),
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                      color: AppColors.darkTheme,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -110,12 +152,20 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.showTitle)
-          Text(
-            widget.hintText,
-            style: DmSansRegular.copyWith(fontSize: Dimensions.fontSize12),
-          ),
-        SizedBox(height: widget.showTitle ? 5 : 0),
+        (_isFocused ||
+                widget.selectedValue != null ||
+                _selectedValues.isNotEmpty)
+            ? Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 0),
+                child: Text(
+                  widget.hintText,
+                  style: DmSansRegular.copyWith(
+                    fontSize: Dimensions.fontSize12,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+            : Padding(padding: EdgeInsets.only(top: 15)),
         GestureDetector(
           onTap: widget.isMultiple ? () => _onMultiSelect(context) : null,
           child: AbsorbPointer(
@@ -148,8 +198,12 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                   ),
                 ),
                 hintText: widget.isMultiple
-                    ? (_selectedValues.isEmpty ? widget.hintText : _selectedValues.join(", "))
-                    : widget.hintText,
+                    ? (_selectedValues.isEmpty
+                        ? widget.hintText
+                        : _selectedValues.join(", "))
+                    : (!_isFocused && widget.selectedValue == null
+                        ? widget.hintText
+                        : null),
                 hintStyle: DmSansRegular.copyWith(
                   fontSize: Dimensions.fontSize14,
                   color: Theme.of(context).hintColor,
@@ -157,32 +211,49 @@ class _CustomDropdownFieldState extends State<CustomDropdownField> {
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
               ),
               items: widget.isMultiple
                   ? []
                   : widget.options.map((String option) {
-                return DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(option),
-                );
-              }).toList(),
+                      return DropdownMenuItem<String>(
+                        value: option,
+                        child: Text(option),
+                      );
+                    }).toList(),
               onChanged: widget.isMultiple
                   ? null
                   : (newValue) {
-                widget.onChanged(newValue);
-              },
+                      setState(() {
+                        _isFocused = true;
+                      });
+                      widget.onChanged(newValue);
+                    },
               isExpanded: true,
               validator: (value) {
                 if (widget.required) {
                   if (widget.isMultiple) {
-                    if (_selectedValues.isEmpty) return 'This field is required';
+                    if (_selectedValues.isEmpty)
+                      return 'This field is required';
                   } else {
-                    if (value == null || value.isEmpty) return 'This field is required';
+                    if (value == null || value.isEmpty)
+                      return 'This field is required';
                   }
                 }
                 return widget.validator?.call(value);
               },
+              onTap: () {
+                setState(() {
+                  _isFocused = true;
+                });
+              },
+              icon: SvgPicture.asset(
+                Svgs.downArrowVector,
+                height: 15,
+                width: 15,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),

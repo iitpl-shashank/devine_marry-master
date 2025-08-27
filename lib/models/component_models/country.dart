@@ -41,8 +41,6 @@ class Country {
   }
 }
 
-
-
 class StateResponse {
   final List<StateModel> states;
 
@@ -50,7 +48,8 @@ class StateResponse {
 
   factory StateResponse.fromJson(Map<String, dynamic> json) {
     return StateResponse(
-      states: (json['states'] as List).map((e) => StateModel.fromJson(e)).toList(),
+      states:
+          (json['states'] as List).map((e) => StateModel.fromJson(e)).toList(),
     );
   }
 
@@ -64,16 +63,19 @@ class StateResponse {
 class StateModel {
   final int id;
   final String name;
+  final int countryId;
 
   StateModel({
     required this.id,
     required this.name,
+    required this.countryId,
   });
 
   factory StateModel.fromJson(Map<String, dynamic> json) {
     return StateModel(
       id: json['id'],
       name: json['name'],
+      countryId: json["country_id"],
     );
   }
 
@@ -81,7 +83,7 @@ class StateModel {
     return {
       'id': id,
       'name': name,
+      'country_id': countryId,
     };
   }
 }
-

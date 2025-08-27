@@ -7,15 +7,34 @@ class AppConstants {
   /// Api Url ///
 
   static const String sendOtpUrl = "check-mobile";
+  static const String sendInterest = "send-interests";
+  static const String acceptInterest = "interests/accept";
+  static const String rejectInterest = "interests/reject";
   static const String verifyOtpUrl = "verify-otp";
+  static const String notificationsUrl = "notifications";
+  static const String updateNotificationRead =
+      "notifications/update-read-status";
   static const String updateProfileUrl = "update/my-profile";
   static const String countries = "getcountries";
   static const String religions = "getreligions";
   static const String userAttribute = "user-attributes";
   static const String gender = "getgenders";
   static const String castes = "Getcastes";
+  static const String castesList = "get-caste-list";
   static const String getDegrees = "get-degrees";
   static const String states = "Getstate";
+  static const String galleryPhotoUpload = 'gallery-upload';
+  static const String galleryImages = 'gallery-images';
+  static const String galleryDelete = 'gallery-delete';
+  static const String statesList = "get-state-list";
+  static const String getMatchedUsers = "get-matched-users";
+  static const String searchUsers = "search-users";
+  static const String conversationsList = "conversations";
+  static const String getMessages = "get-messages";
+  static const String getUserDetails = "get-user-details";
+  static const String getProfileDetails = "get-profile-details";
+  static const String profileUpdate = "profile-update";
+  static const String updateProfileImage = "update-profile-image";
   static const String myProfileUrl = "userData";
   static const String register = "register";
   static const String privacyUrl = "page/";
@@ -48,6 +67,7 @@ class AppConstants {
   static const String subscribedPatientDetails = "subscribed-patient-details";
   static const String storeHealthGoal = "store/health-goal";
   static const String fetchHealthGoal = "get/health-goal";
+  static const String deleteAccount = "account/delete";
 
   /// image url ///
   static const String serviceImageUrl =

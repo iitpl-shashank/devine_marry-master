@@ -1,0 +1,674 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../controller/AuthController/auth_controller.dart';
+import '../../../utils/string_texts.dart';
+import '../../../utils/styles.dart';
+import '../../../utils/themes/app_colors.dart';
+import '../../../widgets/custom_drop_down_field.dart';
+import '../../../widgets/custom_text_field.dart';
+import '../../../widgets/number_picker_custom.dart';
+
+class PreferencesScreen extends StatefulWidget {
+  const PreferencesScreen({super.key});
+
+  @override
+  State<PreferencesScreen> createState() => _PreferencesScreenState();
+}
+
+class _PreferencesScreenState extends State<PreferencesScreen> {
+  final AuthController authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    authController.stateResponse.states.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AuthController>(builder: (controller) {
+      final smokingOptions = controller.dataModel.smoking.map((smoking) {
+        switch (smoking.id) {
+          case 1:
+            return {'label': "Occasional Smoker", 'value': smoking.name};
+          case 3:
+            return {'label': "Non Smoker", 'value': smoking.name};
+          case 4:
+            return {'label': "Regular Smoker", 'value': smoking.name};
+          default:
+            return {'label': smoking.name, 'value': smoking.name};
+        }
+      }).toList();
+
+      final drinkingOptions = controller.dataModel.drinking.map((drinking) {
+        switch (drinking.id) {
+          case 1:
+            return {'label': "Occasional Drinker", 'value': drinking.name};
+          case 3:
+            return {'label': "Non Drinker", 'value': drinking.name};
+          case 4:
+            return {'label': "Regular Drinker", 'value': drinking.name};
+          default:
+            return {'label': drinking.name, 'value': drinking.name};
+        }
+      }).toList();
+
+      return Scaffold(
+        backgroundColor: AppColors.transparent,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 91),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      StringTexts.partnerPreferences,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.darkTheme,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
+                        height: 1.40,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        StringTexts.YouCanUpdateTheData,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.textBlack,
+                          fontSize:
+                              DmSansRegular.copyWith(fontSize: 12).fontSize,
+                          // fontFamily: 'DM Sans',
+                          fontWeight: DmSansBold.fontWeight,
+                          height: 1.40,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 21),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  width: Get.size.width,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 21),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              StringTexts.set_preferences.toUpperCase(),
+                              style: TextStyle(
+                                color: AppColors.darkTheme,
+                                fontSize: DmSansRegular.copyWith(fontSize: 14)
+                                    .fontSize,
+                                // fontFamily: 'DM Sans',
+                                fontWeight: DmSansBold.fontWeight,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomTextField(
+                                hintText: 'Min Age',
+                                readOnly: true,
+                                suffixText: "Yrs",
+                                inputType: TextInputType.number,
+                                isAmount: true,
+                                controller: controller.prefMinAgeController,
+                                onChanged: (value) {},
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Age (in Yrs)",
+                                    context: context,
+                                    maxHeight: 254,
+                                    initialHeight: 25,
+                                    onHeightSelected: (value) {
+                                      controller.prefMinAgeController.text =
+                                          value.toString();
+                                    },
+                                  );
+                                },
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: CustomTextField(
+                                hintText: 'Max Age',
+                                readOnly: true,
+                                suffixText: "Yrs",
+                                inputType: TextInputType.number,
+                                isAmount: true,
+                                controller: controller.prefMaxAgeController,
+                                onChanged: (value) {},
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Age (in Yrs)",
+                                    context: context,
+                                    maxHeight: 254,
+                                    initialHeight: 25,
+                                    onHeightSelected: (value) {
+                                      controller.prefMaxAgeController.text =
+                                          value.toString();
+                                    },
+                                  );
+                                },
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomTextField(
+                                readOnly: true,
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Height (in cm)",
+                                    context: context,
+                                    maxHeight: 200,
+                                    onHeightSelected: (value) {
+                                      controller.prefMinHeightController.text =
+                                          value.toString();
+                                    },
+                                    initialHeight: 170,
+                                  );
+                                },
+                                hintText: 'Min Height',
+                                inputType: TextInputType.number,
+                                suffixText: "cm",
+                                isAmount: true,
+                                controller: controller.prefMinHeightController,
+                                onChanged: (value) {},
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: CustomTextField(
+                                readOnly: true,
+                                onTap: () {
+                                  showHeightPickerDialog(
+                                    title: "Select Height (in cm)",
+                                    context: context,
+                                    maxHeight: 200,
+                                    onHeightSelected: (value) {
+                                      controller.prefMaxHeightController.text =
+                                          value.toString();
+                                    },
+                                    initialHeight: 170,
+                                  );
+                                },
+                                hintText: 'Max Height',
+                                inputType: TextInputType.number,
+                                suffixText: "cm",
+                                isAmount: true,
+                                controller: controller.prefMaxHeightController,
+                                onChanged: (value) {},
+                                validation: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                hintText: 'Religion',
+                                options: [
+                                  'Select All',
+                                  ...controller.religionResponse.religions
+                                      .map((religions) => religions.name)
+                                ].toList(),
+                                isMultiple: true,
+                                selectedValues: controller.prefReligion,
+                                onChanged: (value) {
+                                  log("Selected value: $value");
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updatePrefReligion(['Select All']);
+                                      controller.getCasteList(
+                                        controller.religionResponse.religions
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updatePrefReligion(filtered);
+                                      controller.getCasteList(
+                                        controller.religionResponse.religions
+                                            .where((element) =>
+                                                filtered.contains(element.name))
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    }
+                                  } else {
+                                    controller.updatePrefReligion([]);
+                                    controller.getCasteList([]);
+                                  }
+                                  controller.updateCasteList([]);
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (controller.casteListResponse.castes.isNotEmpty)
+                          SizedBox(height: 17),
+                        if (controller.casteListResponse.castes.isNotEmpty)
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomDropdownField(
+                                  hintText: 'Caste',
+                                  options: [
+                                    'Select All',
+                                    ...controller.casteListResponse.castes
+                                        .map((castes) => castes.name)
+                                  ].toList(),
+                                  isMultiple: true,
+                                  selectedValues: controller.prefCaste,
+                                  onChanged: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      if (value.contains('Select All')) {
+                                        controller
+                                            .updateCasteList(['Select All']);
+                                      } else {
+                                        List<String> filtered =
+                                            List<String>.from(value)
+                                              ..remove('Select All');
+                                        controller.updateCasteList(filtered);
+                                      }
+                                    } else {
+                                      controller.updateCasteList([]);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select an option';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                selectedValue: smokingOptions.firstWhere(
+                                  (option) =>
+                                      option['value'] ==
+                                      controller.prefSmokingHabit,
+                                  orElse: () => smokingOptions.first,
+                                )['label'],
+                                hintText: 'Smoking Habit',
+                                options: smokingOptions
+                                    .map((option) => option['label'] as String)
+                                    .toList(),
+                                onChanged: (value) {
+                                  final selectedOption =
+                                      smokingOptions.firstWhere(
+                                    (option) => option['label'] == value,
+                                    orElse: () => smokingOptions.first,
+                                  );
+                                  controller.updatePrefSmokingHabit(
+                                      selectedOption['value'] ?? "");
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 13,
+                            ),
+                            Flexible(
+                              child: CustomDropdownField(
+                                hintText: 'Drinking Habit',
+                                selectedValue: drinkingOptions.firstWhere(
+                                  (option) =>
+                                      option['value'] ==
+                                      controller.prefDrinkingHabit,
+                                  orElse: () => drinkingOptions.first,
+                                )['label'],
+                                options: drinkingOptions
+                                    .map((option) => option['label'] as String)
+                                    .toList(),
+                                onChanged: (value) {
+                                  final selectedOption =
+                                      drinkingOptions.firstWhere(
+                                    (option) => option['label'] == value,
+                                    orElse: () => drinkingOptions.first,
+                                  );
+                                  controller.updatePrefDrinkingHabit(
+                                      selectedOption['value'] ?? "");
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                selectedValues: controller.prefCountry,
+                                isMultiple: true,
+                                hintText: 'Country',
+                                options: [
+                                  'Select All',
+                                  ...controller.countryResponse.countries
+                                      .map((country) => country.name)
+                                ].toList(),
+                                onChanged: (value) {
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updateCountryList(['Select All']);
+                                      controller.getStatesList(
+                                        controller.countryResponse.countries
+                                            .map((element) =>
+                                                element.id.toString())
+                                            .toList(),
+                                      );
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updateCountryList(filtered);
+                                      List<String> countryIds = controller
+                                          .countryResponse.countries
+                                          .where((element) =>
+                                              filtered.contains(element.name))
+                                          .map((element) =>
+                                              element.id.toString())
+                                          .toList();
+                                      controller.getStatesList(countryIds);
+                                    }
+                                  } else {
+                                    controller.updateCountryList([]);
+                                    controller.getStatesList([]);
+                                  }
+                                  controller.updatePrefState([]);
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (controller.stateResponse.states.isNotEmpty)
+                          SizedBox(height: 17),
+                        if (controller.stateResponse.states.isNotEmpty)
+                          Row(
+                            children: [
+                              Flexible(
+                                child: CustomDropdownField(
+                                  hintText: 'State',
+                                  isMultiple: true,
+                                  selectedValues: controller.prefState,
+                                  options: [
+                                    'Select All',
+                                    ...controller.stateResponse.states
+                                        .map((states) => states.name)
+                                  ].toList(),
+                                  onChanged: (value) {
+                                    if (value != null && value.isNotEmpty) {
+                                      if (value.contains('Select All')) {
+                                        controller
+                                            .updatePrefState(['Select All']);
+                                      } else {
+                                        List<String> filtered =
+                                            List<String>.from(value)
+                                              ..remove('Select All');
+                                        controller.updatePrefState(filtered);
+                                      }
+                                    } else {
+                                      controller.updatePrefState([]);
+                                    }
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please select an option';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                hintText: 'Qualification',
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.qualifications.map(
+                                      (qualification) => qualification.name)
+                                ].toList(),
+                                isMultiple: true,
+                                selectedValues:
+                                    controller.prefHighestQualification,
+                                onChanged: (value) {
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller.updatePrefQualification(
+                                          ['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller
+                                          .updatePrefQualification(filtered);
+                                    }
+                                  } else {
+                                    controller.updatePrefQualification([]);
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        GetBuilder<AuthController>(builder: (prController) {
+                          return Visibility(
+                            visible: (prController.prefHighestQualification !=
+                                    null &&
+                                (prController.prefHighestQualification!
+                                        .contains("Select All") ||
+                                    (prController.prefHighestQualification!.any(
+                                      (q) =>
+                                          q != "High School" &&
+                                          q != "Intermediate",
+                                    )))),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 17),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: CustomDropdownField(
+                                        key: ValueKey(prController.prefDegree),
+                                        hintText: 'Degree',
+                                        options: [
+                                          'Select All',
+                                          ...controller.degreeResponse.Degrees
+                                              .map((degree) => degree.name)
+                                        ].toList(),
+                                        isMultiple: true,
+                                        selectedValues: prController.prefDegree,
+                                        onChanged: (value) {
+                                          debugPrint("value===> $value");
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            if (value.contains('Select All')) {
+                                              prController.updatePrefDegree(
+                                                  ['Select All']);
+                                            } else {
+                                              List<String> filtered =
+                                                  List<String>.from(value)
+                                                    ..remove('Select All');
+                                              prController
+                                                  .updatePrefDegree(filtered);
+                                            }
+                                          } else {
+                                            prController.updatePrefDegree([]);
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please select an option';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: CustomDropdownField(
+                                hintText: 'Complexion',
+                                options: [
+                                  'Select All',
+                                  ...controller.dataModel.complexion
+                                      .map((complexion) => complexion.name)
+                                ].toList(),
+                                isMultiple: true,
+                                selectedValues: controller.prefComplexion,
+                                onChanged: (value) {
+                                  if (value != null && value.isNotEmpty) {
+                                    if (value.contains('Select All')) {
+                                      controller
+                                          .updatePrefComplexion(['Select All']);
+                                    } else {
+                                      List<String> filtered =
+                                          List<String>.from(value)
+                                            ..remove('Select All');
+                                      controller.updatePrefComplexion(filtered);
+                                    }
+                                  } else {
+                                    controller.updatePrefComplexion([]);
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select an option';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 21),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}

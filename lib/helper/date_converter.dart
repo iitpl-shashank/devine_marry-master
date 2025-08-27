@@ -1,10 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class DateConverter {
-
   static String formatDate(DateTime dateTime) {
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
@@ -21,6 +18,7 @@ class DateConverter {
   static DateTime parseDateString(String dateString) {
     return DateTime.parse(dateString); // Adjust the parsing format if needed
   }
+
   static DateTime convertStringToDatetime(String dateTime) {
     return DateFormat("yyyy-MM-ddTHH:mm:ss.SSS").parse(dateTime);
   }
@@ -29,14 +27,15 @@ class DateConverter {
     return DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').parse(dateTime);
   }
 
-
   static String dateTimeStringToDateOnly(String dateTime) {
-    return DateFormat('dd MMM yyyy').format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime));
+    return DateFormat('dd MMM yyyy')
+        .format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime));
   }
 
   static String dateTimeStringForDisbursement(String time) {
-    var newTime = '${time.substring(0,10)} ${time.substring(11,23)}';
-    return DateFormat('dd MMM, yyyy').format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(newTime));
+    var newTime = '${time.substring(0, 10)} ${time.substring(11, 23)}';
+    return DateFormat('dd MMM, yyyy')
+        .format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(newTime));
   }
 
   static DateTime dateTimeStringToDate(String dateTime) {
@@ -51,7 +50,6 @@ class DateConverter {
     return DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(dateTime);
   }
 
-
   static String convertTimeToTime(DateTime time) {
     return DateFormat('HH:mm').format(time);
   }
@@ -61,34 +59,37 @@ class DateConverter {
   }
 
   static String convertDateToDate(String date) {
-    return DateFormat('dd MMM yyyy').format(DateFormat('yyyy-MM-dd').parse(date));
+    return DateFormat('dd MMM yyyy')
+        .format(DateFormat('yyyy-MM-dd').parse(date));
   }
 
   static String dateTimeStringToMonthAndTime(String dateTime) {
-    return DateFormat('dd MMM yyyy HH:mm').format(dateTimeStringToDate(dateTime));
+    return DateFormat('dd MMM yyyy HH:mm')
+        .format(dateTimeStringToDate(dateTime));
   }
 
   static String dateTimeForCoupon(DateTime dateTime) {
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
-
-
-
-  static int differenceInMinute(String? deliveryTime, String? orderTime, int? processingTime, String? scheduleAt) {
+  static int differenceInMinute(String? deliveryTime, String? orderTime,
+      int? processingTime, String? scheduleAt) {
     int minTime = processingTime ?? 0;
-    if(deliveryTime != null && deliveryTime.isNotEmpty && processingTime == null) {
+    if (deliveryTime != null &&
+        deliveryTime.isNotEmpty &&
+        processingTime == null) {
       try {
         List<String> timeList = deliveryTime.split('-');
         minTime = int.parse(timeList[0]);
-      }catch(_) {}
+      } catch (_) {}
     }
-    DateTime deliveryTime0 = dateTimeStringToDate(scheduleAt ?? orderTime!).add(Duration(minutes: minTime));
+    DateTime deliveryTime0 = dateTimeStringToDate(scheduleAt ?? orderTime!)
+        .add(Duration(minutes: minTime));
     return deliveryTime0.difference(DateTime.now()).inMinutes;
   }
 
   static bool isBeforeTime(String? dateTime) {
-    if(dateTime == null) {
+    if (dateTime == null) {
       return false;
     }
     DateTime scheduleTime = dateTimeStringToDate(dateTime);
@@ -103,33 +104,32 @@ class DateConverter {
     int day = dateTime.difference(DateTime.now()).inDays;
     return day;
   }
-
 }
-
 
 class SimpleDateConverter {
 // Method to parse a date string in 'dd-MM-yyyy' format
-static DateTime parseDateString(String dateString) {
-return DateFormat('dd-MM-yyyy').parse(dateString);
-}
+  static DateTime parseDateString(String dateString) {
+    return DateFormat('dd-MM-yyyy').parse(dateString);
+  }
 
 // Method to format a DateTime object into 'yyyy-MM-dd' format
-static String formatDateToCustomFormat(DateTime dateTime) {
-return DateFormat('yyyy-MM-dd').format(dateTime);
-}
+  static String formatDateToCustomFormat(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd').format(dateTime);
+  }
 
 // Example usage combining both methods
-static String parseAndFormatDateString(String dateString) {
-DateTime dateTime = parseDateString(dateString);
-return formatDateToCustomFormat(dateTime);
-}
+  static String parseAndFormatDateString(String dateString) {
+    DateTime dateTime = parseDateString(dateString);
+    return formatDateToCustomFormat(dateTime);
+  }
 }
 
 class TimeConverter {
   // Method to format a TimeOfDay object into 'HH:mm' format
   static String formatTimeToCustomFormat(TimeOfDay timeOfDay) {
     final now = DateTime.now();
-    final dateTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final dateTime = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     return DateFormat('HH:mm').format(dateTime);
   }
 }
@@ -146,7 +146,6 @@ class AppointmentDateTimeConverter {
   }
 }
 
-
 class SimpleTimeConverter {
   // Converts DateTime to a custom time format with AM/PM
   static String formatTimeToCustomFormat(DateTime dateTime) {
@@ -158,6 +157,60 @@ class SimpleTimeConverter {
     DateTime dateTime = DateFormat("hh:mm a").parse(time12Hour);
 
     // Format it to 24-hour format
-    return DateFormat("HH:mm").format(dateTime); // Outputs as "08:25" or "20:25" depending on input
+    return DateFormat("HH:mm")
+        .format(dateTime); // Outputs as "08:25" or "20:25" depending on input
+  }
+}
+
+class HeightConverter {
+  static String convertCmToFeetAndInches(int heightInCm) {
+    double totalInches = heightInCm * 0.393701;
+    int feet = totalInches ~/ 12;
+    int inches = (totalInches % 12).round();
+    return "$feet ft $inches in";
+  }
+}
+
+class AgeCalculator {
+  static String calculateAge(String birthDateString) {
+    DateTime birthDate = DateFormat('yyyy-MM-dd').parse(birthDateString);
+    DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return "$age";
+  }
+
+  static bool matchAges(String birthDateString1, String birthDateString2) {
+    // Parse the birth dates
+    try {
+      DateTime birthDate1 = DateFormat('yyyy-MM-dd').parse(birthDateString1);
+      DateTime birthDate2 = DateFormat('yyyy-MM-dd').parse(birthDateString2);
+
+      // Calculate ages in years
+      int age1 = _calculateAgeInYears(birthDate1);
+      int age2 = _calculateAgeInYears(birthDate2);
+      debugPrint("Age1: $age1");
+      debugPrint("Age2: $age2");
+      // Compare ages in years
+      return age1 == age2;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static int _calculateAgeInYears(DateTime birthDate) {
+    DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+
+    // Adjust age if the current date is before the birth date in the current year
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+
+    return age;
   }
 }

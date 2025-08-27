@@ -1,7 +1,20 @@
+import 'package:devine_marry/models/home/match_preference_model.dart';
+import 'package:devine_marry/views/ConnectScreen/chat_screen.dart';
+import 'package:devine_marry/views/DetailScreen/user_details_screen.dart';
+import 'package:devine_marry/views/HomeScreen/see_all_matches_screen.dart';
+import 'package:devine_marry/views/LoginAndRegistrationScreen/SubScreens/preferences_screen.dart';
+import 'package:devine_marry/views/MenuScreen/menu_screen.dart';
+import 'package:devine_marry/views/NotificationScreen/notification_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/education_profession_details_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/family_background_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/personal_details_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/personality_details_screen.dart';
+import 'package:devine_marry/views/ProfileScreen/photo_gallery.dart';
+import 'package:devine_marry/views/ProfileScreen/preference_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../views/DashBoardScreen/dash_board_screen.dart';
+import '../views/DashBoardScreen/dashboard_screen.dart';
 import '../views/LoginAndRegistrationScreen/SubScreens/profile_complete_screen.dart';
 import '../views/LoginAndRegistrationScreen/login_screen.dart';
 import '../views/LoginAndRegistrationScreen/otp_screen.dart';
@@ -45,7 +58,18 @@ class RouteHelper {
   static const String otpVerification = '/otp-verification';
   static const String letsBegin = '/lets-begin';
   static const String dashboard = '/dashboard';
-  static const String   successFullRegisterationScreen = '/successfull-registeration-screen';
+  static const String personalDetails = '/personal-details';
+  static const String familyBackground = '/family-background';
+  static const String personalityDetails = '/personality-details';
+  static const String preferenceDetails = '/preference-details';
+  static const String photoGallery = '/photo-gallery';
+  static const String userDetailsScreen = '/user-details-screen';
+  static const String seeAllScreen = '/see-all-screen';
+  static const String chatScreen = '/chat-screen';
+  static const String educationProfessionDetail =
+      '/education-profession-details';
+  static const String successFullRegisterationScreen =
+      '/successfull-registeration-screen';
   static const String selectSlot = '/select-slot';
   static const String patientDetails = '/patient-details';
   static const String paymentMethod = '/payment-method';
@@ -53,6 +77,7 @@ class RouteHelper {
   static const String allServices = '/all-services';
   static const String clinic = '/clinic';
   static const String notification = '/notification';
+  static const String menu = '/menu';
   static const String search = '/search';
   static const String help = '/help';
   static const String subsHistory = '/subsHistory';
@@ -123,7 +148,8 @@ class RouteHelper {
 
   static String getServiceDetailRoute(
     String? id,
-    String? title, String? videoUrl,
+    String? title,
+    String? videoUrl,
   ) =>
       '$serviceDetail?id=$id&title=$title&videoUrl=$videoUrl';
 
@@ -153,15 +179,77 @@ class RouteHelper {
 
   /// Pages ==================>
   static List<GetPage> routes = [
+    // GetPage(name: initial, page: () => DashBoardScreen()),
     GetPage(name: initial, page: () => const SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
-    GetPage(name: register, page: () => RegisterScreen(),),
-    GetPage( name: otpVerification,
-        page: () => OtpVerificationScreen()),
-    GetPage( name: dashboard,
+    GetPage(
+      name: register,
+      page: () => RegisterScreen(),
+    ),
+    GetPage(name: otpVerification, page: () => OtpVerificationScreen()),
+    GetPage(
+        name: dashboard,
+        //UPDATED for preference screen
         page: () => DashBoardScreen()),
-    GetPage( name: successFullRegisterationScreen,
+    // page: () => PreferencesScreen()),
+    GetPage(
+        name: successFullRegisterationScreen,
         page: () => ProfileCompleteScreen()),
+    GetPage(
+      name: notification,
+      page: () => NotificationScreen(),
+    ),
+    GetPage(
+      name: menu,
+      page: () => MenuScreen(),
+    ),
+    GetPage(
+      name: personalDetails,
+      page: () => PersonalDetailsScreen(),
+    ),
+    GetPage(
+      name: familyBackground,
+      page: () => FamilyBackgroundScreen(),
+    ),
+    GetPage(
+      name: educationProfessionDetail,
+      page: () => EducationProfessionDetailsScreen(),
+    ),
+    GetPage(
+      name: personalityDetails,
+      page: () => PersonalityDetailsScreen(),
+    ),
+    GetPage(
+      name: preferenceDetails,
+      page: () => PreferenceDetailsScreen(),
+    ),
+    GetPage(
+      name: photoGallery,
+      page: () => PhotoGallery(),
+    ),
+    GetPage(
+      name: userDetailsScreen,
+      page: () => UserDetailsScreen(
+        userId: Get.arguments as String,
+      ),
+    ),
+    GetPage(
+      name: seeAllScreen,
+      page: () {
+        final arguments = Get.arguments as Map<String, dynamic>; // Cast to Map
+        final String title = arguments['title'] as String; // Extract title
+        final List<User> users =
+            arguments['users'] as List<User>; // Extract users
+        return SeeAllMatchesScreen(
+          title: title,
+          users: users,
+        );
+      },
+    ),
+    GetPage(
+      name: chatScreen,
+      page: () => ChatScreen(),
+    ),
     // GetPage(name: dashboard, page: () => const DashboardScreen(pageIndex: 0)),
     // GetPage(
     //     name: selectSlot,

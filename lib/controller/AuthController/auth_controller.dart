@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:devine_marry/helper/common_functions.dart';
+import 'package:devine_marry/utils/themes/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:devine_marry/data/api/api.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +20,6 @@ import '../../models/user/user.dart';
 import '../../utils/app_constants.dart';
 import '../../widgets/common_loading.dart';
 import '../../widgets/custom_snack_bar.dart';
-import 'package:path/path.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
@@ -35,7 +38,7 @@ class AuthController extends GetxController implements GetxService {
   bool get isLoginLoading => _isLoginLoading;
   final loginFormKey = GlobalKey<FormState>();
   final FocusNode phoneFocus = FocusNode();
-
+  String selectedCountryCode = '+91';
   PageController pageController = PageController();
   int currentPage = 0;
 
@@ -50,7 +53,7 @@ class AuthController extends GetxController implements GetxService {
   TextEditingController dobController = TextEditingController();
 
   int? siblings = 0;
-  String? numberOfSiblings;
+  String? numberOfSiblings = '0';
   String? lookingFor;
   String? maritalStatus;
   String? religion;
@@ -60,7 +63,6 @@ class AuthController extends GetxController implements GetxService {
   String? dob = "";
   String? gender;
   String? profilePhoto = "";
-
 
   void updateLookingFor(String value) {
     lookingFor = value;
@@ -82,8 +84,19 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  void updateCasteList(List<String> value) {
+    log("Caste List: $value");
+    prefCaste = value;
+    update();
+  }
+
   void updateCountry(String value) {
     country = value;
+    update();
+  }
+
+  void updateCountryList(List<String> value) {
+    prefCountry = value;
     update();
   }
 
@@ -92,11 +105,20 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  void updateStateList(List<String> value) {
+    prefState = value;
+    update();
+  }
+
+  void updatePrefState(List<String> value) {
+    prefState = value;
+    update();
+  }
+
   void updateDob(String value) {
     dob = value;
     value = DateConverter.formatDate(DateTime.parse(value));
-    dobController.text =
-        value;
+    dobController.text = value;
     update();
   }
 
@@ -110,70 +132,97 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-
-
-
-
-
-
   //EducationDetails
 
   TextEditingController schoolUniversityController = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDayController = TextEditingController();
   TextEditingController companyOrganisationController = TextEditingController();
   TextEditingController designationController = TextEditingController();
   TextEditingController monthlyIncomeController = TextEditingController();
 
   int? experience = 0;
-  String? noOfYears;
+  String? noOfYears = '0';
   String? highestQualification;
   String? degree;
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
+  String? yearOfPassing;
 
   //PersonalityDetails
 
   TextEditingController hairController = TextEditingController();
   TextEditingController eyeColorController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController disabilityController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController interestController = TextEditingController();
-
 
   String? smokingHabit;
   String? drinkingHabit;
   String? bloodGroup;
   String? complexion;
   String? disability;
+
+  CasteResponse casteResponse = CasteResponse(castes: []);
+  DegreeResponse degreeResponse = DegreeResponse(Degrees: []);
+  StateResponse stateResponse = StateResponse(states: []);
+  List<String> yearOptions = CommonFunctions.getYearListWithPursuing();
+
+  //PreferencesDetails
+
+  TextEditingController prefMinAgeController = TextEditingController();
+  TextEditingController prefMinHeightController = TextEditingController();
+  TextEditingController prefMaxAgeController = TextEditingController();
+  TextEditingController prefMaxHeightController = TextEditingController();
   List<String>? prefReligion;
+  List<String>? prefCaste;
   List<String>? prefHighestQualification;
+  List<String>? prefDegree;
   List<String>? prefCountry;
+  List<String>? prefState;
+  List<String>? prefComplexion;
+  String? prefSmokingHabit;
+  String? prefDrinkingHabit;
 
   CountryResponse countryResponse = CountryResponse(countries: []);
   ReligionResponse religionResponse = ReligionResponse(religions: []);
-  DataModel dataModel = DataModel(maritalStatuses: [], genders: [], qualifications: [], smoking: [], drinking: [], bloodGroups: [], complexion: [], disabilities: []);
-  CasteResponse casteResponse = CasteResponse(castes: []);
-  DegreeResponse degreeResponse = DegreeResponse( Degrees: []);
-  StateResponse stateResponse = StateResponse(states: []);
+  CasteResponse casteListResponse = CasteResponse(castes: []);
 
-
+  DataModel dataModel = DataModel(
+      maritalStatuses: [],
+      genders: [],
+      qualifications: [],
+      smoking: [],
+      drinking: [],
+      bloodGroups: [],
+      complexion: [],
+      disabilities: []);
 
   void updateBloodGroup(String value) {
     bloodGroup = value;
     update();
-
   }
+
   void updateComplexion(String value) {
     complexion = value;
     update();
-
   }
+
   void updateSmokingHabit(String value) {
     smokingHabit = value;
     update();
   }
+
+  void updatePrefSmokingHabit(String value) {
+    prefSmokingHabit = value;
+    update();
+  }
+
+  void updatePrefDrinkingHabit(String value) {
+    prefDrinkingHabit = value;
+    update();
+  }
+
   void updateDrinkingHabit(String value) {
     drinkingHabit = value;
     update();
@@ -183,12 +232,26 @@ class AuthController extends GetxController implements GetxService {
     disability = values;
     update();
   }
+
   void updatePrefReligion(List<String> value) {
     prefReligion = value;
+
+    log("Pref Religion: $prefReligion");
     update();
   }
+
   void updatePrefQualification(List<String> value) {
     prefHighestQualification = value;
+    update();
+  }
+
+  void updatePrefDegree(List<String> value) {
+    prefDegree = value;
+    update();
+  }
+
+  void updatePrefComplexion(List<String> value) {
+    prefComplexion = value;
     update();
   }
 
@@ -197,17 +260,20 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-
-
   void updateHighestQualification(String value) {
     highestQualification = value;
     update();
   }
+
   void updateDegree(String? value) {
     degree = value;
     update();
   }
 
+  void updateYearOfPassing(String? value) {
+    yearOfPassing = value;
+    update();
+  }
 
   List<LookingFor> lookingForList = [
     LookingFor(id: 1, title: 'Bridegroom'),
@@ -215,17 +281,16 @@ class AuthController extends GetxController implements GetxService {
   ];
 
   void nextPage() {
-    pageController.nextPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeIn);
-    update();
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+    log("Page number : ${pageController.page}");
+    if (currentPage < 4) {
+      pageController.nextPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      currentPage = pageController.page!.toInt() + 1;
       update();
-    });
-
+      log("Next Page number : ${currentPage.toString()}");
+    }
   }
 
   void updatePage(int index) {
@@ -235,16 +300,14 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void previousPage() {
-    pageController.previousPage(
-        duration: Duration(
-          milliseconds: 300,
-        ),
-        curve: Curves.easeOut);
-    Future.delayed(Duration(milliseconds: 300), () {
-      currentPage = pageController.page!.toInt();
+    if (currentPage > 0) {
+      pageController.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
       update();
-    });
-    update();
+      currentPage = pageController.page!.toInt() - 1;
+    }
   }
 
   void changePhoneNumber(String value) {
@@ -252,141 +315,15 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-  //
-  // Future<bool> isLoggedIn() async {
-  //   bool value = await  authRepo.isLoggedIn();
-  //   if(value){
-  //     try {
-  //       Response response = await authRepo.getUserData();
-  //       debugPrint(response.body.toString());
-  //       UserModel user = UserModel.fromJson(response.body['user']);
-  //       debugPrint("User: ${user.toJson()}");
-  //     } catch (e) {
-  //       debugPrint("Error: $e");
-  //     }
-  //   } else {
-  //
-  //   }
-  //
-  //   return false;
-  // }
-  // DateTime? selectedDate;
-  // String? formattedDate;
-  // String? privacyPolicy;
-  //
-  // void updateDate(DateTime newDate) {
-  //   selectedDate = newDate;
-  //   formattedDate = SimpleDateConverter.formatDateToCustomFormat(selectedDate!);
-  //   update();
-  // }
-  //
-  // var selectedGender = 'Male'; // Observable for selected gender
-  // final List<String> genderOptions = ['Male', 'Female',]; // List of options
-  //
-  // void updateGender(String gender) {
-  //   selectedGender = gender; // Update selected gender
-  //   update(); // Call update to refresh listeners (not using Obx)
-  // }
-  //
-  // var selectedDiabetes = 'No';
-  // final List<String> diabetesOptions = ['No','Yes']; // List of options
-  //
-  // void updateDiabetes(String val) {
-  //   selectedDiabetes = val;
-  //   update();
-  // }
-  //
-  // var selectedGlasses = 'No';
-  // final List<String> glassesOptions = ['No','Yes'];
-  // void updateGlasses(String val) {
-  //   selectedGlasses = val;
-  //   update();
-  // }
-  //
-  // var selectedBp= 'No';
-  // final List<String> bpOptions = ['No','Yes'];
-  //
-  // void updateHealth(String val) {
-  //   selectedBp = val;
-  //   update();
-  // }
-  //
-  //
-  // bool _isLoading = false;
-  // bool get isLoading => _isLoading;
-  //
-  // DateTime? lastBackPressTime;
-  // Future<bool> handleOnWillPop() async {
-  //   final now = DateTime.now();
-  //
-  //   if (lastBackPressTime == null || now.difference(lastBackPressTime!) > const Duration(seconds: 2)) {
-  //     updateLastBackPressTime(now);
-  //     ScaffoldMessenger.of(Get.context!).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Press back again to exit'),
-  //         duration: Duration(seconds: 2),
-  //       ),
-  //     );
-  //     SystemNavigator.pop();
-  //     return Future.value(false);
-  //   }
-  //   return Future.value(true);
-  // }
-  //
-  // Future<void> getPrivacyPolicy(String value) async {
-  //
-  //   _isLoginLoading = true;
-  //   update();
-  //   Response response = await authRepo.getPrivacyPolicy(value);
-  //
-  //   final Map<String, dynamic> data = response.body['data'] as Map<String, dynamic>;
-  //   log(data.toString(),name: "Privacy Policy");
-  //
-  //   privacyPolicy = data['content'].toString();
-  //   if(value == "1") {
-  //     Get.to(() => PrivacyPolicy(
-  //       privacyPolicy: privacyPolicy ?? "",
-  //       title: "Privacy Policy",
-  //     ));
-  //   } else {
-  //     Get.to(() => PrivacyPolicy(
-  //       privacyPolicy: privacyPolicy ?? "",
-  //       title: "Terms & Condition",
-  //     ));
-  //   }
-  //   _isLoginLoading = false;
-  //   update();
-  // }
-  //
-  //
-  //
-  // void updateLastBackPressTime(DateTime time) {
-  //   lastBackPressTime = time;
-  //   update();
-  // }
-  //
-  // ///################ Apis ########################
-  //
-  //
-  // bool _isLoginLoading = false;
-  // bool get isLoginLoading => _isLoginLoading;
-  //
-  // bool _isShowingBottomBar = true;
-  // bool get isShowingBottomBar => _isShowingBottomBar;
-  //
-  //
-  // void updateBottomBarVisibility(bool isVisible) {
-  //   _isShowingBottomBar = isVisible;
-  //   //debugPrint('Bottom bar visibility: $isVisible');
-  //   update();
-  // }
   Future<void> sendOtpApi() async {
     _isLoginLoading = true;
     update();
     try {
-      Response response =
-          await authRepo.sendOtpRepo(phoneController.text.trim());
-        debugPrint("Response: ${response.body}");
+      Response response = await authRepo.sendOtpRepo(
+        phoneController.text.trim(),
+        selectedCountryCode,
+      );
+      debugPrint("Response: ${response.body}");
       // var responseData = response.body;
       if (response.body['status']) {
         var responseData = response.body;
@@ -487,6 +424,7 @@ class AuthController extends GetxController implements GetxService {
 
   Future<void> getUserAttributes() async {
     _isLoginLoading = true;
+    print("User Attributes");
     update();
     try {
       _isLoginLoading = true;
@@ -495,6 +433,7 @@ class AuthController extends GetxController implements GetxService {
 
       // var responseData = response.body;
       if (response.body['status']) {
+        print("User Attributes true");
         var responseData = response.body;
         DataModel userAttribute = DataModel.fromJson(responseData['data']);
         dataModel = userAttribute;
@@ -585,6 +524,98 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
+  Future<void> getStatesList(List<String> id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(AppConstants.token) ?? "";
+    print("$token");
+    print("Country ids : $id");
+    showLoading();
+    updateStateList([]);
+    stateResponse = StateResponse(states: []);
+    _isLoginLoading = true;
+    update();
+    try {
+      _isLoginLoading = true;
+      update();
+      Response response = await authRepo.getStateList(
+        id: id,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          // 'Accept' : 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+      );
+
+      if (response.body['status'] && response.body != null) {
+        var responseData = response.body;
+        StateResponse states = StateResponse.fromJson(responseData['data']);
+        stateResponse = states;
+        print("Country ids : ${response.body}");
+        _isLoginLoading = false;
+        update();
+      } else {
+        // print('Failed to fetch the castes');
+        // showCustomSnackBar("Something went wrong. Please try again.",
+        //     isError: true);
+        hideLoading();
+      }
+    } catch (e) {
+      closeSnackBar();
+      hideLoading();
+      showCustomSnackBar("Something went wrong. Please try again. $e",
+          isError: true);
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
+    }
+  }
+
+  Future<void> getCasteList(List<String> id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(AppConstants.token) ?? "";
+    print("Caste List ID: $id");
+    showLoading();
+    updateCasteList([]);
+    casteListResponse = CasteResponse(castes: []);
+    _isLoginLoading = true;
+    update();
+    try {
+      _isLoginLoading = true;
+      update();
+      Response response = await authRepo.getCastesList(
+        id: id,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+      );
+      print("Castes Response : ${response.body}");
+      if (response.body == null) {}
+      if (response.body['status'] && response.body != null) {
+        var responseData = response.body;
+        CasteResponse castes = CasteResponse.fromJson(responseData['data']);
+        casteListResponse = castes;
+        print("Castes : ${casteListResponse.castes.length}");
+        _isLoginLoading = false;
+        update();
+      } else {
+        // print('Failed to fetch the castes');
+        // showCustomSnackBar("Something went wrong. Please try again.",
+        //     isError: true);
+        hideLoading();
+      }
+    } catch (e) {
+      closeSnackBar();
+      hideLoading();
+      showCustomSnackBar("Something went wrong. Please try again. $e",
+          isError: true);
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
+    }
+  }
 
   Future<void> getDegrees() async {
     showLoading();
@@ -596,12 +627,14 @@ class AuthController extends GetxController implements GetxService {
       _isLoginLoading = true;
       update();
       Response response = await authRepo.getDegree();
+      log("Degree Response: ${response.body}");
       debugPrint(response.body.toString());
       if (response.body == null) {}
       if (response.body['success'] && response.body != null) {
         var responseData = response.body;
         DegreeResponse degrees = DegreeResponse.fromJson(responseData);
         degreeResponse = degrees;
+        log("Degres : ${degreeResponse.Degrees.length}");
         _isLoginLoading = false;
         update();
       } else {
@@ -622,9 +655,6 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
-
-
-
   //
   // Future<void> saveSubscriptionStatus(bool isActive) async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -637,9 +667,137 @@ class AuthController extends GetxController implements GetxService {
   //   return prefs.getBool('isSubscriptionActive') ?? false;
   // }
   //
+  // Future<void> verifyOtpApi(String? otp) async {
+  //   ApiClient apiClient = ApiClient(
+  //       appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+  //   if (phoneController.text.isEmpty || otp == null) {
+  //     showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
+  //     return;
+  //   }
+
+  //   _isLoginLoading = true;
+  //   update();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //   final String? deviceToken = "";
+  //   // await prefs.getString('FCM');
+  //   //debugPrint('Device token: $deviceToken');
+  //   try {
+  //     Response response = await authRepo.verifyOtp(
+  //         phoneController.text.trim(), otp, deviceToken);
+  //     print(response);
+  //     // Create a multipart request
+  //     bool isSaved =
+  //         await prefs.setString(AppConstants.token, response.body['token']);
+  //     print(response.body['token']);
+  //     apiClient.updateHeader(response.body['token']);
+  //     if (response.body['status']) {
+  //       closeSnackBar();
+  //       log("Body==> ${response.body['user']}");
+  //       UserModel user = UserModel.fromJson(response.body['user']);
+  //       if (!isSaved) return;
+  //       if (user.profileComplete == 0 || user.profileComplete == null) {
+  //         Get.toNamed(RouteHelper.register);
+  //         showCustomSnackBar(response.body['message'],
+  //             isError: false, isSuccess: true);
+  //       } else {
+  //         Get.toNamed(RouteHelper.dashboard);
+  //       }
+  //     } else {
+  //       showCustomSnackBar(response.body['message'], isError: true);
+  //     }
+  //   } catch (e) {
+  //     closeSnackBar();
+  //     showCustomSnackBar("Something went wrong. Please try again $e .",
+  //         isError: true);
+  //   } finally {
+  //     _isLoginLoading = false;
+  //     update();
+  //   }
+  // }
+
+  // Future<void> verifyOtpApi(String? otp) async {
+  //   ApiClient apiClient = ApiClient(
+  //       appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+
+  //   if (phoneController.text.isEmpty || otp == null) {
+  //     showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
+  //     return;
+  //   }
+
+  //   _isLoginLoading = true;
+  //   update();
+
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final String? deviceToken = ""; // Replace with actual device token logic
+
+  //   try {
+  //     // Call the verifyOtp API
+  //     Response response = await authRepo.verifyOtp(
+  //         phoneController.text.trim(), otp, deviceToken);
+
+  //     print("API Response: ${response.body}");
+
+  //     // Extract and save the token
+  //     String? token = response.body['token'];
+  //     if (token == null || token.isEmpty) {
+  //       print("❌ Token is null or empty in the response");
+  //       showCustomSnackBar("Failed to retrieve token. Please try again.",
+  //           isError: true);
+  //       return;
+  //     }
+
+  //     // Save the token to SharedPreferences
+  //     bool isSaved = await prefs.setString(AppConstants.token, token);
+  //     if (!isSaved) {
+  //       print("❌ Failed to save the token");
+  //       showCustomSnackBar("Failed to save token. Please try again.",
+  //           isError: true);
+  //       return;
+  //     }
+
+  //     print("✅ Token saved successfully: $token");
+
+  //     // Update the API client header with the new token
+  //     apiClient.updateHeader(token);
+  //     print("Saved Token: ${prefs.getString(AppConstants.token)}");
+
+  //     // Ensure the header is updated before making any API calls
+  //     print("Updated Headers token: ${apiClient.token}");
+
+  //     // Handle the response and navigate accordingly
+  //     if (response.body['status']) {
+  //       closeSnackBar();
+  //       log("Body==> ${response.body['user']}");
+  //       UserModel user = UserModel.fromJson(response.body['user']);
+
+  //       if (user.profileComplete == 0 || user.profileComplete == null) {
+  //         // Fetch required data before navigating
+  //         // await fetchInitialData(); // Ensure all required data is fetched
+  //         Get.toNamed(
+  //             RouteHelper.register); // Navigate to the registration screen
+  //         showCustomSnackBar(response.body['message'],
+  //             isError: false, isSuccess: true);
+  //       } else {
+  //         // Navigate to the dashboard
+  //         Get.toNamed(RouteHelper.dashboard);
+  //       }
+  //     } else {
+  //       showCustomSnackBar(response.body['message'], isError: true);
+  //     }
+  //   } catch (e) {
+  //     closeSnackBar();
+  //     showCustomSnackBar("Something went wrong. Please try again. $e",
+  //         isError: true);
+  //   } finally {
+  //     _isLoginLoading = false;
+  //     update();
+  //   }
+  // }
   Future<void> verifyOtpApi(String? otp) async {
     ApiClient apiClient = ApiClient(
         appBaseUrl: AppConstants.baseUrl, sharedPreferences: sharedPreferences);
+
     if (phoneController.text.isEmpty || otp == null) {
       showCustomSnackBar('Phone number and OTP cannot be null', isError: true);
       return;
@@ -647,26 +805,53 @@ class AuthController extends GetxController implements GetxService {
 
     _isLoginLoading = true;
     update();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String? deviceToken = "";
-    // await prefs.getString('FCM');
-    //debugPrint('Device token: $deviceToken');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? deviceToken = ""; // Replace with actual device token logic
+
     try {
+      // Call the verifyOtp API
       Response response = await authRepo.verifyOtp(
           phoneController.text.trim(), otp, deviceToken);
-      // Create a multipart request
-      await prefs.setString(AppConstants.token, response.body['token']);
-      apiClient.updateHeader(response.body['token']);
+
+      print("API Response: ${response.body}");
+
+      // Extract and save the token
+      String? token = response.body['token'];
+      if (token == null || token.isEmpty) {
+        print("❌ Token is null or empty in the response");
+        showCustomSnackBar("Failed to retrieve token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      // Save the token to SharedPreferences
+      bool isSaved = await prefs.setString(AppConstants.token, token);
+      if (!isSaved) {
+        print("❌ Failed to save the token");
+        showCustomSnackBar("Failed to save token. Please try again.",
+            isError: true);
+        return;
+      }
+
+      print("✅ Token saved successfully: $token");
+
+      // Update the API client header with the new token
+      apiClient.updateHeader(token);
+
+      // Handle the response and navigate accordingly
       if (response.body['status']) {
         closeSnackBar();
         log("Body==> ${response.body['user']}");
         UserModel user = UserModel.fromJson(response.body['user']);
+
         if (user.profileComplete == 0 || user.profileComplete == null) {
+          // Navigate to the registration screen
           Get.toNamed(RouteHelper.register);
           showCustomSnackBar(response.body['message'],
               isError: false, isSuccess: true);
         } else {
+          // Navigate to the dashboard
           Get.toNamed(RouteHelper.dashboard);
         }
       } else {
@@ -674,13 +859,26 @@ class AuthController extends GetxController implements GetxService {
       }
     } catch (e) {
       closeSnackBar();
-      showCustomSnackBar("Something went wrong. Please try again $e .",
-          isError: true);
+      showCustomSnackBar("Wrong OTP. Please try again.", isError: true);
     } finally {
       _isLoginLoading = false;
       update();
     }
   }
+//
+  // Future<void> fetchInitialData() async {
+  //   try {
+  //     // Fetch required data sequentially
+  //     await getCountries();
+  //     await getReligion();
+  //     await getUserAttributes();
+  //     // Add other API calls if needed
+  //   } catch (e) {
+  //     print("❗ Error fetching initial data: $e");
+  //     showCustomSnackBar("Failed to fetch initial data. Please try again.",
+  //         isError: true);
+  //   }
+  // }
 
   void updateSiblings(int i) {
     siblings = i;
@@ -694,9 +892,91 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  Future<void> registerUserPreferences({
+    required String token,
+    required String url,
+    required int smokingStatus,
+    required int drinkingStatus,
+    required List<int> religionList,
+    required List<int> casteList,
+    required List<int> countryList,
+    required List<int> stateList,
+    required List<int> qualificationList,
+    required List<int> complexionsList,
+    required List<int> degrees,
+  }) async {
+    log("All Preferences : "
+        "smokingStatus: $smokingStatus, "
+        "drinkingStatus: $drinkingStatus, "
+        "religionList: $religionList, "
+        "casteList: $casteList, "
+        "countryList: $countryList, "
+        "stateList: $stateList, "
+        "qualificationList: $qualificationList, "
+        "complexionsList: $complexionsList");
+    log("Preferences URL: $url");
+    log("Preferences Token: $token");
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+
+    var request = http.Request(
+      'POST',
+      Uri.parse(url),
+    );
+
+    request.body = json.encode({
+      "step": "preferences",
+      "min_age": prefMinAgeController.text,
+      "min_height": prefMinHeightController.text,
+      "max_age": prefMaxAgeController.text,
+      "max_height": prefMaxHeightController.text,
+      "religion": religionList,
+      "smoking_status": smokingStatus,
+      "drinking_status": drinkingStatus,
+      "caste": casteList,
+      "country": countryList,
+      "state": stateList,
+      "qualifications": qualificationList,
+      "complexions": complexionsList,
+      "degree": degrees,
+    });
+
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        String responseBody = await response.stream.bytesToString();
+        hideLoading();
+        Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        print("✅ Success: $responseBody");
+      } else {
+        Get.snackbar(
+          "Error",
+          "Error ${response.statusCode}: ${response.reasonPhrase}",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        print("❌ Error ${response.statusCode}: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("❗ Exception: $e");
+      hideLoading();
+    } finally {
+      hideLoading();
+      _isLoginLoading = false;
+      update();
+    }
+  }
+
   Future<bool> registerUser(String updateType) async {
     showLoading();
-    final String url = AppConstants.baseUrl+AppConstants.register; // Replace with your API URL
+    final String url = AppConstants.baseUrl +
+        AppConstants.register; // Replace with your API URL
 
     // Image file (Replace with actual file picker logic)
     File imageFile = File(profilePhoto ?? ""); // Replace with actual image path
@@ -711,9 +991,9 @@ class AuthController extends GetxController implements GetxService {
       "Accept": "application/json",
     });
 
-    Map<dynamic, dynamic> finalMap = {};
+    Map<String, dynamic> finalMap = {};
 
-    if(updateType == "register"){
+    if (updateType == "register") {
       finalMap = {
         "step": "register",
         "looking_for": lookingForList
@@ -725,15 +1005,16 @@ class AuthController extends GetxController implements GetxService {
             .id
             .toString(),
         "firstname": firstNameController.text,
-        "lastname": lastNameController.text,
+        "lastname": lastNameController.text ?? "",
         "religions": religionResponse.religions
             .firstWhere((element) => element.name == religion)
             .id
             .toString(),
-        "caste": casteResponse.castes
-            .firstWhere((element) => (element.name ?? "") == caste)
-            .id
-            .toString(),
+        if (casteResponse.castes.isNotEmpty)
+          "caste": casteResponse.castes
+              .firstWhere((element) => (element.name ?? "") == caste)
+              .id
+              .toString(),
         "country": countryResponse.countries
             .firstWhere((element) => (element.name ?? "") == country)
             .id
@@ -751,54 +1032,36 @@ class AuthController extends GetxController implements GetxService {
         "father_profession": fathersProfessionController.text,
         "mother_name": motherNameController.text,
         "mother_profession": motherProfessionController.text,
-        "number_of_siblings": (numberOfSiblings ?? "").toString(),
+        "number_of_siblings": (numberOfSiblings ?? "0").toString(),
       };
-    } else if(updateType == "basicInfo"){
-      bool isHighSchoolOrIntermediate =
-          highestQualification != "High School" && highestQualification != "Intermediate";
+    } else if (updateType == "basicInfo") {
+      bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
+          highestQualification != "Intermediate";
       finalMap = {
         "step": "basicInfo",
         "highest_qualification": (dataModel.qualifications
-            .firstWhere((element) => (element.name ?? "") == highestQualification)
-            .id)
-            .toString() ,
-        "institute": schoolUniversityController.text,
-        if(isHighSchoolOrIntermediate)"degree": degreeResponse.Degrees
-            .firstWhere((element) => (element.name ?? "") == degree)
-            .id
+                .firstWhere(
+                    (element) => (element.name ?? "") == highestQualification)
+                .id)
             .toString(),
-        "starting_year": startDateController.text,
-        "ending_year": endDayController.text,
+        "institute": schoolUniversityController.text,
+        if (isHighSchoolOrIntermediate)
+          "degree": degreeResponse.Degrees.firstWhere(
+              (element) => (element.name ?? "") == degree).id.toString(),
+        "year_of_passing":
+            (yearOfPassing == "Pursuing") ? "pursuing" : yearOfPassing,
         "company": companyOrganisationController.text,
         "designation": designationController.text,
         "monthly_income": monthlyIncomeController.text,
         "experience": noOfYears,
       };
-    }
-    else {
-
-      List<String> Religion = [];
-      List<String> HighestQualification = [];
-      List<String> Country = [];
-
-
-      religionResponse.religions.forEach((religion) {
-        if(prefReligion!.contains(religion.name)){
-          Religion.add(religion.id.toString());
-        }
-      });
-
-      dataModel.qualifications.forEach((qualification) {
-        if(prefHighestQualification!.contains(qualification.name)){
-          HighestQualification.add(qualification.id.toString());
-        }
-      });
-
-      countryResponse.countries.forEach((country) {
-        if(prefCountry!.contains(country.name)){
-          Country.add(country.id.toString());
-        }
-      });
+    } else if (updateType == "physicalAttributeInfo") {
+      bool isDisabled = disability == 'Yes';
+      var ab = dataModel.drinking
+          .firstWhere((element) => (element.name ?? "") == drinkingHabit)
+          .id
+          .toString();
+      print("Drinking Habit ID: $ab");
 
       finalMap = {
         "step": "physicalAttributeInfo",
@@ -824,22 +1087,129 @@ class AuthController extends GetxController implements GetxService {
             .firstWhere((element) => (element.name ?? "") == complexion)
             .id
             .toString(),
-        "disabilities": dataModel.disabilities.firstWhere((dis)=>dis.name == disability).id,
-        "religions": Religion,
-        "Qualification": HighestQualification,
-        "country": Country,
+        "disabilities": dataModel.disabilities
+            .firstWhere((dis) => dis.name == disability)
+            .id,
+        if (isDisabled) "disabilitiedata": disabilityController.text,
       };
-    }
+    } else if (updateType == "preferences") {
+      List<int> Religion = [];
+      List<int> HighestQualification = [];
+      List<int> Country = [];
+      List<int> Degree = [];
+      List<int> State = [];
+      List<int> Caste = [];
+      List<int> Complexions = [];
 
+      if (prefReligion != null && prefReligion!.contains('Select All')) {
+        Religion.addAll(
+            religionResponse.religions.map((religion) => religion.id));
+      } else {
+        for (var religion in religionResponse.religions) {
+          if (prefReligion != null && prefReligion!.contains(religion.name)) {
+            Religion.add(religion.id);
+          }
+        }
+      }
+
+      if (prefHighestQualification != null &&
+          prefHighestQualification!.contains('Select All')) {
+        HighestQualification.addAll(dataModel.qualifications.map((q) => q.id));
+      } else {
+        for (var qualification in dataModel.qualifications) {
+          if (prefHighestQualification != null &&
+              prefHighestQualification!.contains(qualification.name)) {
+            HighestQualification.add(qualification.id.toInt());
+          }
+        }
+      }
+      if (prefHighestQualification!.contains("Select All") ||
+          (prefHighestQualification!.any(
+            (q) => q != "High School" && q != "Intermediate",
+          ))) {
+        if (prefDegree != null && prefDegree!.contains('Select All')) {
+          Degree.addAll(degreeResponse.Degrees.map((d) => d.id));
+        } else {
+          for (var degree in degreeResponse.Degrees) {
+            if (prefDegree != null && prefDegree!.contains(degree.name)) {
+              Degree.add(degree.id.toInt());
+            }
+          }
+        }
+      }
+
+      if (prefCountry != null && prefCountry!.contains('Select All')) {
+        Country.addAll(countryResponse.countries.map((c) => c.id));
+      } else {
+        for (var country in countryResponse.countries) {
+          if (prefCountry != null && prefCountry!.contains(country.name)) {
+            Country.add(country.id.toInt());
+          }
+        }
+      }
+
+      if (prefState != null && prefState!.contains('Select All')) {
+        State.addAll(stateResponse.states.map((s) => s.id));
+      } else {
+        for (var state in stateResponse.states) {
+          if (prefState != null && prefState!.contains(state.name)) {
+            State.add(state.id.toInt());
+          }
+        }
+      }
+
+      if (prefCaste != null && prefCaste!.contains('Select All')) {
+        Caste.addAll(casteListResponse.castes.map((c) => c.id));
+      } else {
+        for (var caste in casteListResponse.castes) {
+          if (prefCaste != null && prefCaste!.contains(caste.name)) {
+            Caste.add(caste.id.toInt());
+          }
+        }
+      }
+
+      if (prefComplexion != null && prefComplexion!.contains('Select All')) {
+        Complexions.addAll(dataModel.complexion.map((c) => c.id));
+      } else {
+        for (var c in dataModel.complexion) {
+          if (prefComplexion != null && prefComplexion!.contains(c.name)) {
+            Complexions.add(c.id.toInt());
+          }
+        }
+      }
+
+      int smokingStatusPref = dataModel.smoking
+          .firstWhere((element) => (element.name) == prefSmokingHabit)
+          .id;
+
+      int drinkingStatusPref = dataModel.drinking
+          .firstWhere((element) => (element.name) == prefDrinkingHabit)
+          .id;
+
+      registerUserPreferences(
+        token: token,
+        url: url,
+        smokingStatus: smokingStatusPref,
+        drinkingStatus: drinkingStatusPref,
+        religionList: Religion,
+        casteList: Caste,
+        countryList: Country,
+        stateList: State,
+        qualificationList: HighestQualification,
+        complexionsList: Complexions,
+        degrees: Degree,
+      );
+
+      return true;
+    }
 
     log("Final Map: $finalMap\n===>");
     // Add fields
-    request.fields.addAll(
-        finalMap.map((key, value) => MapEntry(key.toString(), value?.toString() ?? ""))
-    );
+    request.fields.addAll(finalMap
+        .map((key, value) => MapEntry(key.toString(), value.toString() ?? "")));
 
     // Add image file
-        if(imageFile.path.isNotEmpty && updateType == "register"){
+    if (imageFile.path.isNotEmpty && updateType == "register") {
       request.files.add(
         await http.MultipartFile.fromPath("image", imageFile.path),
       );
@@ -852,10 +1222,10 @@ class AuthController extends GetxController implements GetxService {
       if (response.statusCode == 200) {
         hideLoading();
         print("Success: $responseData");
-        if(currentPage != 2) {
-          nextPage();
-        } else {
+        if (currentPage == 4) {
           Get.toNamed(RouteHelper.successFullRegisterationScreen);
+        } else {
+          nextPage();
         }
         return true;
       } else {
@@ -872,66 +1242,27 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
-//
-//
-// bool _userDataLoading = false;
-// bool get userDataLoading => _userDataLoading;
-//
-//
-// UserData? _userData;
-// PatientData? _patientData;
-//
-// UserData? get userData => _userData;
-// PatientData? get patientData => _patientData;
-//
-// Future<ApiResponse?> userDataApi() async {
-//   // LoadingDialog.showLoading(message: "Please wait...");
-//   _userDataLoading = true;
-//   _userData = null;
-//   _patientData = null;
-//   update();
-//   Response response = await authRepo.getUserData();
-//   if (response.statusCode == 200) {
-//     Map<String, dynamic> responseData = response.body;
-//     ApiResponse apiResponse = ApiResponse.fromJson(responseData);
-//     _userData = apiResponse.userData;
-//     _patientData = apiResponse.patientData;
-//     bool isSubscriptionActive = (responseData['subscriptionArray']['status'] ??false) as bool;
-//     debugPrint("Subscription status: ${responseData['subscriptionArray']['status']}");
-//     await saveSubscriptionStatus(isSubscriptionActive);
-//   } else {
-//
-//   }
-//   _userDataLoading = false;
-//   // LoadingDialog.hideLoading();
-//   update();
-//   return ApiResponse(userData: _userData, patientData: _patientData); // Return the combined response
-// }
-
   void checkCreateAccountScreen() {
     if ((lookingFor ?? "").isNotEmpty &&
         (maritalStatus ?? "").isNotEmpty &&
         (country ?? "").isNotEmpty &&
-        (caste ?? "").isNotEmpty &&
+        ((caste ?? "").isNotEmpty || casteResponse.castes.isEmpty) &&
         (religion ?? "").isNotEmpty &&
-        (state ?? "").isNotEmpty &&
-        (firstNameController.text ?? "").isNotEmpty &&
-        (lastNameController.text ?? "").isNotEmpty &&
-        (fathersProfessionController.text ?? "").isNotEmpty &&
-        (fathersNameController.text ?? "").isNotEmpty &&
-        (motherNameController.text ?? "").isNotEmpty &&
-        (motherProfessionController.text ?? "").isNotEmpty &&
-        ((numberOfSiblings ?? "").isNotEmpty &&
-            (numberOfSiblings ?? "") != "0") &&
+        (firstNameController.text).isNotEmpty &&
+        // (lastNameController.text).isNotEmpty &&
+        (fathersProfessionController.text).isNotEmpty &&
+        (fathersNameController.text).isNotEmpty &&
+        (motherNameController.text).isNotEmpty &&
+        (motherProfessionController.text).isNotEmpty &&
+        (numberOfSiblings ?? "").isNotEmpty &&
         (dobController.text).isNotEmpty &&
         (gender ?? "").isNotEmpty &&
         (profilePhoto ?? "").isNotEmpty) {
       registerUser("register");
     } else {
-      if (numberOfSiblings == "0") {
+      if ((lookingFor ?? "").isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Number of siblings should be greater than 0",
-            isError: true);
+        showCustomSnackBar("Please select looking for", isError: true);
       } else if (dobController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select date of birth", isError: true);
@@ -950,7 +1281,7 @@ class AuthController extends GetxController implements GetxService {
       } else if ((state ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select a state", isError: true);
-      } else if ((caste ?? "").isEmpty) {
+      } else if ((caste ?? "").isEmpty && (casteResponse.castes.isNotEmpty)) {
         closeSnackBar();
         showCustomSnackBar("Please select a caste", isError: true);
       } else if ((religion ?? "").isEmpty) {
@@ -959,9 +1290,6 @@ class AuthController extends GetxController implements GetxService {
       } else if (firstNameController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your first name", isError: true);
-      } else if (lastNameController.text.isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please enter your last name", isError: true);
       } else if (fathersNameController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your father's name", isError: true);
@@ -981,45 +1309,43 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void checkEducationScreen() {
-    bool isHighSchoolOrIntermediate =
-        highestQualification != "High School" && highestQualification == "Intermediate";
-
+    bool isHighSchoolOrIntermediate = highestQualification != "High School" &&
+        highestQualification == "Intermediate";
     if ((highestQualification ?? "").isNotEmpty &&
         (!isHighSchoolOrIntermediate || (degree ?? "").isNotEmpty) &&
-        (schoolUniversityController.text ?? "").isNotEmpty &&
-        (startDateController.text ?? "").isNotEmpty &&
-        (endDayController.text ?? "").isNotEmpty &&
-        (companyOrganisationController.text ?? "").isNotEmpty &&
-        (designationController.text ?? "").isNotEmpty &&
-        (monthlyIncomeController.text ?? "").isNotEmpty &&
-        ((noOfYears ?? "").isNotEmpty && (noOfYears ?? "") != "0")) {
+        (schoolUniversityController.text).isNotEmpty &&
+        (yearOfPassing != null && yearOfPassing!.isNotEmpty) &&
+        (companyOrganisationController.text).isNotEmpty &&
+        (designationController.text).isNotEmpty &&
+        (monthlyIncomeController.text).isNotEmpty &&
+        (noOfYears ?? "").isNotEmpty) {
       registerUser("basicInfo");
     } else {
       if ((highestQualification ?? "").isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select highest qualification", isError: true);
+        showCustomSnackBar("Please select highest qualification",
+            isError: true);
       } else if (isHighSchoolOrIntermediate && (degree ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select degree", isError: true);
       } else if (schoolUniversityController.text.isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please enter your school/university name", isError: true);
-      } else if (startDateController.text.isEmpty) {
+        showCustomSnackBar("Please enter your school/university name",
+            isError: true);
+      } else if ((yearOfPassing ?? '').isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please select start date", isError: true);
-      } else if (endDayController.text.isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select end date", isError: true);
+        showCustomSnackBar("Please select year of passing.", isError: true);
       } else if (companyOrganisationController.text.isEmpty) {
         closeSnackBar();
-        showCustomSnackBar("Please enter your company/organisation name", isError: true);
+        showCustomSnackBar("Please enter your company/organisation name",
+            isError: true);
       } else if (designationController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your designation", isError: true);
       } else if (monthlyIncomeController.text.isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your monthly income", isError: true);
-      } else if ((noOfYears ?? "").isEmpty || (noOfYears ?? "") == "0") {
+      } else if ((noOfYears ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter experience", isError: true);
       }
@@ -1027,40 +1353,50 @@ class AuthController extends GetxController implements GetxService {
   }
 
   void checkPersonalityScreen() {
-    if ((hairController.text ?? "").isNotEmpty &&
-        (eyeColorController.text ?? "").isNotEmpty &&
-        (bioController.text ?? "").isNotEmpty &&
-        (heightController.text ?? "").isNotEmpty &&
-        (weightController.text ?? "").isNotEmpty &&
-        (interestController.text ?? "").isNotEmpty &&
+    bool isDisabled = disability == 'Yes';
+
+    if ((hairController.text).isNotEmpty &&
+        (eyeColorController.text).isNotEmpty &&
+        (bioController.text).isNotEmpty &&
+        ((heightController.text).isNotEmpty &&
+            int.parse(heightController.text) > 130) &&
+        ((weightController.text).isNotEmpty &&
+            int.parse(weightController.text) > 30) &&
+        (interestController.text).isNotEmpty &&
         (smokingHabit ?? "").isNotEmpty &&
         (drinkingHabit ?? "").isNotEmpty &&
         (bloodGroup ?? "").isNotEmpty &&
         (complexion ?? "").isNotEmpty &&
-        (prefCountry ?? []).isNotEmpty &&
-        (prefHighestQualification ?? []).isNotEmpty &&
-        (prefReligion ?? []).isNotEmpty &&
-        (disability ?? "").isNotEmpty) {
-      registerUser("personality");
+        (disability ?? "").isNotEmpty &&
+        (isDisabled ? disabilityController.text.isNotEmpty : true)) {
+      registerUser("physicalAttributeInfo");
     } else {
-      if ((hairController.text ?? "").isEmpty) {
+      if ((hairController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your hair color", isError: true);
-      } else if ((eyeColorController.text ?? "").isEmpty) {
+      } else if ((eyeColorController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your eye color", isError: true);
-  } else if ((bioController.text ?? "").isEmpty) {
+      } else if ((bioController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your bio", isError: true);
-      } else if ((heightController.text ?? "").isEmpty) {
+      } else if ((heightController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your height", isError: true);
-      } else if ((weightController.text ?? "").isEmpty) {
+      } else if ((weightController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your weight", isError: true);
-      } else if ((interestController.text ?? "").isEmpty) {
+      } else if ((interestController.text).isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please enter your interest", isError: true);
+      } else if (int.parse(heightController.text) < 131) {
+        closeSnackBar();
+        showCustomSnackBar("Height should be greater than 130 cm",
+            isError: true);
+      } else if (int.parse(weightController.text) < 31) {
+        closeSnackBar();
+        showCustomSnackBar("Weight should be greater than 30 kg",
+            isError: true);
       } else if ((smokingHabit ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select smoking habit", isError: true);
@@ -1073,20 +1409,242 @@ class AuthController extends GetxController implements GetxService {
       } else if ((complexion ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select complexion", isError: true);
-      } else if ((prefCountry ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred country", isError: true);
-      } else if ((prefHighestQualification ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred highest qualification", isError: true);
-      } else if ((prefReligion ?? []).isEmpty) {
-        closeSnackBar();
-        showCustomSnackBar("Please select preferred religion", isError: true);
       } else if ((disability ?? "").isEmpty) {
         closeSnackBar();
         showCustomSnackBar("Please select disability", isError: true);
+      } else if (isDisabled && disabilityController.text.isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please enter about your disability", isError: true);
       }
     }
   }
 
+  void checkPreferencesScreen() {
+    int minAge = int.tryParse(prefMinAgeController.text) ?? 0;
+    int maxAge = int.tryParse(prefMaxAgeController.text) ?? 0;
+    int minHeight = int.tryParse(prefMinHeightController.text) ?? 0;
+    int maxHeight = int.tryParse(prefMaxHeightController.text) ?? 0;
+
+    if ((prefMinAgeController.text).isNotEmpty &&
+        (minAge > 18) &&
+        (prefMinHeightController.text).isNotEmpty &&
+        (minHeight > 130) &&
+        (prefMaxAgeController.text).isNotEmpty &&
+        (maxAge > 18) &&
+        (prefMaxHeightController.text).isNotEmpty &&
+        (maxHeight > 130) &&
+        (prefReligion ?? []).isNotEmpty &&
+        (prefCaste ?? []).isNotEmpty &&
+        (prefSmokingHabit ?? "").isNotEmpty &&
+        (prefDrinkingHabit ?? "").isNotEmpty &&
+        (prefCountry ?? []).isNotEmpty &&
+        (prefState ?? []).isNotEmpty &&
+        (prefHighestQualification ?? []).isNotEmpty &&
+        (prefComplexion ?? []).isNotEmpty) {
+      if (maxAge <= minAge) {
+        closeSnackBar();
+        showCustomSnackBar("Maximum age must be greater than minimum age.",
+            isError: true);
+        return;
+      }
+      if (maxHeight <= minHeight) {
+        closeSnackBar();
+        showCustomSnackBar(
+            "Maximum height must be greater than minimum height.",
+            isError: true);
+        return;
+      }
+
+      if (prefHighestQualification != null &&
+          (prefHighestQualification!.contains("Select All") ||
+              prefHighestQualification!.any(
+                (q) => q != "High School" && q != "Intermediate",
+              ))) {
+        if (prefDegree == null || prefDegree!.isEmpty) {
+          Get.snackbar(
+            "Error",
+            "Degree cannot be empty.",
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.red,
+            colorText: AppColors.white,
+          );
+          return;
+        }
+      }
+      registerUser("preferences");
+    } else {
+      if ((prefMinAgeController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select minimum age.", isError: true);
+      } else if (int.parse(prefMinAgeController.text) < 18) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be greater than 18.", isError: true);
+      } else if (int.parse(prefMinAgeController.text) > 100) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be less than 100.", isError: true);
+      } else if ((prefMinHeightController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select minimum height.", isError: true);
+      } else if ((prefMaxAgeController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select maximum age.", isError: true);
+      } else if (int.parse(prefMaxAgeController.text) < 18) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be greater than 18.", isError: true);
+      } else if (int.parse(prefMaxAgeController.text) > 100) {
+        closeSnackBar();
+        showCustomSnackBar("Age should be less than 100.", isError: true);
+      } else if ((prefMaxHeightController.text).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select your height.", isError: true);
+      } else if ((prefSmokingHabit ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select Smoking habit", isError: true);
+      } else if ((prefDrinkingHabit ?? "").isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select drinking habit", isError: true);
+      } else if ((prefComplexion ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select complexion", isError: true);
+      } else if ((prefCountry ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred country", isError: true);
+      } else if ((prefState ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred state", isError: true);
+      } else if ((prefHighestQualification ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred highest qualification",
+            isError: true);
+      } else if ((prefReligion ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred religion", isError: true);
+      } else if ((prefCaste ?? []).isEmpty) {
+        closeSnackBar();
+        showCustomSnackBar("Please select preferred caste.", isError: true);
+      }
+    }
+  }
+
+// For logout
+  Future<bool> logOut() async {
+    showLoading();
+    bool isLogOut = await authRepo.clearSharedData();
+    if (isLogOut) {
+      Get.offAllNamed(RouteHelper.getLoginRoute());
+      showCustomSnackBar("Logout Successfully", isError: false);
+    } else {
+      showCustomSnackBar("Something went wrong. Please try again.",
+          isError: true);
+    }
+    hideLoading();
+    return isLogOut;
+  }
+
+  Future<void> deleteAccount() async {
+    showLoading();
+    try {
+      Response isDeleted = await authRepo.deleteAccount();
+      if (isDeleted.body != null && isDeleted.body['status'] == true) {
+        bool isLogOut = await authRepo.clearSharedData();
+        if (isLogOut) {
+          Get.offAllNamed(RouteHelper.getLoginRoute());
+          showCustomSnackBar(
+            "Account deleted successfully",
+            isError: false,
+            isSuccess: true,
+          );
+        } else {
+          showCustomSnackBar("Something went wrong. Please try again.",
+              isError: true);
+        }
+      } else {
+        showCustomSnackBar("Something went wrong. Please try again.",
+            isError: true);
+      }
+    } catch (e) {
+      showCustomSnackBar("Something went wrong. Please try again.",
+          isError: true);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  void showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Logout Confirmation"),
+          content: const Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog without logging out
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "No",
+                style: TextStyle(
+                  color: AppColors.lightTheme,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform logout
+                Navigator.of(context).pop(); // Close the dialog
+                await logOut();
+              },
+              child: const Text(
+                "Yes",
+                style: TextStyle(
+                  color: AppColors.darkTheme,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDeleteAccountConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Account Confirmation"),
+          content: const Text("Are you sure you want to delete your account?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog without logging out
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "No",
+                style: TextStyle(
+                  color: AppColors.lightTheme,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Perform delete account
+                Navigator.of(context).pop(); // Close the dialog
+                await deleteAccount();
+              },
+              child: const Text(
+                "Yes",
+                style: TextStyle(
+                  color: AppColors.darkTheme,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

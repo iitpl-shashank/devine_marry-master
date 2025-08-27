@@ -1,8 +1,6 @@
-import 'package:devine_marry/controller/AuthController/auth_controller.dart';
 import 'package:devine_marry/controller/SplashScreenController/splash_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import '../../utils/images.dart';
 
 class SplashScreen extends StatelessWidget {
